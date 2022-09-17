@@ -1,0 +1,13 @@
+{
+	"project":
+	[
+		{
+			"build":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
+			"folders":[{"path":".\\[source]"}]
+		}
+	],
+	"converter":"D:\\my\\GameDev\\QuestSoftPlayer\\QSP 580 QG 400b\\txt2gam.exe",
+	"player":"D:\\my\\GameDev\\QuestSoftPlayer\\QSP 580 QG 400b\\qspgui.exe",
+	"save_txt2gam":"False",
+	"start":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp"
+}
