@@ -1,0 +1,21 @@
+QSP-Game функция создания таблицы данных
+$args[0] - идентификатор таблицы данных
+$args[1] - название таблицы
+# edb.bd.newTable
+local $table_id,$table_name=$args[0],$args[1]
+if $table_id='': msg 'Ошибка! bd.newTable: не передан ID таблицы данных.' & exit
+if instr($table_id,'$')=1: $table_id=$mid($table_id,2)	& !@ отрезаем первый символ, если это символ $
+!@ $EASY_DATABASE - глобальный массив.
+!@ Вносим идентификатор таблицы данных в массив
+$EASY_DATABASE['data_table',EASY_DATABASE['data_table.counter']]=$table_id
+!@ увеличиваем счётчик созданных баз
+EASY_DATABASE['data_table.counter']+=1
+!@ увеличиваем число существующих баз
+EASY_DATABASE['data_table.number']+=1
+!@ создаём запись в массиве, описывающем таблицу данных
+!@ вносим идентификатор и название таблицы
+dynamic "
+	$<<$table_id>>['id']='<<$table_id>>'
+	$<<$table_id>>['NAME']='<<$table_name>>'
+"
+--- edb.bd.newTable ---------------------------------

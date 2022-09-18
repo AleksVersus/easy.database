@@ -1,8 +1,13 @@
 QSP-Game Стартовая локация Easy.DataBase
 # edb
-!@ для начала научим эту крошку парсить команды
-!@ но для этого нам нужно понимать, кк записывать команды
-*pl "test"
+"
+	Easy DataBase -> Система Управления Базой Данных
+
+	bd - вывод информации о базе данных
+
+"
+inclib 'easy.math.qsp'
+$usercom = 'edb.usercom'
 --- edb ---------------------------------
 
 Команды можно принимать как одиночные, так и целым списком.
@@ -13,3 +18,16 @@ QSP-Game Стартовая локация Easy.DataBase
 1. Если точка найдена раньше, значит имеем дело со сылками к объектам команды, последовательно извлекаем объекты
 2. Если фигурная скобка найдена раньше точки, значит дальше идут исключительно аргументы, и мы парсим аргументы
 3. Если не найдены ни точки ни фигурные скобки, значит команда кончилась и мы скорее всего имеем дело с неявным методом
+
+# edb.usercom
+if $user_text='bd':
+	loop local i=0 while i<EASY_DATABASE['data_table.counter'] step i+=1:
+		*pl "data_table.<<i>>.id = "+$EASY_DATABASE['data_table',i]
+	end
+	*pl "data_table.counter = "+$str(EASY_DATABASE['data_table.counter'])
+	*pl "data_table.number = "+$str(EASY_DATABASE['data_table.number'])
+else
+	dynamic $user_text
+end
+--- edb.usercom ---------------------------------
+
