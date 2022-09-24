@@ -7,9 +7,8 @@
 		},
 		{
 			"build":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.math.qsp",
-			"files":[
-				{"path":"..\\easy.math.3\\[source]\\07_операции с массивами\\99_em.arr.print.qsps"},
-				{"path":"..\\easy.math.3\\[source]\\07_операции с массивами\\99_em.fewArrs.print.qsps"}
+			"folders":[
+				{"path":"..\\easy.math.3\\[source]"}
 			]
 		}
 	],
