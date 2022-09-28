@@ -6,8 +6,12 @@ local $table_id,$table_name=$args[0],$args[1]
 if $table_id='': msg 'Ошибка! bd.newTable: не передан ID таблицы данных.' & exit
 if instr($table_id,'$')=1: $table_id=$mid($table_id,2)	& !@ отрезаем первый символ, если это символ $
 !@ $EASY_DATABASE - глобальный массив.
-!@ Вносим идентификатор таблицы данных в массив
-$EASY_DATABASE['data_table',EASY_DATABASE['data_table.counter']]=$table_id
+!@ Вносим идентификатор таблицы данных в список
+if $EASY_DATABASE['data_table_ids']='':
+	$EASY_DATABASE['data_table_ids']=$table_id
+else
+	$EASY_DATABASE['data_table_ids']+='|'+$table_id
+end
 !@ увеличиваем счётчик созданных баз
 EASY_DATABASE['data_table.counter']+=1
 !@ увеличиваем число существующих баз

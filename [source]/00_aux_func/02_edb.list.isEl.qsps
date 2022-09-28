@@ -1,0 +1,19 @@
+QSP-Game Вспомогательная функция
+Проверяет наличие в строке вида "aaaa|bbbb|....|zzzzz" указанной части
+$args[0] - строка, список
+$args[1] - старое значение
+$args[2] - разделитель (по умолчанию вертикальная черта)
+# edb.list.isEl
+!@ объявляем локальные переменные
+local $list,$element,$delimiter=$args[0],$args[1],$args[2]
+!@ разделитель по умолчанию
+if $delimiter='': $delimiter='|'
+!@ костылим список, чтобы легко искать элемент
+$list=$delimiter+$list+$delimiter
+!@ ищем элемент
+if instr($list,$delimiter+$element+$delimiter)<>0:
+	result=1
+else
+	result=0
+end
+--- edb.list.remove ---------------------------------

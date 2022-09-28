@@ -46,14 +46,31 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
-	!@ обрабатываем команды ($last_object - служит для хранения последнего объекта из цепочки)
-	loop local i,size,$last_object=0,arrsize('$command_objects'),'' while i<size step i+=1 & $last_object=$command_objects[i]:
+	local $last_object	& !@ последний объект в цепочке объектов, с которым мы имели дело
+	local $parse_arguments	& !@ распарсиваем аргументы для метода в этот массив
+	!@ обрабатываем команды ($last_object - служит для хранения последней ссылки на объект из цепочки)
+	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1 & $last_object=$command_objects[i]:
 		!@ *pl (($command_objects[i],' > ',$command_arguments[i]))
-		if $command_objects[i]='bd':
-			!@ объект, с которым мы работаем является базой данных
-			if i+1=size:
-				!@ это последний объект в цепочке, значит мы имеем дело с неявным методом. Вызываем.
-				$result=@edb.bd.implicit()
+		if $command_arguments[i]='':
+			!@ объект, с которым мы работаем, не является методом
+			if $command_objects[i]='bd':
+				!@ объект, с которым мы работаем, является базой данных
+				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
+			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_arguments[i]):
+				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
+				$last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
+			end
+			!@ в результат всегда возвращаем данные из неявного метода
+			$result=($last_object['type'],$last_object['id'],$last_object['content'])
+		else
+			!@ объект, с которым мы работаем, является методом
+			if $last_object['type']='data_base':
+				!@ это метод для базы данных
+				if $command_objects[i]='newTable':
+					!@ метод создания новой таблицы данных
+					if $command_arguments[i]<>'{}':
+						@em.str.inArr($mid($command_arguments[i],2,len($command_arguments[i])-1),'$parse_arguments',',',"[notspace][trim][strip]")
+						@edb.bd.newTable($parse_arguments[0],$parse_arguments[1])
 			end
 		end
 	end
