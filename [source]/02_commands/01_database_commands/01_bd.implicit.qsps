@@ -1,0 +1,15 @@
+QSP-Game функция применения неявного метода к объекту Базы Данных
+# edb.bd.implicit
+local $data_tables=''
+!@ если в базе данных есть хоть одна таблица, формируем список таблиц
+if EASY_DATABASE['data_table.number']<>0:
+	loop i,to=0,EASY_DATABASE['data_table.counter'] while i<to step i+=1:
+		if $EASY_DATABASE['data_table',i]<>'':
+			$data_tables+=$EASY_DATABASE['data_table',i]+'|'	& !@ к каждому элементу списка добавляется вертикальная черта
+		end
+	end
+	!@ отрезаем последнюю вертикальную черту
+	$data_tables=$mid($data_tables,1,len($data_tables)-1)
+end
+$result=('data_base','',$data_tables)
+--- edb.bd.implicit ---------------------------------
