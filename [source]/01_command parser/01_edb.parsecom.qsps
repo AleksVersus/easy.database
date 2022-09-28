@@ -11,10 +11,10 @@ $args[1]...$args[18] — значения, которые нельзя было 
 2. Если фигурная скобка найдена раньше точки, значит дальше идут исключительно аргументы, и мы парсим аргументы
 3. Если не найдены ни точки ни фигурные скобки, значит команда кончилась и мы скорее всего имеем дело с неявным методом
 
-# edb.parsecom
+# edb
 !@ объявляем локальные переменные
 local $command_list
-*pl 'edb.parsecom'+$args[0]
+*pl 'edb'+$args[0]
 !@ разбиваем команды на отдельные строки и помещаем в массив
 @em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
 *pl arrsize('$command_list')
@@ -39,20 +39,27 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			elseif dot_instr=0 or (brk_instr<dot_instr and brk_instr<>0):
 				$command_objects[]=$mid($command,1,brk_instr-1)
 				cls_instr=instr($command,'}')
-				$command_arguments[]=$mid($command,brk_instr+1,cls_instr-(brk_instr+1))
+				$command_arguments[]=$mid($command,brk_instr,cls_instr-(brk_instr-1))
 				$command=$mid($command,cls_instr+1)
 				!@ *pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command))
 			end
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
-	!@ обрабатываем команды
-	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1:
-		*pl $command_objects[i]+' > '+$command_arguments[i]
+	!@ обрабатываем команды ($last_object - служит для хранения последнего объекта из цепочки)
+	loop local i,size,$last_object=0,arrsize('$command_objects'),'' while i<size step i+=1 & $last_object=$command_objects[i]:
+		!@ *pl (($command_objects[i],' > ',$command_arguments[i]))
+		if $command_objects[i]='bd':
+			!@ объект, с которым мы работаем является базой данных
+			if i+1=size:
+				!@ это последний объект в цепочке, значит мы имеем дело с неявным методом. Вызываем.
+				$result=@edb.bd.implicit()
+			end
+		end
 	end
 	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
 	killvar '$command_objects' & killvar '$command_arguments'
 end
---- edb.parsecom ---------------------------------
+--- edb ---------------------------------
 
 !@pp:var(em_str_inarr)

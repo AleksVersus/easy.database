@@ -1,5 +1,5 @@
 QSP-Game Стартовая локация Easy.DataBase
-# edb
+# edb.start
 "
 	Easy DataBase -> Система Управления Базой Данных
 
@@ -15,8 +15,8 @@ local $commands="
 	bd.objects.body.000023.power.fire.set{137}
 	bd.dialog.replics.ff012.clr{}.append{power}.append{fire}.set{137}
 "
-@edb.parsecom($commands)
---- edb ---------------------------------
+@edb($commands)
+--- edb.start ---------------------------------
 
 
 
