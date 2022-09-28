@@ -1,0 +1,58 @@
+QSP-Game локация для распарсивания команд
+$args[0] - полный список команд
+$args[1]...$args[18] — значения, которые нельзя было уместить в списке команд
+
+Команды можно принимать как одиночные, так и целым списком.
+Каждая команда должна записываться отдельной строкой, никаких объединений (кроме возможно транзакций)
+
+Распарсиваем с помощью instr, отыскивая в команде точку и фигурную скобку.
+
+1. Если точка найдена раньше, значит имеем дело со сылками к объектам команды, последовательно извлекаем объекты
+2. Если фигурная скобка найдена раньше точки, значит дальше идут исключительно аргументы, и мы парсим аргументы
+3. Если не найдены ни точки ни фигурные скобки, значит команда кончилась и мы скорее всего имеем дело с неявным методом
+
+# edb.parsecom
+!@ объявляем локальные переменные
+local $command_list
+*pl 'edb.parsecom'+$args[0]
+!@ разбиваем команды на отдельные строки и помещаем в массив
+@em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
+*pl arrsize('$command_list')
+loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
+	!@ непосредственно здесь уже парсим каждую отдельную команду
+	local $command_objects, $command_arguments	& !@ сюда помещаем списки объектов и аргументов к этим объектам
+	dynamic {
+		!@ внутрь динамика передаётся команда. Это позволяет использовать внутри динамика локальные переменные
+		local $command=$args[0]	& !@ присваиваем команду локальной переменной
+		$command
+		local dot_instr, brk_instr, cls_instr	& !@ вхождение точки и вхождения скобок
+		loop while len($command)>0:
+			dot_instr=instr($command,'.')	& !@ вхождение точки в команду
+			brk_instr=instr($command,'{')	& !@ вхождение открывающей скобки в команду
+			if dot_instr=1:
+				$command=$mid($command,2)
+			elseif brk_instr=0 or (dot_instr<brk_instr and dot_instr<>0):
+				$command_objects[]=$mid($command,1,dot_instr-1)
+				$command_arguments[]=''	& !@ этим символом помечаем, что команда отсутствует
+				$command=$mid($command,dot_instr+1)
+				!@ *pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command))
+			elseif dot_instr=0 or (brk_instr<dot_instr and brk_instr<>0):
+				$command_objects[]=$mid($command,1,brk_instr-1)
+				cls_instr=instr($command,'}')
+				$command_arguments[]=$mid($command,brk_instr+1,cls_instr-(brk_instr+1))
+				$command=$mid($command,cls_instr+1)
+				!@ *pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command))
+			end
+		end
+	},$command_list[i]
+	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
+	!@ обрабатываем команды
+	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1:
+		*pl $command_objects[i]+' > '+$command_arguments[i]
+	end
+	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
+	killvar '$command_objects' & killvar '$command_arguments'
+end
+--- edb.parsecom ---------------------------------
+
+!@pp:var(em_str_inarr)
