@@ -8,6 +8,14 @@ QSP-Game Стартовая локация Easy.DataBase
 "
 inclib 'easy.math.qsp'
 $usercom = 'edb.usercom'
+
+local $commands="
+	bd.objects.newString{}
+	bd.objects.body.000001.name.set{Одноручный меч}
+	bd.objects.body.000023.power.fire.set{137}
+	bd.dialog.replics.ff012.clr{}.append{power}.append{fire}.set{137}
+"
+@edb.parsecom($commands)
 --- edb ---------------------------------
 
 
@@ -35,19 +43,45 @@ end
 
 QSP-Game локация для распарсивания команд
 $args[0] - полный список команд
+$args[1]...$args[18] — значения, которые нельзя было уместить в списке команд
 # edb.parsecom
 !@ объявляем локальные переменные
-local $comand_list
+local $command_list
+*pl 'edb.parsecom'+$args[0]
 !@ разбиваем команды на отдельные строки и помещаем в массив
-@em.str.inArr($args[0],$comand_list,'',"[notspace][trim][strip]")
-loop local i,size=0,arrsize('$comand_list') while i<size step i+=1:
+@em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
+*pl arrsize('$command_list')
+loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 	!@ непосредственно здесь уже парсим каждую отдельную команду
 	dynamic {
 		!@ внутрь динамика передаётся команда. Это позволяет использовать внутри динамика локальные переменные
 		local $command=$args[0]	& !@ присваиваем команду локальной переменной
-		local dot_instr, brk_instr	& !@ вхождение точки и вхождение скобки
-		
+		$command
+		local dot_instr, brk_instr, cls_instr	& !@ вхождение точки и вхождения скобок
+		local $command_objects, $command_arguments	& !@ сюда помещаем списки объектов и аргументов к этим объектам
+		loop while len($command)>0:
+			dot_instr=instr($command,'.')	& !@ вхождение точки в команду
+			brk_instr=instr($command,'{')	& !@ вхождение открывающей скобки в команду
+			if dot_instr=1:
+				$command=$mid($command,2)
+			elseif brk_instr=0 or (dot_instr<brk_instr and dot_instr<>0):
+				$command_objects[]=$mid($command,1,dot_instr-1)
+				$command_arguments[]=''
+				$command=$mid($command,dot_instr+1)
+				!@ *pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command))
+			elseif dot_instr=0 or (brk_instr<dot_instr and brk_instr<>0):
+				$command_objects[]=$mid($command,1,brk_instr-1)
+				cls_instr=instr($command,'}')
+				$command_arguments[]=$mid($command,brk_instr+1,cls_instr-(brk_instr+1))
+				$command=$mid($command,cls_instr+1)
+				!@ *pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command))
+			end
+		end
+		loop local i,size=0,arrsize('$command_objects') while i<size step i+=1:
+			*pl $command_objects[i]+' > '+$command_arguments[i]
+		end
 	},$command_list[i]
+	*pl
 end
 --- edb.parsecom ---------------------------------
 
