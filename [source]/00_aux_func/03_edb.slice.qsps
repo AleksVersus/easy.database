@@ -1,0 +1,12 @@
+QSP-Game Вырезает из строки текст
+# edb.slice
+!@ объявляем локальные переменные
+local $_string,_start,_end=$args[0],args[1],args[2]
+if _start=0: _start=2
+if _end=0: _end=-2
+!@ если номер передан, как отрицательное число, вычисляем его как положительное
+if _start<0: _start=len($_string)+1+_start
+if _end<0: _end=len($_string)+1+_end
+!@ в конце концов вычисляем результат
+$result=$mid($_string,_start,_end-_start+1)
+--- edb.slice ---------------------------------
