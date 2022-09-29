@@ -15,7 +15,8 @@ local $commands="
 	bd.objects.body.000023.power.fire.set{137}
 	bd.dialog.replics.ff012.clr{}.append{power}.append{fire}.set{137}
 "
-@edb($commands)
+!@ @edb($commands)
+@edb.slice('{bd.erpog}')
 --- edb.start ---------------------------------
 
 

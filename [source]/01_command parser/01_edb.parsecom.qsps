@@ -14,6 +14,9 @@ $args[1]...$args[18] — значения, которые нельзя было 
 # edb
 !@ объявляем локальные переменные
 local $command_list
+local $last_object	& !@ последний объект в цепочке объектов, с которым мы имели дело
+local $dyn_code		& !@ переменная для хранения динамического кода
+local $parse_arguments & !@ массив для временного хранения распарсенных аргументов
 *pl 'edb'+$args[0]
 !@ разбиваем команды на отдельные строки и помещаем в массив
 @em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
@@ -46,8 +49,6 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
-	local $last_object	& !@ последний объект в цепочке объектов, с которым мы имели дело
-	local $parse_arguments	& !@ распарсиваем аргументы для метода в этот массив
 	!@ обрабатываем команды ($last_object - служит для хранения последней ссылки на объект из цепочки)
 	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1 & $last_object=$command_objects[i]:
 		!@ *pl (($command_objects[i],' > ',$command_arguments[i]))
@@ -69,8 +70,35 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 				if $command_objects[i]='newTable':
 					!@ метод создания новой таблицы данных
 					if $command_arguments[i]<>'{}':
-						@em.str.inArr($mid($command_arguments[i],2,len($command_arguments[i])-1),'$parse_arguments',',',"[notspace][trim][strip]")
+						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
 						@edb.bd.newTable($parse_arguments[0],$parse_arguments[1])
+					else
+						msg "edb: bd: Метод newTable получил пустой аргумент."
+					end
+				elseif  $command_objects[i]='delTables':
+					!@ метод удаления таблиц
+					if $command_arguments[i]<>'{}':
+						!@ распарсиваем аргументы для метода в массив $parse_arguments
+						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
+						!@ подменяем ссылки на аргументы значениями
+						loop local i,size,num=0,arrsize('$parse_arguments'),0 while i<size step i+=1:
+							if strcomp($parse_arguments[i],'%args\d+%'):
+								!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+								num = $strfind($parse_arguments[i],'%args(\d+)%',1)
+								if num<>0: $parse_arguments[i]=$args[num]
+							end
+						end
+						!@ теперь собираем строку вызова метода удаления таблиц данных
+						$dyn_code="@edb.bd.delTables('<<$command_arguments[i]>>',$parse_arguments[0]"
+						loop local i,size=1,arrsize('$parse_arguments') while i<size step i+=1:
+							$dyn_code+=",$parse_arguments[<<i>>]"
+						end
+						$dyn_code+=")"
+						dynamic $dyn_code
+					else
+						msg "edb: bd: Метод delTables получил пустой аргумент."
+					end
+				end
 			end
 		end
 	end
