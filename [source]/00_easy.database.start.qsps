@@ -11,12 +11,14 @@ $usercom = 'edb.usercom'
 showacts 0
 showobjs 0
 local $commands="
-	bd.objects.newString{}
-	bd.objects.body.000001.name.set{Одноручный меч}
-	bd.objects.body.000023.power.fire.set{137}
-	bd.dialog.replics.ff012.clr{}.append{power}.append{fire}.set{137}
+	bd.newTable{objects}
+	bd.newTable{dialogue}
+	bd.newTable{deseases}
+	bd.newTable{locations}
+	bd.newTable{personages}
+	bd.newTable{hide_links}
 "
-!@ @edb($commands)
+@edb($commands)
 @edb.slice('{bd.erpog}')
 --- edb.start ---------------------------------
 

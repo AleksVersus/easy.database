@@ -6,7 +6,8 @@ local $columns_list	& !@ массив для распарсенного спис
 !@ перебираем циклом все таблицы данных и удаляем
 loop local i=0 while i<dt_count step i+=1:
 	!@ необходимо получить список колонок из таблицы данных
-	@em.str.inArr($dyneval({$result=$arritem($args[0],'columns')},$args[i]),'$columns_list','|',"[notspace][trim][strip]")
+	!@ pl "delTables: <<$args[i]>>"	& !@< code
+	@em.str.inArr($arritem($args[i],'columns'),'$columns_list','|',"[notspace][trim][strip]")
 	!@ когда у нас есть распарсенный список колонок, удаляем массивы с этими колонками
 	loop local j,size=0,arrsize('$columns_list') while j<size step j+=1:
 		killvar '<<$args[i]>>_<<$columns_list[j]>>'
@@ -21,6 +22,7 @@ loop local i=0 while i<dt_count step i+=1:
 	EASY_DATABASE['data_table.number']-=1	& !@ уменьшаем счётчик существующих таблиц
 	!@ удаляяем запись о таблице из списка идентификаторов таблиц
 	$EASY_DATABASE['data_table_ids']=@edb.list.remove($EASY_DATABASE['data_table_ids'],$args[i])
+	!@ pl $EASY_DATABASE['data_table_ids']	& !@< проверяем
 	!@ снимаем активность с базы данных, если это текущая база данных
 	if $EASY_DATABASE['current_data_table']=$args[i]: $EASY_DATABASE['current_data_table']=''
 end
