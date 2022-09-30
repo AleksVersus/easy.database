@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-pl "${1:location}"	& !@< ${2:code}
+pl "${1:log text}" & wait ${2:100}	& !@< ${3:comment}
 ]]></content>
 	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
 	<tabTrigger>logging</tabTrigger>

@@ -20,7 +20,7 @@ local $dyn_code		& !@ переменная для хранения динами�
 local $parse_arguments & !@ массив для временного хранения распарсенных аргументов
 !@ разбиваем команды на отдельные строки и помещаем в массив
 @em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
-!@ pl 'Парсер. Команд на входе: <<arrsize("$command_list")>>'	& !@< выводим лог
+pl 'Парсер. Команд на входе: <<arrsize("$command_list")>>' & wait 0	& !@< выводим лог
 !@ теперь с помощью цикла перебираем все команды
 loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 	!@ непосредственно здесь уже парсим каждую отдельную команду
@@ -28,36 +28,43 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 	dynamic {
 		!@ внутрь динамика передаётся команда. Это позволяет использовать внутри динамика локальные переменные
 		local $command=$args[0]	& !@ присваиваем команду локальной переменной
-		!@ pl 'Парсер. Команда[<<i>>]: '+$command	& !@< выводим команду
+		pl 'Парсер. Команда[<<i>>]: '+$command & wait 100 	& !@< выводим команду
 		local dot_instr, brk_instr, cls_instr	& !@ вхождение точки и вхождения скобок
 		loop while len($command)>0:
 			dot_instr=instr($command,'.')	& !@ вхождение точки в команду
 			brk_instr=instr($command,'{')	& !@ вхождение открывающей скобки в команду
+			pl "dot <<dot_instr>> brk <<brk_instr>>" & wait 100	& !@< comment
 			if dot_instr=1:
 				$command=$mid($command,2)
+			elseif brk_instr=0 and dot_instr=0:
+				$command_objects[]=$command
+				$command_arguments[]=''
+				killvar '$command'
+				pl "single Object" & wait 100	& !@< comment
 			elseif brk_instr=0 or (dot_instr<brk_instr and dot_instr<>0):
 				$command_objects[]=$mid($command,1,dot_instr-1)
 				$command_arguments[]=''	& !@ этим символом помечаем, что команда отсутствует
 				$command=$mid($command,dot_instr+1)
-				!@ *pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command))
+				pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
 			elseif dot_instr=0 or (brk_instr<dot_instr and brk_instr<>0):
 				$command_objects[]=$mid($command,1,brk_instr-1)
 				cls_instr=instr($command,'}')
 				$command_arguments[]=$mid($command,brk_instr,cls_instr-(brk_instr-1))
 				$command=$mid($command,cls_instr+1)
-				!@ *pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command))
+				pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
 			end
+			pl "Парсер. Распарсивание команды." & wait 100	& !@< comment
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
 	!@ pl 'Парсер. Команда. Объектов в цепочке: '+$str(arrsize('$command_objects'))
 	!@ обрабатываем команды ($last_object - служит для хранения последней ссылки на объект из цепочки)
 	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1:
-		!@ pl 'Парсер. Объект: <<$command_objects[i]>> Аргументы: <<$command_arguments[i]>>'	& !@< 
-		!@ pl "Last Objects: <<$last_object['type']>>,<<$last_object['id']>>,<<$last_object['content']>>"	& !@< 
+		pl 'Парсер. Объект: <<$command_objects[i]>> Аргументы: <<$command_arguments[i]>>' & wait 100 	& !@< 
+		pl "Last Objects: <<$last_object['type']>>,<<$last_object['id']>>,<<$last_object['content']>>" & wait 100 	& !@< 
 		if $command_arguments[i]='':
 			!@ объект, с которым мы работаем, не является методом
-			!@ pl 'Объект в цепочке: <<$command_objects[i]>>'	& !@< выводим команду
+			pl 'Объект в цепочке: <<$command_objects[i]>>' & wait 100 	& !@< выводим команду
 			if $command_objects[i]='bd':
 				!@ объект, с которым мы работаем, является базой данных
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
@@ -65,17 +72,15 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
 			end
-			!@ в результат всегда возвращаем данные из неявного метода
-			$result=($last_object['type'],$last_object['id'],$last_object['content'])
 		else
 			!@ объект, с которым мы работаем, является методом
-			!@ pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>'	& !@< выводим команду
+			pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>' & wait 100 	& !@< выводим команду
 			if $last_object['type']='data_base':
-				!@ pl 'Парсер. Команда для базы данных'	& !@< выводим
+				pl 'Парсер. Команда для базы данных' & wait 100 	& !@< выводим
 				!@ это метод для базы данных
 				if $command_objects[i]='newTable':
 					!@ метод создания новой таблицы данных
-					!@ pl 'Парсер. newTable: <<$command_arguments[i]>>'	& !@< выводим
+					pl 'Парсер. newTable: <<$command_arguments[i]>>' & wait 100 	& !@< выводим
 					if $command_arguments[i]<>'{}':
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
 						@edb.bd.newTable($parse_arguments[0],$parse_arguments[1])
@@ -117,13 +122,18 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						@edb.bd.print()
 					end
+				else
+					msg "Парсер. Неизвестный метод <<$command_objects[i]>>"
 				end
+			elseif $last_object['type']='data_base':
 			end
 		end
 	end
 	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
 	killvar '$command_objects' & killvar '$command_arguments'
 end
+!@ в результат всегда возвращаем данные из неявного метода
+$result=($last_object['type'],$last_object['id'],$last_object['content'])
 --- edb ---------------------------------
 
 !@pp:var(em_str_inarr)

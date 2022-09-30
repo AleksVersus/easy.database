@@ -26,10 +26,10 @@ local $commands="
 
 # edb.usercom
 !@ проверяем, присутствует ли в строке от пользователя команда к парсеру
-local $bd_command=$strfind($user_text,'^\s*\S+(\.\S+(\{[\s\S]*?\})?)*\s*$')
+local $bd_command=$strfind($user_text,'^\s*>\s*(\S+|bd)(\.\S+(\{[\s\S]*?\})?)*\s*$')
 if $bd_command<>'':
 	!@ если команда есть, выполняем
-	@edb($user_text)
+	@edb($trim($user_text))
 else
 	dynamic $user_text
 end
