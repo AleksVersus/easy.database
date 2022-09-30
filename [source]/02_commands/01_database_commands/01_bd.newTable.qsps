@@ -22,4 +22,6 @@ dynamic "
 	$<<$table_id>>['ID']='<<$table_id>>'
 	$<<$table_id>>['NAME']='<<$table_name>>'
 "
+!@ делаем созданную таблицу текущей
+$EASY_DATABASE['current_data_table']=$table_id
 --- edb.bd.newTable ---------------------------------

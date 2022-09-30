@@ -76,7 +76,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						msg "edb: bd: Метод newTable получил пустой аргумент."
 					end
-				elseif  $command_objects[i]='delTables':
+				elseif $command_objects[i]='delTables':
 					!@ метод удаления таблиц
 					if $command_arguments[i]<>'{}':
 						!@ распарсиваем аргументы для метода в массив $parse_arguments
@@ -99,6 +99,8 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						msg "edb: bd: Метод delTables получил пустой аргумент."
 					end
+				elseif $command_objects[i]='print':
+					@edb.bd.print()
 				end
 			end
 		end

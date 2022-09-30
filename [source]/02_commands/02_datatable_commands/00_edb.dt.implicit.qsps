@@ -1,7 +1,9 @@
 QSP-Game функция применения неявного метода к объекту Таблица Данных
 # edb.dt.implicit
-local $data_table_id=$args[0]	& !@ получили идентификатор таблицы данных
-
+local $table_id=$args[0]	& !@ получили идентификатор таблицы данных
+$result=('data_table',$table_id,$arritem($table_id,'columns'))
+!@ делаем таблицу текущей
+$EASY_DATABASE['current_data_table']=$table_id
 --- edb.dt.implicit ---------------------------------
 
 Функция возвращает кортеж из трёх элементов
