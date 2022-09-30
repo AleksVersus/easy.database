@@ -19,8 +19,9 @@ $list=$replace($list,$delimiter+$old_el+$delimiter,$delimiter+$new_el+$delimiter
 !@ если не запрещена очистка пустых элементов
 if instr($comm,'[noclear]')=0:
 	!@ удаляем их
-	$list=$replace($list,$delimiter+$delimiter)
+	$list=$replace($list,$delimiter+$delimiter,$delimiter)
 end
+$result=@edb.slice($list)
 --- edb.list.remove ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
