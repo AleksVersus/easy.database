@@ -8,7 +8,8 @@ QSP-Game Стартовая локация Easy.DataBase
 "
 inclib 'easy.math.qsp'
 $usercom = 'edb.usercom'
-
+showacts 0
+showobjs 0
 local $commands="
 	bd.objects.newString{}
 	bd.objects.body.000001.name.set{Одноручный меч}
@@ -22,12 +23,11 @@ local $commands="
 
 
 # edb.usercom
-if $user_text='bd':
-	loop local i=0 while i<EASY_DATABASE['data_table.counter'] step i+=1:
-		*pl "data_table.<<i>>.id = "+$EASY_DATABASE['data_table',i]
-	end
-	*pl "data_table.counter = "+$str(EASY_DATABASE['data_table.counter'])
-	*pl "data_table.number = "+$str(EASY_DATABASE['data_table.number'])
+!@ проверяем, присутствует ли в строке от пользователя команда к парсеру
+local $bd_command=$strfind($user_text,'^\s*\S+(\.\S+(\{[\s\S]*?\})?)*\s*$')
+if $bd_command<>'':
+	!@ если команда есть, выполняем
+	@edb($user_text)
 else
 	dynamic $user_text
 end

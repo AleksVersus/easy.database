@@ -12,15 +12,15 @@ $args[1]...$args[18] — значения, которые нельзя было 
 3. Если не найдены ни точки ни фигурные скобки, значит команда кончилась и мы скорее всего имеем дело с неявным методом
 
 # edb
+args[19]=args[19]	& !@ нужно будет использовать переменные args, чтобы избежать пересечений имён с другими переменными
 !@ объявляем локальные переменные
 local $command_list
 local $last_object	& !@ последний объект в цепочке объектов, с которым мы имели дело
 local $dyn_code		& !@ переменная для хранения динамического кода
 local $parse_arguments & !@ массив для временного хранения распарсенных аргументов
-*pl 'edb'+$args[0]
 !@ разбиваем команды на отдельные строки и помещаем в массив
 @em.str.inArr($args[0],'$command_list','',"[notspace][trim][strip]")
-*pl arrsize('$command_list')
+pl 'Парсер. Команд на входе: <<arrsize("$command_list")>>'	& !@< выводим лог
 !@ теперь с помощью цикла перебираем все команды
 loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 	!@ непосредственно здесь уже парсим каждую отдельную команду
@@ -28,7 +28,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 	dynamic {
 		!@ внутрь динамика передаётся команда. Это позволяет использовать внутри динамика локальные переменные
 		local $command=$args[0]	& !@ присваиваем команду локальной переменной
-		$command
+		pl 'Парсер. Команда[<<i>>]: '+$command	& !@< выводим команду
 		local dot_instr, brk_instr, cls_instr	& !@ вхождение точки и вхождения скобок
 		loop while len($command)>0:
 			dot_instr=instr($command,'.')	& !@ вхождение точки в команду
@@ -50,11 +50,14 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
+	pl 'Парсер. Команда. Объектов в цепочке: '+$str(arrsize('$command_objects'))
 	!@ обрабатываем команды ($last_object - служит для хранения последней ссылки на объект из цепочки)
-	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1 & $last_object=$command_objects[i]:
-		!@ *pl (($command_objects[i],' > ',$command_arguments[i]))
+	loop local i,size=0,arrsize('$command_objects') while i<size step i+=1:
+		pl 'Парсер. Объект: <<$command_objects[i]>> Аргументы: <<$command_arguments[i]>>'	& !@< 
+		pl "Last Objects: <<$last_object['type']>>,<<$last_object['id']>>,<<$last_object['content']>>"	& !@< 
 		if $command_arguments[i]='':
 			!@ объект, с которым мы работаем, не является методом
+			pl 'Объект в цепочке: <<$command_objects[i]>>'	& !@< выводим команду
 			if $command_objects[i]='bd':
 				!@ объект, с которым мы работаем, является базой данных
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
@@ -66,10 +69,13 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			$result=($last_object['type'],$last_object['id'],$last_object['content'])
 		else
 			!@ объект, с которым мы работаем, является методом
+			pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>'	& !@< выводим команду
 			if $last_object['type']='data_base':
+				pl 'Парсер. Команда для базы данных'	& !@< выводим
 				!@ это метод для базы данных
 				if $command_objects[i]='newTable':
 					!@ метод создания новой таблицы данных
+					pl 'Парсер. newTable: <<$command_arguments[i]>>'	& !@< выводим
 					if $command_arguments[i]<>'{}':
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
 						@edb.bd.newTable($parse_arguments[0],$parse_arguments[1])
@@ -82,11 +88,11 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 						!@ распарсиваем аргументы для метода в массив $parse_arguments
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
 						!@ подменяем ссылки на аргументы значениями
-						loop local i,size,num=0,arrsize('$parse_arguments'),0 while i<size step i+=1:
+						loop local i,size=0,arrsize('$parse_arguments') while i<size step i+=1:
 							if strcomp($parse_arguments[i],'%args\d+%'):
 								!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
-								num = $strfind($parse_arguments[i],'%args(\d+)%',1)
-								if num<>0: $parse_arguments[i]=$args[num]
+								args['num'] = val($strfind($parse_arguments[i],'%args(\d+)%',1))
+								if args['num']<>0: $parse_arguments[i]=$args[args['num']]
 							end
 						end
 						!@ теперь собираем строку вызова метода удаления таблиц данных
@@ -100,7 +106,17 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 						msg "edb: bd: Метод delTables получил пустой аргумент."
 					end
 				elseif $command_objects[i]='print':
-					@edb.bd.print()
+					if $command_arguments[i]<>'{}':
+						$command_arguments[i]=@edb.slice($command_arguments[i])
+						if strcomp($command_arguments[i],'%args\d+%'):
+							!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+							args['num'] = val($strfind($command_arguments[i],'%args(\d+)%',1))
+							if args['num']<>0: $command_arguments[i]=$args[args['num']]
+						end
+						@edb.bd.print($command_arguments[i])
+					else
+						@edb.bd.print()
+					end
 				end
 			end
 		end
