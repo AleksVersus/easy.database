@@ -65,7 +65,9 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		if $command_arguments[i]='':
 			!@ объект, с которым мы работаем, не является методом
 			pl 'Объект в цепочке: <<$command_objects[i]>>' & wait 100 	& !@< выводим команду
-			if $command_objects[i]='bd':
+			if $last_object['type']=''
+				!@ если предыдущего объекта в цепочке нет, то определяем тип объекта:
+				$command_objects[i]='bd':
 				!@ объект, с которым мы работаем, является базой данных
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
 			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_arguments[i]):
