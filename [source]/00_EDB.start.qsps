@@ -19,7 +19,7 @@ local $commands="
 	bd.newTable{hide_links}
 "
 @edb($commands)
-@edb.slice('{bd.erpog}')
+
 --- edb.start ---------------------------------
 
 

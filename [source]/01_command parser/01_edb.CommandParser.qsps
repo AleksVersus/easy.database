@@ -33,27 +33,26 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		loop while len($command)>0:
 			dot_instr=instr($command,'.')	& !@ вхождение точки в команду
 			brk_instr=instr($command,'{')	& !@ вхождение открывающей скобки в команду
-			pl "dot <<dot_instr>> brk <<brk_instr>>" & wait 100	& !@< comment
+			!@ pl "dot <<dot_instr>> brk <<brk_instr>>" & wait 100	& !@< comment
 			if dot_instr=1:
 				$command=$mid($command,2)
 			elseif brk_instr=0 and dot_instr=0:
 				$command_objects[]=$command
 				$command_arguments[]=''
 				killvar '$command'
-				pl "single Object" & wait 100	& !@< comment
+				!@ pl "single Object" & wait 100	& !@< comment
 			elseif brk_instr=0 or (dot_instr<brk_instr and dot_instr<>0):
 				$command_objects[]=$mid($command,1,dot_instr-1)
 				$command_arguments[]=''	& !@ этим символом помечаем, что команда отсутствует
 				$command=$mid($command,dot_instr+1)
-				pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
+				!@ pl (('comm ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
 			elseif dot_instr=0 or (brk_instr<dot_instr and brk_instr<>0):
 				$command_objects[]=$mid($command,1,brk_instr-1)
 				cls_instr=instr($command,'}')
 				$command_arguments[]=$mid($command,brk_instr,cls_instr-(brk_instr-1))
 				$command=$mid($command,cls_instr+1)
-				pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
+				!@ pl (('args ',$command_objects[],'-',$command_arguments[],'-',$command)) & wait 100	& !@< comment
 			end
-			pl "Парсер. Распарсивание команды." & wait 100	& !@< comment
 		end
 	},$command_list[i]
 	!@ на данном этапе у нас есть список ссылок к объектам в массивах $command_objsects и $command_arguments
@@ -65,12 +64,11 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		if $command_arguments[i]='':
 			!@ объект, с которым мы работаем, не является методом
 			pl 'Объект в цепочке: <<$command_objects[i]>>' & wait 100 	& !@< выводим команду
-			if $last_object['type']=''
-				!@ если предыдущего объекта в цепочке нет, то определяем тип объекта:
-				$command_objects[i]='bd':
-				!@ объект, с которым мы работаем, является базой данных
+			if $last_object['type']=''and $command_objects[i]='bd':
+				!@ если предыдущего объекта в цепочке нет и ссылка похожа на ссылку на базу данных		
+				!@ значит объект, с которым мы работаем, является базой данных
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
-			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_arguments[i]):
+			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
 			end
@@ -125,14 +123,34 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 						@edb.bd.print()
 					end
 				else
-					msg "Парсер. Неизвестный метод <<$command_objects[i]>>"
+					msg "Парсер. Неизвестный метод для Базы Данных <<$command_objects[i]>>"
 				end
-			elseif $last_object['type']='data_base':
+			elseif $last_object['type']='data_table':
+				pl 'Парсер. Команда для таблицы данных' & wait 100 	& !@< выводим
+				!@ значит мы обрабатываем методы для таблицы данных
+				if $command_objects[i]='print':
+					pl 'Парсер. Команда print для <<$command_objects[i]>>' & wait 100 	& !@< выводим
+					!@ вывод на экран информации о таблице данных
+					if $command_arguments[i]<>'{}':
+						$command_arguments[i]=@edb.slice($command_arguments[i])
+						if strcomp($command_arguments[i],'%args\d+%'):
+							!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+							args['num'] = val($strfind($command_arguments[i],'%args(\d+)%',1))
+							if args['num']<>0: $command_arguments[i]=$args[args['num']]
+						end
+						!@ в $command_objects[i-1] как раз остался идентификатор талицы данных
+						@edb.dt.print($command_objects[i-1],$command_arguments[i])
+					else
+						@edb.dt.print($command_objects[i-1])
+					end
+				else
+					msg "Парсер. Неизвестный метод для Таблицы Данных <<$command_objects[i]>>"
+				end
 			end
 		end
 	end
 	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
-	killvar '$command_objects' & killvar '$command_arguments'
+	killvar '$command_objects' & killvar '$command_arguments' & killvar '$last_object'
 end
 !@ в результат всегда возвращаем данные из неявного метода
 $result=($last_object['type'],$last_object['id'],$last_object['content'])

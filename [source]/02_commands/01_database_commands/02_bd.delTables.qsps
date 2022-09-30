@@ -7,7 +7,7 @@ local $edb_bd_deltables_columns_list	& !@ массив для распарсен
 loop args['i']=0 while args['i']<args['size'] step args['i']+=1:
 	!@ необходимо получить список колонок из таблицы данных
 	!@ pl "delTables: <<$args[args['i']]>>"	& !@< code
-	@em.str.inArr($arritem($args[args['i']],'columns'),'$edb_bd_deltables_columns_list','|',"[notspace][trim][strip]")
+	@em.str.inArr($arritem('$'+$args[args['i']],'columns'),'$edb_bd_deltables_columns_list','|',"[notspace][trim][strip]")
 	!@ когда у нас есть распарсенный список колонок, удаляем массивы с этими колонками
 	loop args['k'],args['list_size']=0,arrsize('$edb_bd_deltables_columns_list') while args['k']<args['list_size'] step args['k']+=1:
 		killvar '<<$args[args['i']]>>_<<$edb_bd_deltables_columns_list[args['k']]>>'
