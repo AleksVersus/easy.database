@@ -2,16 +2,15 @@ QSP-Game функция создания таблицы данных
 $args[0] - идентификатор таблицы данных ID
 $args[1] - название таблицы NAME
 # edb.bd.newTable
-local $table_id,$table_name=$args[0],$args[1]
-if $table_id='': msg 'bd.newTable: не передан ID таблицы данных.' & exit
-if instr($table_id,'$')=1: $table_id=$mid($table_id,2)	& !@ отрезаем первый символ, если это символ $
-if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$table_id):
+if $args[0]='': msg 'bd.newTable: не передан ID таблицы данных.' & exit
+if instr($args[0],'$')=1: $args[0]=$mid($args[0],2)	& !@ отрезаем первый символ, если это символ $
+if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$args[0]):
 	!@ $EASY_DATABASE - глобальный массив.
 	!@ Вносим идентификатор таблицы данных в список
 	if $EASY_DATABASE['data_table_ids']='':
-		$EASY_DATABASE['data_table_ids']=$table_id
+		$EASY_DATABASE['data_table_ids']=$args[0]
 	else
-		$EASY_DATABASE['data_table_ids']+='|'+$table_id
+		$EASY_DATABASE['data_table_ids']+='|'+$args[0]
 	end
 	!@ увеличиваем счётчик созданных баз
 	EASY_DATABASE['data_table.counter']+=1
@@ -20,13 +19,15 @@ if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$table_id):
 	!@ создаём запись в массиве, описывающем таблицу данных
 	!@ вносим идентификатор и название таблицы
 	dynamic "
-		$<<$table_id>>['ID']='<<$table_id>>'
-		$<<$table_id>>['NAME']='<<$table_name>>'
+		$<<$args[0]>>['ID']='<<$args[0]>>'
+		$<<$args[0]>>['NAME']='<<$args[1]>>'
 	"
 	!@ делаем созданную таблицу текущей
-	$EASY_DATABASE['current_data_table']=$table_id
-	!@ pl 'bd.newTable: Создана Таблица данных «<<$table_id>>».'
+	$EASY_DATABASE['current_data_table']=$args[0]
+	!@ pl 'bd.newTable: Создана Таблица данных «<<$args[0]>>».'
 else
-	msg 'bd.newTable: Таблица данных «<<$table_id>>» уже существует.'
+	msg 'bd.newTable: Таблица данных «<<$args[0]>>» уже существует.'
 end
 --- edb.bd.newTable ---------------------------------
+
+Внимание!!! Поскольку данная функция работает с массивами, во избежание пересечения имён с уже существующими массивами число локальных переменных в функции сведено к минимуму, именно поэтому здесь так много используется args

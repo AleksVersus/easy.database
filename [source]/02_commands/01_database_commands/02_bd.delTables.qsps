@@ -1,31 +1,35 @@
 QSP-Game функция удаления таблиц данных
 $args[0]...$args[18] - идентификаторы таблиц данных
 # edb.bd.delTables
-local dt_count=arrsize('$args')	& !@ получаем число таблиц данных к удалению
-local $columns_list	& !@ массив для распарсенного списка колонок
+args['size']=arrsize('$args')	& !@ получаем число таблиц данных к удалению
+local $edb_bd_deltables_columns_list	& !@ массив для распарсенного списка колонок
 !@ перебираем циклом все таблицы данных и удаляем
-loop local i=0 while i<dt_count step i+=1:
+loop args['i']=0 while args['i']<args['size'] step args['i']+=1:
 	!@ необходимо получить список колонок из таблицы данных
-	!@ pl "delTables: <<$args[i]>>"	& !@< code
-	@em.str.inArr($arritem($args[i],'columns'),'$columns_list','|',"[notspace][trim][strip]")
+	!@ pl "delTables: <<$args[args['i']]>>"	& !@< code
+	@em.str.inArr($arritem($args[args['i']],'columns'),'$edb_bd_deltables_columns_list','|',"[notspace][trim][strip]")
 	!@ когда у нас есть распарсенный список колонок, удаляем массивы с этими колонками
-	loop local j,size=0,arrsize('$columns_list') while j<size step j+=1:
-		killvar '<<$args[i]>>_<<$columns_list[j]>>'
-		if $EASY_DATABASE['current_data_table']=$args[i] and $EASY_DATABASE['current_col']=$columns_list[j]:
+	loop args['k'],args['list_size']=0,arrsize('$edb_bd_deltables_columns_list') while args['k']<args['list_size'] step args['k']+=1:
+		killvar '<<$args[args['i']]>>_<<$edb_bd_deltables_columns_list[args['k']]>>'
+		if $EASY_DATABASE['current_data_table']=$args[args['i']] and $EASY_DATABASE['current_col']=$edb_bd_deltables_columns_list[args['k']]:
 			!@ снимаем активность со столбца, если это текущий столбец
 			$EASY_DATABASE['current_col']=''
 		end
 	end
 	!@ когда удалены колонки, удаляем массив таблицы
-	killvar $args[i]
+	killvar $args[args['i']]
 	!@ убираем запись от таблице из базы данных
 	EASY_DATABASE['data_table.number']-=1	& !@ уменьшаем счётчик существующих таблиц
 	!@ удаляяем запись о таблице из списка идентификаторов таблиц
-	$EASY_DATABASE['data_table_ids']=@edb.list.remove($EASY_DATABASE['data_table_ids'],$args[i])
+	$EASY_DATABASE['data_table_ids']=@edb.list.remove($EASY_DATABASE['data_table_ids'],$args[args['i']])
 	!@ pl $EASY_DATABASE['data_table_ids']	& !@< проверяем
 	!@ снимаем активность с базы данных, если это текущая база данных
-	if $EASY_DATABASE['current_data_table']=$args[i]: $EASY_DATABASE['current_data_table']=''
+	if $EASY_DATABASE['current_data_table']=$args[args['i']]: $EASY_DATABASE['current_data_table']=''
 end
 --- edb.bd.delTables ---------------------------------
 
-Предполагается, что эта функция будет использоваться довольно редко
+Предполагается, что эта функция будет использоваться довольно редко.
+
+Внимание!!! Поскольку данная функция работает с массивами, во избежание пересечения имён с уже существующими массивами число локальных переменных в функции сведено к минимуму, именно поэтому здесь так много используется args
+
+Единственный локальный для функции массив имеет имя $edb_bd_deltables_columns_list — выбранное с таким расчётом, чтобы не пересекаться с именами любых возможных в вашей игре колонок и таблиц данных, однако будьте внимательны.

@@ -1,9 +1,9 @@
 QSP-Game функция применения неявного метода к объекту Таблица Данных
+$args[0]	—	идентификатор таблицы данных
 # edb.dt.implicit
-local $table_id=$args[0]	& !@ получили идентификатор таблицы данных
-$result=('data_table',$table_id,$arritem($table_id,'columns'))
+$result=('data_table',$args[0],$arritem($args[0],'columns'))
 !@ делаем таблицу текущей
-$EASY_DATABASE['current_data_table']=$table_id
+$EASY_DATABASE['current_data_table']=$args[0]
 --- edb.dt.implicit ---------------------------------
 
 Функция возвращает кортеж из трёх элементов
