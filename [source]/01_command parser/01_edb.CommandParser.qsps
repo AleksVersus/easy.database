@@ -143,6 +143,24 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						@edb.dt.print($command_objects[i-1])
 					end
+				elseif $command_objects[i]='newCol':
+					if $command_arguments[i]<>'{}':
+						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
+						!@ подменяем ссылки на аргументы значениями
+						loop local i,size=0,arrsize('$parse_arguments') while i<size step i+=1:
+							if strcomp($parse_arguments[i],'%args\d+%'):
+								!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+								args['num'] = val($strfind($parse_arguments[i],'%args(\d+)%',1))
+								if args['num']<>0: $parse_arguments[i]=$args[args['num']]
+							end
+						end
+						!@ $command_objects[i-1] - идентфикатор таблицы данных,
+						!@ $parse_arguments[0] - идентификатор столбца
+						!@ $parse_arguments[1] - тип столбца
+						@edb.dt.newCol($command_objects[i-1],$parse_arguments[0],$parse_arguments[1])
+					else
+						msg "Парсер. Не указаны аргументы для метода newCol{}"
+					end
 				else
 					msg "Парсер. Неизвестный метод для Таблицы Данных <<$command_objects[i]>>"
 				end
@@ -150,7 +168,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		end
 	end
 	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
-	killvar '$command_objects' & killvar '$command_arguments' & killvar '$last_object'
+	killvar '$command_objects' & killvar '$command_arguments' & killvar '$last_object' & killvar '$parse_arguments'
 end
 !@ в результат всегда возвращаем данные из неявного метода
 $result=($last_object['type'],$last_object['id'],$last_object['content'])
