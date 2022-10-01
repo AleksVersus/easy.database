@@ -13,7 +13,7 @@ $args['columns_list']=$arritem('$'+$args[0],'columns')	& !@ список кол�
 	$args['res']+="Столбец с SystemID: "+$arritem('$'+$args[0],'id_column')+$args['nr']
 	$args['res']+="Колонки Таблицы данных: "
 	if $args['columns_list']<>'':
-		!@ если есть колонки в списке
+		!@ если есть колонки в списке, выводим их в виде словаря
 		loop args['i'],args['run']=1,1 while args['run'] step args['i']+=1:
 			$args['column']=@em.str.getWord($args['columns_list'],args['i'])
 			if $args['column']<>$args['last']:
