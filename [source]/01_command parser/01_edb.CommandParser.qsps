@@ -126,7 +126,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					msg "edb: bd: Неизвестный метод для Базы Данных <<$command_objects[i]>>"
 				end
 			elseif $last_object['type']='data_table':
-				pl 'edb: dt: Команда для таблицы данных' & wait 100 	& !@< выводим
+				!@ pl 'edb: dt: Команда для таблицы данных' & wait 100 	& !@< выводим
 				!@ значит мы обрабатываем методы для таблицы данных
 				if $command_objects[i]='print':
 					!@ pl 'edb: dt: Команда print для <<$command_objects[i]>>' & wait 100 	& !@< выводим
