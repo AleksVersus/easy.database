@@ -4,7 +4,7 @@ $args[0] - уменьшаемый список
 $args[1] - вычитаемый список
 $args[2] - разделитель
 $args[3] - управляющее слово [union] или [un] - убирает из обоих списков повторяющиеся элементы, а на выход даёт неповторяющиеся
-# edb.list.remove
+# edb.list.diff
 !@ объявляем локальные переменные
 local $src_list,$del_list,$delimiter,$comm=$args[0],$args[1],$args[2],$lcase($args[3])
 !@ локальные массивы для списков
@@ -15,11 +15,11 @@ if instr($comm,'[un]')<>0: $comm=$replace($comm,'[un]','[union]')
 if $delimiter='': $delimiter='|'
 !@ оба списка запихиваем в массивы
 @em.str.inArr($args[0],'$first_list',$delimiter,"[notspace][trim][strip]")
-@em.str.inArr($args[0],'$second_list',$delimiter,"[notspace][trim][strip]")
+@em.str.inArr($args[1],'$second_list',$delimiter,"[notspace][trim][strip]")
 !@ теперь сравниваем списки, оставляя только несовпадающие значения
 loop local i,size,pos=0,max(arrsize('first_list'),arrsize('second_list')),-1 while i<size step i+=1:
 	if $first_list[i]<>'':
-		pos=arrpos('second_list',$first_list[i])
+		pos=arrpos('$second_list',$first_list[i])
 		if pos<>-1:
 			$first_list[i]=''
 			$second_list[pos]=''
@@ -39,6 +39,6 @@ if instr($comm,'[union]')<>0:
 end
 !@ 
 $result=$mid($result,len($delimiter)+1)
---- edb.list.remove ---------------------------------
+--- edb.list.diff ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
