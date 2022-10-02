@@ -12,6 +12,12 @@ showacts 0
 showobjs 0
 local $commands="
 	bd.newTable{objects}
+	bd.objects.newCol{id,str}
+	bd.objects.newCol{body,dict}
+	bd.objects.newCol{position,str}
+	bd.objects.newCol{include,str}
+	bd.objects.newCol{kolvo,num}
+	bd.objects.newCol{charge,num}
 	bd.newTable{dialogue}
 	bd.newTable{deseases}
 	bd.newTable{locations}
