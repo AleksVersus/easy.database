@@ -1,0 +1,44 @@
+QSP-Game Вспомогательная функция
+На вход принимает два списка. Убирает из первого списка элементы, которые встречаются во втором списке
+$args[0] - уменьшаемый список
+$args[1] - вычитаемый список
+$args[2] - разделитель
+$args[3] - управляющее слово [union] или [un] - убирает из обоих списков повторяющиеся элементы, а на выход даёт неповторяющиеся
+# edb.list.remove
+!@ объявляем локальные переменные
+local $src_list,$del_list,$delimiter,$comm=$args[0],$args[1],$args[2],$lcase($args[3])
+!@ локальные массивы для списков
+local $first_list, $second_list
+!@ правильная упарвляющая конструкция
+if instr($comm,'[un]')<>0: $comm=$replace($comm,'[un]','[union]')
+!@ разделитель
+if $delimiter='': $delimiter='|'
+!@ оба списка запихиваем в массивы
+@em.str.inArr($args[0],'$first_list',$delimiter,"[notspace][trim][strip]")
+@em.str.inArr($args[0],'$second_list',$delimiter,"[notspace][trim][strip]")
+!@ теперь сравниваем списки, оставляя только несовпадающие значения
+loop local i,size,pos=0,max(arrsize('first_list'),arrsize('second_list')),-1 while i<size step i+=1:
+	if $first_list[i]<>'':
+		pos=arrpos('second_list',$first_list[i])
+		if pos<>-1:
+			$first_list[i]=''
+			$second_list[pos]=''
+		end
+	else
+		i=size
+	end
+end
+!@ когда из списков удалены все совпадающие значения, составляем новый список
+loop local i,size=0,arrsize('first_list') while i<size step i+=1:
+	if $first_list[i]<>'': $result+=$delimiter+$first_list[i]
+end
+if instr($comm,'[union]')<>0:
+	loop local i,size=0,arrsize('second_list') while i<size step i+=1:
+		if $second_list[i]<>'': $result+=$delimiter+$second_list[i]
+	end
+end
+!@ 
+$result=$mid($result,len($delimiter)+1)
+--- edb.list.remove ---------------------------------
+
+Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
