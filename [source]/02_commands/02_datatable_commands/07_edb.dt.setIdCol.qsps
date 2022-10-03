@@ -2,10 +2,13 @@ QSP-Game устанавливаем столбец системных идент
 $args[0] - идентификатор таблицы данных
 $args[1] - идентификатор столбца, который выставляем 
 # edb.dt.setIdCol
+!@ pl 'edb.dt.setIdCol «<<$args[0]>>» «<<$args[1]>>»' & wait 100 	& !@< выводим
 !@ получаем список колонок
 $args['columns_list']=$arritem('$'+$args[0],'columns')
+!@ pl "edb.dt.setIdCol «<<$args['columns_list']>>»" & wait 100 	& !@< выводим
 !@ если идентификатор есть в списке, устанавливаем его
-if @edb.list.isEl($args['columns_list'],$args[0]):
+if @edb.list.isEl($args['columns_list'],$args[1]):
+	!@ pl "присваиваем" & wait 100 	& !@< выводим
 	dynamic "$<<$args[0]>>['id_column']=$args[0]",$args[1]
 end
 --- edb.dt.unsetCur ---------------------------------

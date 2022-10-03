@@ -59,9 +59,10 @@ else
 			$args['id']=''
 		end
 	end
+	pl "edb.dt.newRow: id_column_pos=<<args['id_column_pos']>> <<$args['id']>>" & wait 0 & !@< стереть
 	if $args['id']='':
 		!@ если айди не вычислился, это полная жопа. Вы где-то накосячили, и вся ваша таблица данных работает через хуй
-		msg "edb.dt.newRow: Ошибка! Колонка для идентификаторов определена, но не существует! "+$args['id_column_name']
+		msg "edb.dt.newRow: Ошибка! Колонка для идентификаторов определена, но не существует! «"+$args['id_column_name']+"» Либо вы не определили идентификатор «<<$args[args['id_column_pos']+1]>>»|«<<$args[1]>>»"
 		jump 'no_id_column'
 	end
 	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] step args['i']+=1:
@@ -76,11 +77,11 @@ else
 		end
 		if $args['type']<>'num':
 			dynamic "
-				$<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[<<$args['id']>>]=$args[0]
+				$<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>['<<$args['id']>>']=$args[0]
 			",$args['string']
 		else
 			dynamic "
-				<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[<<$args['id']>>]=args[0]
+				<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>['<<$args['id']>>']=args[0]
 			",args['number']
 		end
 	end

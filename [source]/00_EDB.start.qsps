@@ -13,6 +13,7 @@ showobjs 0
 local $commands="
 	bd.newTable{objects}
 	bd.objects.newCol{id,str}
+	bd.objects.setIdCol{id}
 	bd.objects.newCol{body,dict}
 	bd.objects.newCol{position,str}
 	bd.objects.newCol{include,str}
