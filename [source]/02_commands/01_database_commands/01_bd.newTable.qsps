@@ -23,7 +23,7 @@ if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$args[0]):
 		$<<$args[0]>>['NAME']='<<$args[1]>>'
 	"
 	!@ делаем созданную таблицу текущей
-	$EASY_DATABASE['current_data_table']=$args[0]
+	@edb.dt.setCur($args[0])
 	!@ pl 'bd.newTable: Создана Таблица данных «<<$args[0]>>».'
 else
 	msg 'bd.newTable: Таблица данных «<<$args[0]>>» уже существует.'

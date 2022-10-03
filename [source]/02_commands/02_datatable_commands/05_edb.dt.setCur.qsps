@@ -1,0 +1,15 @@
+QSP-Game Делаем указанную таблицу данных текущей
+$args[0] - идентификатор таблицы данных
+# edb.dt.setCur
+!@ если прошлая и текущая не совпадают
+if $EASY_DATABASE['last_data_table']<>$EASY_DATABASE['current_data_table']:
+	!@ обнуляем текущие столбец, строку и идентификатор строки, а так же список ключей
+	$EASY_DATABASE['current_col']=''
+	$EASY_DATABASE['current_row']=''
+	$EASY_DATABASE['current_id']=''
+
+	$EASY_DATABASE['current_key']=''
+end
+!@ ту, что была текущей, делаем прошлой. Ту, что была прошлой, делаем текущей
+set $EASY_DATABASE['last_data_table'],$EASY_DATABASE['current_data_table']=$EASY_DATABASE['current_data_table'],$args[0]
+--- edb.dt.setCur ---------------------------------

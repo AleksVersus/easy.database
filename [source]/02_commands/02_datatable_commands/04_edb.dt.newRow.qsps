@@ -16,8 +16,9 @@ else
 end
 !@ помещаем все значения списка в массив
 @em.str.inArr($args['column_list'],'$edb_dt_newrow_column_list','|',"[notspace][trim][strip]")
+$args['id_column_name']=$arritem('$'+$args[0],'id_column')
 !@ теперь три варианта:
-if $arritem('$'+$args[0],'id_column')='':
+if $args['id_column_name']='':
 	!@ без опоры на идентификатор
 	:no_id_column
 	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] step args['i']+=1:
@@ -50,7 +51,7 @@ else
 	else
 		!@ если передано большее число аргументов, пытаемся выжать айди
 		!@ колонка айди должна быть указана в определённом месте списка колонок
-		args['id_column_pos']=arrpos('$edb_dt_newrow_column_list',$arritem('$'+$args[0],'id_column'))
+		args['id_column_pos']=arrpos('$edb_dt_newrow_column_list',$args['id_column_name'])
 		if args['id_column_pos']<>-1 and args['id_column_pos']<args['osize']:
 			!@ если в списке есть эта колонка (она должна там быть по-хорошему)
 			$args['id']=$args[args['id_column_pos']+1]	& !@ назначаем айди из аргумента, переданного в эту колонку
@@ -60,7 +61,7 @@ else
 	end
 	if $args['id']='':
 		!@ если айди не вычислился, это полная жопа. Вы где-то накосячили, и вся ваша таблица данных работает через хуй
-		msg "edb.dt.newRow: Ошибка! Колонка для идентификаторов определена, но не существует! "+$arritem('$'+$args[0],'id_column')
+		msg "edb.dt.newRow: Ошибка! Колонка для идентификаторов определена, но не существует! "+$args['id_column_name']
 		jump 'no_id_column'
 	end
 	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] step args['i']+=1:
@@ -86,6 +87,13 @@ else
 	jump 'end_keep'
 end
 :end_keep
+!@ устанавливам текущий айди и текущий номер строки
+if $args['id_column_name']<>'':
+	!@ текущий айди
+	$EASY_DATABASE['current_id']=$arritem('$'+$args[0]+'_'+$args['id_column_name'],arrsize('$'+$args[0]+'_'+$args['id_column_name'])-1)
+end
+!@ текущий номер
+$EASY_DATABASE['current_row']=$str(arrsize('$'+$args[0]+'_'+$args['id_column_name'])-1)
 --- edb.dt.newRow ---------------------------------
 
 Примечание 1.
