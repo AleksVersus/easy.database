@@ -20,16 +20,24 @@ end
 if $arritem('$'+$args[0],'id_column')='':
 	!@ без опоры на идентификатор
 	:no_id_column
-	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] and args['i']<args['osize'] step args['i']+=1:
-		$args['type']=$arritem($args[0],($edb_dt_newrow_column_list[args['i']],'col_type'))
+	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] step args['i']+=1:
+		$args['type']=$arritem('$'+$args[0],($edb_dt_newrow_column_list[args['i']],'col_type'))
+		!@ pl "edb.dt.newRow: [<<args['i']>>] <<$args['type']>> <<$args[args['i']+1]>>" & wait 100 	& !@< выводим
+		if args['i']<args['osize']:
+			$args['string']=$args[args['i']+1]
+			args['number']=val($args[args['i']+1])
+		else
+			$args['string']=''
+			args['number']=0
+		end
 		if $args['type']<>'num':
 			dynamic "
 				$<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[]=$args[0]
-			",$args[args['i']+1]
+			",$args['string']
 		else
 			dynamic "
 				<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[]=args[0]
-			",val($args[args['i']+1])
+			",args['number']
 		end
 	end
 	jump 'end_keep'
@@ -55,16 +63,24 @@ else
 		msg "edb.dt.newRow: Ошибка! Колонка для идентификаторов определена, но не существует! "+$arritem('$'+$args[0],'id_column')
 		jump 'no_id_column'
 	end
-	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] and args['i']<args['osize'] step args['i']+=1:
-		$args['type']=$arritem($args[0],($edb_dt_newrow_column_list[args['i']],'col_type'))
+	loop args['i'],args['size']=0,arrsize('$edb_dt_newrow_column_list') while args['i']<args['size'] step args['i']+=1:
+		$args['type']=$arritem('$'+$args[0],($edb_dt_newrow_column_list[args['i']],'col_type'))
+		!@ pl "edb.dt.newRow: [<<args['i']>>] <<$args['type']>> <<$args[args['i']+1]>>" & wait 100 	& !@< выводим
+		if args['i']<args['osize']:
+			$args['string']=$args[args['i']+1]
+			args['number']=val($args[args['i']+1])
+		else
+			$args['string']=''
+			args['number']=0
+		end
 		if $args['type']<>'num':
 			dynamic "
-				$<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>['<<$args['id']>>']=$args[0]
-			",$args[args['i']+1]
+				$<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[<<$args['id']>>]=$args[0]
+			",$args['string']
 		else
 			dynamic "
-				<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>['<<$args['id']>>']=args[0]
-			",val($args[args['i']+1])
+				<<$args[0]>>_<<$edb_dt_newrow_column_list[args['i']]>>[<<$args['id']>>]=args[0]
+			",args['number']
 		end
 	end
 	jump 'end_keep'

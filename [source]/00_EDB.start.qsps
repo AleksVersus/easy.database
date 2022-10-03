@@ -18,12 +18,18 @@ local $commands="
 	bd.objects.newCol{include,str}
 	bd.objects.newCol{kolvo,num}
 	bd.objects.newCol{charge,num}
+	bd.objects.newCol{run,str}
+	bd.objects.newRow{d00000001}
+	bd.objects.newRow{d00000002,[kind:[power:[fire:123:fire]:power]:kind],d00000001,d00000003,12,345,!@ некий код}
+	bd.objects.newRow{}
+	bd.objects.newRow{d00000003,[tire:[p:[uron:375:uron]:p]:tire],!@ещё код,[id|body|run]/dw}
 	bd.newTable{dialogue}
 	bd.newTable{deseases}
 	bd.newTable{locations}
 	bd.newTable{personages}
 	bd.newTable{hide_links}
 "
+usehtml=1
 @edb($commands)
 
 --- edb.start ---------------------------------
@@ -37,6 +43,8 @@ if $bd_command<>'':
 	!@ если команда есть, выполняем
 	$bd_command=$trim($replace($bd_command,$strfind($bd_command,'^\s*>\s*')))
 	@edb($bd_command)
+elseif $user_text='dt.objects':
+	@em.fewArrs.print('$objects_id','$objects_body','$objects_position','$objects_include','objects_kolvo','objects_charge','$objects_run')
 else
 	dynamic $user_text
 end
