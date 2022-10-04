@@ -74,7 +74,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			end
 		else
 			!@ объект, с которым мы работаем, является методом
-			pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>' & wait 100 	& !@< выводим команду
+			!@ pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>' & wait 100 	& !@< выводим команду
 			if $last_object['type']='data_base':
 				!@ pl 'edb: bd: Команда для базы данных' & wait 100 	& !@< выводим
 				!@ это метод для базы данных
@@ -213,6 +213,32 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						@edb.dt.newRow($EASY_DATABASE['current_data_table'])
 					end
+				elseif $command_objects[i]='delRows':
+					!@ метод удаления строк
+					!@ pl 'edb: dt: Метод delRows{}' & wait 100 	& !@< выводим
+					if $command_arguments[i]<>'{}':
+						!@ распарсиваем аргументы для метода в массив $parse_arguments
+						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
+						!@ подменяем ссылки на аргументы значениями
+						loop local i,size=0,arrsize('$parse_arguments') while i<size step i+=1:
+							if strcomp($parse_arguments[i],'%args\d+%'):
+								!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+								args['num'] = val($strfind($parse_arguments[i],'%args(\d+)%',1))
+								if args['num']<>0: $parse_arguments[i]=$args[args['num']]
+							end
+						end
+						!@ теперь собираем строку вызова метода удаления таблиц данных
+						$dyn_code="@edb.dt.delRows($EASY_DATABASE['current_data_table']"
+						loop local i,size=0,arrsize('$parse_arguments') while i<size step i+=1:
+							!@ pl 'edb: dt: Аргументы <<$parse_arguments[i]>>' & wait 100 	& !@< выводим
+							$dyn_code+=",$parse_arguments[<<i>>]"
+						end
+						$dyn_code+=")"
+						!@ pl $dyn_code & wait 100 	& !@< выводим
+						dynamic $dyn_code
+					else
+						msg "edb: dt: Метод delRows получил пустой аргумент."
+					end
 				elseif $command_objects[i]='setCur':
 					!@ метод удаления таблиц
 					!@ pl 'edb: dt: Метод newRow{}' & wait 100 	& !@< выводим
@@ -222,7 +248,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					end
 				elseif $command_objects[i]='setIdCol':
 					!@ метод удаления таблиц
-					pl 'edb: dt: Метод setIdCol{}' & wait 100 	& !@< выводим
+					!@ pl 'edb: dt: Метод setIdCol{}' & wait 100 	& !@< выводим
 					if $command_arguments[i]<>'{}':
 						!@ распарсиваем аргументы для метода в массив $parse_arguments
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")

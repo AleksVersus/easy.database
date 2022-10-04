@@ -1,0 +1,60 @@
+QSP-Game локация для удаления строк из таблицы
+$args[0] - идентификатор таблицы данных
+$args[1] ... $args[18] — идентификаторы или номера строк
+# edb.dt.delRows
+local $edb_dt_delrows_column_list
+args['args_count']=arrsize('args')	& !@ число аргументов, переданных на локацию
+$args['columns_list']=$arritem('$'+$args[0],'columns')	& !@ список колонок
+$args['id_column']=$arritem('$'+$args[0],'id_column')	& !@ колонка идентификаторов
+!@ pl "Число аргументов: <<args['args_count']>>, Колонки: <<$args['columns_list']>>, Колонка идентификаторов: <<$args['id_column']>>"	& !@< удалить
+@em.str.inArr($args['columns_list'],'$edb_dt_delrows_column_list','|',"[notspace][trim][strip]")
+!@ pl "edb.dt.delRows размер массива:<<arrsize('$edb_dt_delrows_column_list')>>" & wait 100 	& !@< выводим
+!@ чтобы не загромождать повторами кода, а так же чтоб изолировать локальные args, создаём блоки кода для dynamic
+$args['kill_by_string']={
+	$args[0]=$args[0]	& !@ идентификатор таблицы данных
+	$args[1]=$args[1]	& !@ идентификатор строки
+	loop args['i'],args['size']=0,arrsize('$edb_dt_delrows_column_list') while args['i']<args['size'] step args['i']+=1:
+		killvar $args[0]+"_"+$edb_dt_delrows_column_list[args['i']],$args[1]
+	end
+}
+$args['kill_by_number']={
+	$args[0]=$args[0]	& !@ идентификатор таблицы
+	args[1]=args[1]	& !@ идентификатор передаём в код
+	loop args['i'],args['size']=0,arrsize('$edb_dt_delrows_column_list') while args['i']<args['size'] step args['i']+=1:
+		killvar $args[0]+"_"+$edb_dt_delrows_column_list[args['i']],args[1]
+	end
+}
+!@ циклом обходим аргументы - идентификаторы
+loop args['i']=1 while args['i']<args['args_count'] step args['i']+=1:
+	!@ получаем идентификтор из аргумента
+	$args['id_row']=$args[args['i']]	& !@ идентификатор строки
+	!@ pl "edb.dt.delRows [<<args['i']>>] <<$args['id_row']>>" & wait 100 	& !@< выводим
+	if strcomp($args['id_row'],'[123456789]\d*'):
+		!@ если передано число
+		!@ pl "edb.dt.delRows это число <<strcomp($args['id_row'],'[123456789]\d*')>>" & wait 100 	& !@< выводим
+		if $args['id_column']<>'':
+			!@ если существует колонка идентификаторов
+			!@ pl "edb.dt.delRows есть колонка айди" & wait 100 	& !@< выводим
+			if arrpos($args['id_column'],$args['id_row'])<>-1:
+				!@ если идентификатор присутствует в колонке, удаляем по идентификатору
+				!@ pl "edb.dt.delRows идентификатор есть в колонке. удаляем по идентификатору" & wait 100 	& !@< выводим
+				dynamic $args['kill_by_string'],$args[0],$args['id_row']
+			else
+				!@ если идентификатор не присутствует в колонке, значит это число, удаляем по числу
+				!@ pl "edb.dt.delRows идентификатора нет в колонке. удаляем по числу" & wait 100 	& !@< выводим
+				dynamic $args['kill_by_number'],$args[0],val($args['id_row'])
+			end
+		else
+			!@ если колонка идентификаторов не существует, просто удаляем по числу
+			!@ pl "edb.dt.delRows нет колонки айди. удаляем по числу" & wait 100 	& !@< выводим
+			dynamic $args['kill_by_number'],$args[0],val($args['id_row'])
+		end
+	else
+		!@ если это не число, удаляем по идентификатору
+		!@ pl "edb.dt.delRows это не число. удаляем по идентификатору" & wait 100 	& !@< выводим
+		dynamic $args['kill_by_string'],$args[0],$args['id_row']
+	end
+end
+--- edb.dt.delRows ---------------------------------
+
+bd.objects.delRows{d00000003,3,d00000006,d00000007}
