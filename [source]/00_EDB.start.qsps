@@ -14,12 +14,7 @@ local $commands="
 	bd.newTable{objects}
 	bd.objects.newCol{id,str}
 	bd.objects.setIdCol{id}
-	bd.objects.newCol{body,dict}
-	bd.objects.newCol{position,str}
-	bd.objects.newCol{include,str}
-	bd.objects.newCol{kolvo,num}
-	bd.objects.newCol{charge,num}
-	bd.objects.newCol{run,str}
+	bd.objects.newCol{body,dict}.newCol{position,str}.newCol{include,str}.newCol{kolvo,num}.newCol{charge,num}.newCol{run,str}
 	bd.objects.newRow{d00000001}
 	bd.objects.newRow{d00000002,[kind:[power:[fire:123:fire]:power]:kind],d00000001,d00000003,12,345,!@ некий код}
 	bd.objects.newRow{}

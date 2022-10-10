@@ -139,10 +139,14 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 							if args['num']<>0: $command_arguments[i]=$args[args['num']]
 						end
 						!@ в $command_objects[i-1] как раз остался идентификатор талицы данных
-						@edb.dt.print($command_objects[i-1],$command_arguments[i])
+						@edb.dt.print($EASY_DATABASE['current_data_table'],$command_arguments[i])
 					else
-						@edb.dt.print($command_objects[i-1])
+						@edb.dt.print($EASY_DATABASE['current_data_table'])
 					end
+				elseif $command_objects[i]='setCur':
+					!@ метод выставления таблицы, как текущей.
+					!@ Не вижу ситуаций, когда бы была необходимость вызывать данный метод
+					@edb.dt.setCur($command_objects[i-1])
 				elseif $command_objects[i]='newCol':
 					if $command_arguments[i]<>'{}':
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
@@ -154,10 +158,10 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 								if args['num']<>0: $parse_arguments[i]=$args[args['num']]
 							end
 						end
-						!@ $command_objects[i-1] - идентфикатор таблицы данных,
+						!@ $EASY_DATABASE['current_data_table'] - идентфикатор таблицы данных,
 						!@ $parse_arguments[0] - идентификатор столбца
 						!@ $parse_arguments[1] - тип столбца
-						@edb.dt.newCol($command_objects[i-1],$parse_arguments[0],$parse_arguments[1])
+						@edb.dt.newCol($EASY_DATABASE['current_data_table'],$parse_arguments[0],$parse_arguments[1])
 					else
 						msg "edb: dt: Метод newCol{} получил пустой аргумент."
 					end
@@ -218,7 +222,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					!@ pl 'edb: dt: Метод delRows{}' & wait 100 	& !@< выводим
 					if $command_arguments[i]<>'{}':
 						!@ распарсиваем аргументы для метода в массив $parse_arguments
-						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")
+						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim]")
 						!@ подменяем ссылки на аргументы значениями
 						loop local i,size=0,arrsize('$parse_arguments') while i<size step i+=1:
 							if strcomp($parse_arguments[i],'%args\d+%'):
@@ -238,13 +242,6 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 						dynamic $dyn_code
 					else
 						msg "edb: dt: Метод delRows получил пустой аргумент."
-					end
-				elseif $command_objects[i]='setCur':
-					!@ метод удаления таблиц
-					!@ pl 'edb: dt: Метод newRow{}' & wait 100 	& !@< выводим
-					if $command_arguments[i]<>'{}':
-						!@ распарсиваем аргументы для метода в массив $parse_arguments
-						@edb.dt.setCur($command_objects[i-1])
 					end
 				elseif $command_objects[i]='setIdCol':
 					!@ метод удаления таблиц
@@ -266,7 +263,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 						msg "edb: dt: Пустой аргумент метода setIdCol{}."
 					end
 				else
-					msg "edb: dt: Неизвестный метод <<$command_objects[i]>>"
+					msg "edb: dt: Неизвестный метод <<$command_objects[i]>>{}"
 				end
 			end
 		end
