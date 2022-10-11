@@ -1,0 +1,10 @@
+QSP-Game функция делает колонку текущей
+$args[0]	—	идентификатор таблицы данных
+$args[1]	—	идентификатор колонки
+# edb.col.setCur
+if $EASY_DATABASE['current_data_table']=$args[0]:
+	$EASY_DATABASE['current_col']=$args[1]
+else
+	msg "edb.col.setCur: Невозможно назначить текущей колонку «<<$args[1]>>», так как таблица «<<$args[0]>>» не является текущей."
+end
+--- edb.col.setCur ---------------------------------
