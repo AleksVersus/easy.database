@@ -11,6 +11,7 @@ $usercom = 'edb.usercom'
 showacts 0
 showobjs 0
 local $commands="
+	bd.comment{Можно придумать какой-то способ переключения подсветки, хотя по-моему и так неплохо}
 	bd.newTable{objects}
 	bd.objects.newCol{id,str}
 	bd.objects.setIdCol{id}
@@ -25,11 +26,7 @@ local $commands="
 	bd.objects.newRow{d00000007,[tire:[p:[uron:375:uron]:p]:tire][body:999:body],!@ещё код,[id|body|run]/dw}
 	bd.objects.newRow{d00000008,[tire:[p:[uron:375:uron]:p]:tire][body:999:body],!@ещё код,[id|body|run]/dw}
 	bd.objects.newRow{d00000009,[tire:[p:[uron:375:uron]:p]:tire][body:999:body],!@ещё код,[id|body|run]/dw}
-	bd.newTable{dialogue}
-	bd.newTable{deseases}
-	bd.newTable{locations}
-	bd.newTable{personages}
-	bd.newTable{hide_links}
+	bd.newTable{dialogue}.newTable{deseases}.newTable{locations}.newTable{personages}.newTable{hide_links}
 "
 usehtml=1
 @edb($commands)

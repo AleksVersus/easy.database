@@ -1,6 +1,7 @@
 QSP-Game функция делает колонку текущей
 $args[0]	—	идентификатор таблицы данных
 $args[1]	—	идентификатор колонки
+$args[2]	-	отладочная. Откуда пришёл запрос
 # edb.col.setCur
 if $EASY_DATABASE['current_data_table']=$args[0]:
 	$EASY_DATABASE['current_col']=$args[1]

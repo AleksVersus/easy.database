@@ -71,6 +71,9 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
 				$last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
+			elseif $last_object['type']='data_table' and @edb.list.isEl($last_object['content'],$command_objects[i]):
+				!@ если предыдущий объект Таблица данных, а мы имеем дело с колонкой, которая в этой таблице данных существует
+				$last_object['type'],$last_object['id'],$last_object['content']=@edb.col.implicit($EASY_DATABASE['current_data_table'],$command_objects[i])	& !@ неявный метод вызываем всегда
 			end
 		else
 			!@ объект, с которым мы работаем, является методом
@@ -122,6 +125,8 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					else
 						@edb.bd.print()
 					end
+				elseif $command_objects[i]='comment':
+					!@ фиктивный метод comment позволяет добавлять фиктивные команды с комментариями
 				else
 					msg "edb: bd: Неизвестный метод для Базы Данных <<$command_objects[i]>>"
 				end
@@ -264,6 +269,26 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 					end
 				else
 					msg "edb: dt: Неизвестный метод <<$command_objects[i]>>{}"
+				end
+			elseif $last_object['type']='table_col':
+				if $command_objects[i]='print':
+					if $command_arguments[i]<>'{}':
+						$command_arguments[i]=@edb.slice($command_arguments[i])
+						if strcomp($command_arguments[i],'%args\d+%'):
+							!@ если в качестве аргумента передана ссылка, заменяем её на значение из $args
+							args['num'] = val($strfind($command_arguments[i],'%args(\d+)%',1))
+							if args['num']<>0: $command_arguments[i]=$args[args['num']]
+						end
+						@edb.col.print($EASY_DATABASE['current_data_table'],$EASY_DATABASE['current_col'],$command_arguments[i])
+					else
+						@edb.col.print($EASY_DATABASE['current_data_table'],$EASY_DATABASE['current_col'])
+					end
+				elseif $command_objects[i]='setCur':
+					!@ метод выставления колонки, как текущей.
+					!@ Не вижу ситуаций, когда бы была необходимость вызывать данный метод
+					@edb.col.setCur($EASY_DATABASE['current_data_table'],$command_objects[i-1])
+				else
+					msg "edb: col: Неизвестный метод <<$command_objects[i]>>{}"
 				end
 			end
 		end
