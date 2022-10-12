@@ -1,0 +1,35 @@
+QSP-Game функция делает строку текущей
+$args[0]	—	идентификатор таблицы данных
+$args[1]	—	идентификатор строки
+args[2]	-	2 - мы имеем дело с идентификатором, 1 - мы имеем дело с числом
+$args[3] - управление. [hard] - управление позволяет заставить при передаче идентификатор назначить в т.ч и текущий номер строки
+# edb.row.setCur
+$args[19]=$args[19]
+if $EASY_DATABASE['current_data_table']=$args[0] and $args[1]<>'':
+	!@ быстро определяем число перед нами или идентификатор
+	if args[2]=0: args[2]=iif(@edb.row.isNum($args[1]),1,2)
+	!@ пытаемся получить идентификатор колонки идентификаторов
+	$args['id_column']=$arritem('$'+$args[0],'id_column')
+	if args[2]=1:
+		!@ если перед нами число, назначаем это число номером текущей строки
+		$EASY_DATABASE['current_row']=$args[1]
+		if $args['id_column']<>'':
+			!@ если колонка идентификаторов существует, назначаем и текущий идентификатор
+			$EASY_DATABASE['current_id']=$arritem('$'+$args[0]+'_'+$args['id_column'],val($args[1]))
+		else
+			$EASY_DATABASE['current_id']=''
+		end
+	elseif args[2]=2:
+		!@ если перед нами идентификатор, назначаем только идентификатор
+		$EASY_DATABASE['current_id']=$args[1]
+		!@ только в крайней необходимости помимо идентификатора назначаем и текущую строку
+		if $args[3]='[hard]' and $args['id_column']<>'':
+			$EASY_DATABASE['current_row']=$str(arrpos('$'+$args[0]+'_'+$args['id_column'],$args[1]))
+		else
+			$EASY_DATABASE['current_row']=''
+		end
+	end
+else
+	msg "edb.row.setCur: Невозможно назначить текущей строку «<<$args[1]>>», так как таблица «<<$args[0]>>» не является текущей."
+end
+--- edb.row.setCur ---------------------------------

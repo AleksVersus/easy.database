@@ -64,21 +64,38 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 		if $command_arguments[i]='':
 			!@ объект, с которым мы работаем, не является методом
 			!@ pl 'Объект в цепочке: <<$command_objects[i]>>' & wait 100 	& !@< выводим команду
-			if $last_object['type']=''and $command_objects[i]='bd':
+			if $last_object['type']='unknown':
+				msg "Попытка обращения к несуществующему объекту «<<$last_object['id']>>». Предыдущий объект в цепочке «<<$last_object['content']>>»"
+				jump 'end_command'
+			elseif $last_object['type']=''and $command_objects[i]='bd':
 				!@ если предыдущего объекта в цепочке нет и ссылка похожа на ссылку на базу данных		
 				!@ значит объект, с которым мы работаем, является базой данных
-				$last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
+				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
 			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
-				$last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
+				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
 			elseif $last_object['type']='data_table' and @edb.list.isEl($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект Таблица данных, а мы имеем дело с колонкой, которая в этой таблице данных существует
-				$last_object['type'],$last_object['id'],$last_object['content']=@edb.col.implicit($EASY_DATABASE['current_data_table'],$command_objects[i])	& !@ неявный метод вызываем всегда
+				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.col.implicit($EASY_DATABASE['current_data_table'],$command_objects[i])	& !@ неявный метод вызываем всегда
+			elseif $last_object['type']='data_table' and no @edb.list.isEl($last_object['content'],$command_objects[i]):
+				!@ если предыдущий объект Таблица данных, а мы имеем дело с не колонкой, которая в этой таблице данных существует
+				!@ значит, вероятнее всего мы имеем дело со строкой. тогда надо проверить правда ли это строка
+				args['isRow']=@edb.row.isThere($EASY_DATABASE['current_data_table'],$command_objects[i])
+				if args['isRow']:
+					!@ если это строка, тогда мы вызываем неявный метод к строке
+					set $last_object['type'],$last_object['id'],$last_object['content']=@edb.row.implicit($EASY_DATABASE['current_data_table'],$command_objects[i],args['isRow'])	& !@ неявный метод вызываем всегда
+				else
+					!@ если это не строка, то это непонятно что
+					set $last_object['type'],$last_object['id'],$last_object['content']='unknown',$command_objects[i],$command_objects[i-1]
+				end
 			end
 		else
 			!@ объект, с которым мы работаем, является методом
 			!@ pl 'Объект в цепочке: «<<$command_objects[i]>>», Тип предыдущего <<$last_object["type"]>>' & wait 100 	& !@< выводим команду
-			if $last_object['type']='data_base':
+			if $last_object['type']='unknown':
+				msg "Попытка обращения к несуществующему объекту «<<$last_object['id']>>». Предыдущий объект в цепочке «<<$last_object['content']>>»"
+				jump 'end_command'
+			elseif $last_object['type']='data_base':
 				!@ pl 'edb: bd: Команда для базы данных' & wait 100 	& !@< выводим
 				!@ это метод для базы данных
 				if $command_objects[i]='newTable':
@@ -293,6 +310,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			end
 		end
 	end
+	:end_command
 	!@ теперь необходимо удалить команды, чтобы на следующей итерации выполнять другую команду
 	killvar '$command_objects' & killvar '$command_arguments' & killvar '$last_object' & killvar '$parse_arguments'
 end
