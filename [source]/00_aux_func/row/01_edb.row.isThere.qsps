@@ -4,17 +4,17 @@ $args[1] - идентификатор или номер строки
 # edb.row.isThere
 $args[1]=$args[1]	& !@ идентификатор строки
 $args['id_column']=$arritem('$'+$args[0],'id_column')	& !@ колонка идентификаторов
-$args['first_col']=@em.str.getWord($arritem('$'+$args[0],'columns'),1)	& !@ самая первая колонка в таблице данных
+$args['first_col']=$args[0]+'_'+@em.str.getWord($arritem('$'+$args[0],'columns'),1)	& !@ самая первая колонка в таблице данных
 if $args['first_col']<>'':
 	!@ если в таблице данных есть хоть одна колонка
 	if strcomp($args[1],'[123456789]\d*'):
 		!@ если передано число
 		if $args['id_column']<>'':
 			!@ если существует колонка идентификаторов
-			if arrpos($args['id_column'],$args[1])<>-1:
+			if arrpos('$'+$args[0]+'_'+$args['id_column'],$args[1])<>-1:
 				!@ и данный идентификатор присутствует в колонке, можно вернуть true - такая строка существует
 				result=2	& !@ в данном случае двойка показывает, что это именно идентификатор
-			elseif val($args[1])<arrsize($args['id_column']):
+			elseif val($args[1])<arrsize($args[0]+'_'+$args['id_column']):
 				!@ если идентификатор не присутствует в колонке, значит мы имеем дело с числом
 				!@ и если оно попадает в высоту колонки, снова возвращаем true
 				result=1
@@ -29,7 +29,7 @@ if $args['first_col']<>'':
 		end
 	else
 		!@ если это не число
-		if $args['id_column']<>'' and arrpos($args['id_column'],$args[1])<>-1:
+		if $args['id_column']<>'' and arrpos('$'+$args[0]+'_'+$args['id_column'],$args[1])<>-1:
 			!@ если колонка идентификаторов существует и данный идентификатор присутствует в нём
 			result=2	& !@ возвращаем два, то есть указываем, что это именно идентификатор
 		else
