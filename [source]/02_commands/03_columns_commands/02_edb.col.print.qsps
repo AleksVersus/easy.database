@@ -19,6 +19,8 @@ elseif instr($args[2],'[instat]')<>0:
 	pl $args['res']
 elseif instr($args[2],'[inresult]')<>0:
 	$result=$args['res']
+else
+	*pl $args['res']
 end
 --- edb.col.print ---------------------------------
 

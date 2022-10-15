@@ -2,15 +2,55 @@ QSP-Game функция применения неявного метода к о
 $args[0]	—	идентификатор таблицы данных
 $args[1]	—	идентификатор строки
 args[2] - если передано число, отличное от нуля, можно сразу понять без доп вычислений, передан уже готовый идентификатор (2) или номер строки (1)
-# edb.col.implicit
+# edb.row.implicit
+local $edb_row_implicit_column_list
 if args[2]=0: args[2]=@edb.row.isThere($args[0],$args[1])
-$result=('table_row',$args[1],'')
+$args['columns_list']=$arritem('$'+$args[0],'columns')	& !@ список колонок
+@em.str.inArr($args['column_list'],'$edb_row_implicit_column_list','|',"[notspace][trim][strip]")
+loop args['i']=0 while args['i']<arrsize('$edb_row_implicit_column_list') step args['i']+=1:
+	!@ если столбец заполнен значением отличным от значения по умолчанию, добавляем его в список
+	$args['col_name']=$dyneval( {
+		$args[0]=$args[0] & !@ таблица данных
+		$args[1]=$args[1] & !@ колонка
+		$args[2]=$args[2] & !@ строка (идентификатор или число)
+		args[3]=args[3] & !@ управление 2 - идентификатор или 1 - число
+		$args['type']=$arritem('$'+$args[0]+'_'+$args[1],0)	& !@ получаем тип
+		if args[3]=2:
+			!@ по айди
+			if $args['type']='num' and arritem($args[0]+'_'+$args[1],$args[1])<>0:
+				$result=$args[1]
+				exit
+			elseif $args['type']<>'num' and $arritem('$'+$args[0]+'_'+$args[1],$args[1])<>'':
+				$result=$args[1]
+				exit
+			else
+				$result=''
+				exit
+			end
+		else
+			!@ по числу
+			if $args['type']='num' and arritem($args[0]+'_'+$args[1],val($args[1])<>0:
+				$result=$args[1]
+				exit
+			elseif $args['type']<>'num' and $arritem('$'+$args[0]+'_'+$args[1],val($args[1]))<>'':
+				$result=$args[1]
+				exit
+			else
+				$result=''
+				exit
+			end
+		end
+
+	},$args[0],$edb_row_implicit_column_list[args['i']],$args[1],args[2] )
+	if $args['col_name']<>'': $args['exit_cols']+='|'+$args['col_name']
+end
+$result=('table_string',$args[1],$mid($args['exit_cols'],2))
 !@ делаем строку текущей
 @edb.row.setCur($args[0],$args[1],args[2])
---- edb.col.implicit ---------------------------------
+--- edb.row.implicit ---------------------------------
 
 Функция возвращает кортеж из трёх элементов
 
-table_row- тип объекта: Строка Таблицы данных.
+table_string- тип объекта: Строка Таблицы данных.
 идентификатор строки Таблицы Данных или её номер
-никакой доп информации из строки не извлечь, третье значение пустое
+список заполненных колонок или пустое значение
