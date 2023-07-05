@@ -5,16 +5,16 @@ $args[1] - искомое значение
 $args[2] - разделитель (по умолчанию вертикальная черта)
 # edb.list.isEl
 !@ объявляем локальные переменные
-local $list,$element,$delimiter=$args[0],$args[1],$args[2]
+local $list_, $element_, $delimiter_ = $args[0], $args[1], $args[2]
 !@ разделитель по умолчанию
-if $delimiter='': $delimiter='|'
+if $delimiter_ = '': $delimiter_ = '|'
 !@ костылим список, чтобы легко искать элемент
-$list=$delimiter+$list+$delimiter
+$list_ = $delimiter_ + $list_ + $delimiter_ 
 !@ ищем элемент
 !@ pl "edb.list.isEl «<<$list>>» «<<$element>>»" & wait 100 	& !@< выводим
-if instr($list,$delimiter+$element+$delimiter)<>0:
-	result=1
+if instr($list_, $delimiter_ + $element_ + $delimiter_) <> 0:
+	result = 1
 else
-	result=0
+	result = 0
 end
 --- edb.list.remove ---------------------------------

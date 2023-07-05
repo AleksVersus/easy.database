@@ -1,7 +1,9 @@
 QSP-Game функция применения неявного метода к объекту Таблица Данных
+
 $args[0]	—	идентификатор таблицы данных
+
 # edb.dt.implicit
-$result=('data_table',$args[0],$arritem('$'+$args[0],'columns'))
+$result = ('data_table', $args[0], $arritem('$'+$args[0], 'columns'))
 !@ делаем таблицу текущей
 @edb.dt.setCur($args[0])
 --- edb.dt.implicit ---------------------------------

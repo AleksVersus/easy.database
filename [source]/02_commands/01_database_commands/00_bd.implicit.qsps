@@ -1,6 +1,7 @@
-QSP-Game функция применения неявного метода к объекту Базы Данных
+QSP-Game Информация о базе данных
+
 # edb.bd.implicit
-$result=('data_base','',$EASY_DATABASE['data_table_ids'])
+$result = ('data_base', '', $EASY_DATABASE['data_table_ids'])
 --- edb.bd.implicit ---------------------------------
 
 Возвращает кортеж значений:
