@@ -1,19 +1,26 @@
 QSP-Game функция, распечатывающая информацию о Базе Данных
+
 $args[0] - управление
-# edb.bd.print
-local $command=$lcase($args[0])
-local $export,$nr='','
+
+# edb.print
+local $command = $lcase($args[0])
+local $export, $nr = '', '
 '
 if instr($command,'[inres]')<>0: $command=$replace($command,'[inres]','[inresult]') 
 !@ ------------------ непосредственно информация о базе данных --------------------
-	$export+="Идентификаторы Таблиц Данных: "+$EASY_DATABASE['data_table_ids']+$nr
-	$export+="Число созданных Таблиц Данных: "+EASY_DATABASE['data_table.counter']+$nr
-	$export+="Число существующих Таблиц Данных: "+EASY_DATABASE['data_table.number']+$nr
+if arrsize('EASY_DATABASE') <> 0:
+	$export+="Идентификатор базы данных: "+$EASY_DATABASE['id']+$nr
+	$export+="Идентификаторы Таблиц Данных: "+$EASY_DATABASE['data_tables.ids']+$nr
+	$export+="Число созданных Таблиц Данных: "+EASY_DATABASE['data_tables.counter']+$nr
+	$export+="Число существующих Таблиц Данных: "+EASY_DATABASE['data_tables.number']+$nr
 	$export+="Текущая Таблица Данных: "+$EASY_DATABASE['current_data_table']+$nr
 	$export+="Текущий столбец: "+$EASY_DATABASE['current_col']+$nr
 	$export+="Текущая строка (номер): "+$EASY_DATABASE['current_row']+$nr
 	$export+="Текущая строка (идентификатор): "+$EASY_DATABASE['current_id']+$nr
 	$export+="Последовательность ключей: "+$EASY_DATABASE['current_key']+$nr
+else:
+	$export+='База данных не инициализирована'
+end
 !@ ------------------ непосредственно информация о базе данных --------------------
 if $command='' or instr($command,'[inmain]')<>0:
 	*pl $export
@@ -22,7 +29,7 @@ elseif instr($command,'[instat]')<>0:
 elseif instr($command,'[inresult]')<>0:
 	$result=$export
 end
---- edb.bd.print ---------------------------------
+--- edb.print ---------------------------------
 
 $args[0]:
 	пустая строка - вывод в окно основного описания
