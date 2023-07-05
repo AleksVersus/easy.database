@@ -1,0 +1,11 @@
+QSP-Game Информация о базе данных
+
+# edb.implicit
+$result = ('data_base', $EASY_DATABASE['id'], $EASY_DATABASE['data_table_ids'])
+--- edb.implicit ---------------------------------
+
+Возвращает кортеж значений:
+
+data_base - тип объекта База Данных
+$EASY_DATABASE['id'] - идентификатор базы данных. Пользы не много от него пока что.
+$EASY_DATABASE['data_table_ids'] — список идентификаторов таблиц данных
