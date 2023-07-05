@@ -1,21 +1,17 @@
 QSP-Game функция создания таблицы данных
 $args[0] - идентификатор таблицы данных ID
 $args[1] - название таблицы NAME
-# edb.bd.newTable
+# edb.newTable
+if $EASY_DATABASE['id'] = '':  msg 'bd.newTable: база данных не инициализирована.' & exit
 if $args[0]='': msg 'bd.newTable: не передан ID таблицы данных.' & exit
 if instr($args[0],'$')=1: $args[0]=$mid($args[0],2)	& !@ отрезаем первый символ, если это символ $
-if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$args[0]):
-	!@ $EASY_DATABASE - глобальный массив.
+if no @edb.list.isEl($EASY_DATABASE['data_tables.ids'], $args[0]):
 	!@ Вносим идентификатор таблицы данных в список
-	if $EASY_DATABASE['data_table_ids']='':
-		$EASY_DATABASE['data_table_ids']=$args[0]
-	else
-		$EASY_DATABASE['data_table_ids']+='|'+$args[0]
-	end
+	$EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
 	!@ увеличиваем счётчик созданных баз
-	EASY_DATABASE['data_table.counter']+=1
+	EASY_DATABASE['data_table.counter'] += 1
 	!@ увеличиваем число существующих баз
-	EASY_DATABASE['data_table.number']+=1
+	EASY_DATABASE['data_table.number'] += 1
 	!@ создаём запись в массиве, описывающем таблицу данных
 	!@ вносим идентификатор и название таблицы
 	dynamic "
@@ -25,9 +21,20 @@ if no @edb.list.isEl($EASY_DATABASE['data_table_ids'],$args[0]):
 	!@ делаем созданную таблицу текущей
 	@edb.dt.setCur($args[0])
 	!@ pl 'bd.newTable: Создана Таблица данных «<<$args[0]>>».'
+	dynamic "
+		$<<$args[0]>>_id[0]='ids'
+	"
+	$EASY_DATABASE['current_col'] = 'id'
+	!@ прописываем колонку в списке колонок в таблице данных, а так же тип колонки
+	dynamic "
+		$<<$args[0]>>['columns'] = @edb.list.append($<<$args[0]>>['columns'],'id')
+		$<<$args[0]>>['id','col_type'] = 'ids'
+		$<<$args[0]>>['id_column'] = 'id'
+	"
 else
 	msg 'bd.newTable: Таблица данных «<<$args[0]>>» уже существует.'
 end
---- edb.bd.newTable ---------------------------------
+--- edb.newTable ---------------------------------
 
 Внимание!!! Поскольку данная функция работает с массивами, во избежание пересечения имён с уже существующими массивами число локальных переменных в функции сведено к минимуму, именно поэтому здесь так много используется args
+
