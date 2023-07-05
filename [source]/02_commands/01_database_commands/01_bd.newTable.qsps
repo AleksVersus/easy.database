@@ -1,10 +1,12 @@
 QSP-Game функция создания таблицы данных
+
 $args[0] - идентификатор таблицы данных ID
 $args[1] - название таблицы NAME
-# edb.newTable
-if $EASY_DATABASE['id'] = '':  msg 'bd.newTable: база данных не инициализирована.' & exit
-if $args[0]='': msg 'bd.newTable: не передан ID таблицы данных.' & exit
-if instr($args[0],'$')=1: $args[0]=$mid($args[0],2)	& !@ отрезаем первый символ, если это символ $
+
+# edb.new_table
+if $EASY_DATABASE['id'] = '':  msg 'bd.new_table: база данных не инициализирована.' & exit
+if $args[0]='': msg 'bd.new_table: не передан ID таблицы данных.' & exit
+if instr($args[0],'$') = 1: $args[0]=$mid($args[0],2)	& !@ отрезаем первый символ, если это символ $
 if no @edb.list.isEl($EASY_DATABASE['data_tables.ids'], $args[0]):
 	!@ Вносим идентификатор таблицы данных в список
 	$EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
@@ -19,8 +21,8 @@ if no @edb.list.isEl($EASY_DATABASE['data_tables.ids'], $args[0]):
 		$<<$args[0]>>['NAME']='<<$args[1]>>'
 	"
 	!@ делаем созданную таблицу текущей
-	@edb.dt.setCur($args[0])
-	!@ pl 'bd.newTable: Создана Таблица данных «<<$args[0]>>».'
+	@edb.dt.set_cur($args[0])
+	!@ pl 'bd.new_table: Создана Таблица данных «<<$args[0]>>».'
 	dynamic "
 		$<<$args[0]>>_id[0]='ids'
 	"
@@ -32,9 +34,9 @@ if no @edb.list.isEl($EASY_DATABASE['data_tables.ids'], $args[0]):
 		$<<$args[0]>>['id_column'] = 'id'
 	"
 else
-	msg 'bd.newTable: Таблица данных «<<$args[0]>>» уже существует.'
+	msg 'bd.new_table: Таблица данных «<<$args[0]>>» уже существует.'
 end
---- edb.newTable ---------------------------------
+--- edb.new_table ---------------------------------
 
 Внимание!!! Поскольку данная функция работает с массивами, во избежание пересечения имён с уже существующими массивами число локальных переменных в функции сведено к минимуму, именно поэтому здесь так много используется args
 

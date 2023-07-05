@@ -114,14 +114,14 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 			elseif $last_object['type']='data_base':
 				!@ pl 'edb: bd: Команда для базы данных' & wait 100 	& !@< выводим
 				!@ это метод для базы данных
-				if $command_objects[i]='newTable':
+				if $command_objects[i]='new_table':
 					!@ метод создания новой таблицы данных
-					!@ pl 'Парсер. newTable: <<$command_arguments[i]>>' & wait 100 	& !@< выводим
+					!@ pl 'Парсер. new_table: <<$command_arguments[i]>>' & wait 100 	& !@< выводим
 					if $command_arguments[i]<>'{}':
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[strip]")
-						@edb.bd.newTable($parse_arguments[0],$parse_arguments[1])
+						@edb.bd.new_table($parse_arguments[0],$parse_arguments[1])
 					else
-						msg "edb: bd: Метод newTable получил пустой аргумент."
+						msg "edb: bd: Метод new_table получил пустой аргумент."
 					end
 				elseif $command_objects[i]='delTables':
 					!@ метод удаления таблиц
@@ -184,7 +184,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 				elseif $command_objects[i]='setCur':
 					!@ метод выставления таблицы, как текущей.
 					!@ Не вижу ситуаций, когда бы была необходимость вызывать данный метод
-					@edb.dt.setCur($command_objects[i-1])
+					@edb.dt.set_cur($command_objects[i-1])
 				elseif $command_objects[i]='newCol':
 					if $command_arguments[i]<>'{}':
 						@em.str.inArr(@edb.slice($command_arguments[i]),'$parse_arguments',',',"[notspace][trim][strip]")

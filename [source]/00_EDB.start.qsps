@@ -13,7 +13,7 @@ showobjs 0
 usehtml=1
 
 @edb.init()
-@edb.newTable('objects', 'Main Table')
+@edb.new_table('objects', 'Main Table')
 
 @edb.print()
 *pl

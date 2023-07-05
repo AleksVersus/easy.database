@@ -1,5 +1,7 @@
 QSP-Game Инициализация базы данных (новая база данных)
+
 # edb.init
+
 $EASY_DATABASE['id'] = @edb.gen_uuid()
 $EASY_DATABASE['data_tables.ids'] = ''
 EASY_DATABASE['data_tables.counter'] = 0
@@ -10,4 +12,5 @@ $EASY_DATABASE['current_col'] = ''
 $EASY_DATABASE['current_row'] = ''
 $EASY_DATABASE['current_id'] = ''
 $EASY_DATABASE['current_keys'] = ''
+
 --- edb.init ---------------------------------
