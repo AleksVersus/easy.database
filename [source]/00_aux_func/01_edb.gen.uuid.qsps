@@ -1,0 +1,7 @@
+QSP-Game генератор идентификатора типа uuid
+
+# edb.gen_uuid
+$result = @em.str.random(8,'[ot]','0123456789abcdef')+'-'+@em.str.random(4,'[ot]','0123456789abcdef')+'-'+@em.str.random(4,'[ot]','0123456789abcdef')+'-'+@em.str.random(4,'[ot]','0123456789abcdef')+'-'+@em.str.random(12,'[ot]','0123456789abcdef')
+--- edb.gen_uuid ---------------------------------
+
+
