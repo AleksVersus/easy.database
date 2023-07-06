@@ -2,7 +2,7 @@ QSP-Game Делаем указанную таблицу данных текущ�
 $args[0] - идентификатор таблицы данных
 # edb.dt.set_cur
 !@ если прошлая и текущая не совпадают
-if $EASY_DATABASE['last_data_table']<>$EASY_DATABASE['current_data_table']:
+if $EASY_DATABASE['last_data_table'] <> $EASY_DATABASE['current_data_table']:
 	!@ обнуляем текущие столбец, строку и идентификатор строки, а так же список ключей
 	$EASY_DATABASE['current_col']=''
 	$EASY_DATABASE['current_row']=''

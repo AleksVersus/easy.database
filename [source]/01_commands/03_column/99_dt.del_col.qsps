@@ -1,0 +1,39 @@
+QSP-Game Удаление столбца из таблицы данных
+
+$args[0] - идентификатор колонки
+$args[1] - идентификатор таблицы данных
+
+# edb.dt.del_col
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@ предохранители
+if $EASY_DATABASE['ID'] = '':
+	msg "dt.del_col: Невозможно выполнить. База данных не инициализирована."
+	exit
+end
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):
+	msg 'dt.del_col: Невозможно выполнить. Таблица данных «<<$args[1]>>» не существует.'
+	exit
+end
+if $args[1] = '':
+	msg 'dt.del_col: Невозможно выполнить. Не указан идентификатор таблицы данных.'
+	exit
+end
+if $args[0] = '':
+	msg 'dt.del_col: Невозможно выполнить. Не указан идентификатор колонки.'
+	exit
+end
+if $args[0] = 'id':
+	msg 'dt.del_col: Нельзя удалить колонку первичных ключей без удаления таблицы данных.'
+	exit
+end
+!@ удаляем массив колонки
+killvar '$<<$args[1]>>_<<$args[0]>>'
+dynamic "
+!@pp: если колонка является текущей, снимаем с неё укзатель
+	if $<<$args[1]>>['current_col'] = '<<$args[0]>>':
+		$<<$args[1]>>['current_col'] = ''
+	end
+!@pp: удаляем идентификатор колонки из списка
+	$<<$args[1]>>['columns'] = @edb.list.remove($<<$args[1]>>['columns'], '<<$args[0]>>')
+"
+--- edb.dt.del_col ---------------------------------

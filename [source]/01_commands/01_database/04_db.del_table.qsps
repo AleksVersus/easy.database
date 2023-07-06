@@ -1,0 +1,46 @@
+QSP-Game Удалить таблицу данных
+
+$args[0] - идентификатор таблицы данных
+
+# edb.del_table
+!@ предохранители
+if $EASY_DATABASE['ID'] = '':
+	msg "edb.del_table: Невозможно выполнить. База данных не инициализирована."
+	exit
+end
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]):
+	msg 'edb.del_table: Невозможно выполнить. Таблица данных «<<$args[0]>>» не существует.'
+	exit
+end
+if $args[0] = '':
+	msg 'edb.del_table: Невозможно выполнить. Не указан идентификатор таблицы данных.'
+	exit
+end
+
+!@ получаем список колонок в таблице данных:
+local $edb_bd_deltable_columns_list_
+@em.str.inArr($arritem('$<<$args[0]>>', 'columns'), '$edb_bd_deltable_columns_list_', '|', '[notspace][trim][strip]')
+!@ проходим циклом по всем колонкам и уничтожаем массивы
+loop local i = 0 while i < arrsize('$edb_bd_deltable_columns_list_') step i += 1:
+	if $edb_bd_deltable_columns_list_[i] <> 'id':
+		@edb.dt.del_col($edb_bd_deltable_columns_list_[i], $args[0])
+	end
+end
+
+!@ удаляем колонку первичных ключей
+killvar '$<<$args[0]>>_id'
+dynamic "
+	if $<<$args[0]>>['current_col'] = 'id':
+		$<<$args[0]>>['current_col'] = ''
+	end
+	$<<$args[0]>>['columns'] = @edb.list.remove($<<$args[0]>>['columns'], 'id')
+"
+
+!@  -------------------- из базы данных удаляем записи --------------------
+!@ уменьшаем счётчик существующих таблиц
+EASY_DATABASE['data_tables.number'] -= 1
+!@ удаляяем запись о таблице из списка идентификаторов таблиц
+$EASY_DATABASE['data_table_ids'] = @edb.list.remove($EASY_DATABASE['data_table_ids'], $args[0])
+!@ снимаем указатель с базы данных, если это текущая база данных
+if $EASY_DATABASE['current_data_table'] = $args[0]: $EASY_DATABASE['current_data_table'] = ''
+--- edb.del_table ---------------------------------
