@@ -92,7 +92,7 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 				!@ если предыдущий объект был колонка, значит мы сто процентов имеем дело со строкой. Не важно, существует она или нет,
 				!@ мы пытаемся с ней работать. Определяем, не число ли упавший к нам идентификатор
 				!@ !!! ЭТО ПРИМИТИВНЕЙШЕЕ ОПРЕДЕЛЕНИЕ, чтобы не грузить и без того перегруженный алгоритм
-				args['isRow']=iif(@edb.row.isNum($command_objects[i]),1,2)
+				args['isRow']=iif(@eedb.row.is_num($command_objects[i]),1,2)
 				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.row.implicit($EASY_DATABASE['current_data_table'],$command_objects[i],args['isRow'])	& !@ неявный метод вызываем всегда
 				!@ однако поскольку мы сослались и на столбец и на строку, значит мы уже работаем с ячейкой!
 				if $EASY_DATABASE['current_id']<>'':

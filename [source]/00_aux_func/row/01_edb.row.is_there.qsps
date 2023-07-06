@@ -4,7 +4,10 @@ $args[0] - идентификатор таблицы данных
 $args[1] - идентификатор строки. Первичный ключ.
 
 # edb.row.is_there
-if $arritem('$<<$args[0]>>', 'ID') = '': msg 'row.is_there: Таблица данных «<<$args[0]>>» не создана.' & exit
+if $arritem('$<<$args[0]>>', 'ID') = '':
+	msg 'row.is_there: Таблица данных «<<$args[0]>>» не создана.'
+	exit
+end
 result = iif(arrpos('$<<$args[0]>>_id', $args[1]) <> -1, 1, 0)
 --- edb.row.is_there ---------------------------------
 

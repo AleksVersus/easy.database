@@ -4,7 +4,7 @@ $args[1]	—	идентификатор колонки
 $args[2]	—	идентификатор строки
 args[3] - 2 (идентификатор) или 1 (номер) (строки)
 # edb.cell.implicit
-if args[3]=0: args[3]=iif(@edb.row.isNum($args[2]),1,2)
+if args[3]=0: args[3]=iif(@eedb.row.is_num($args[2]),1,2)
 if args[3]=2:
 	$args['row_id']=$args
 end

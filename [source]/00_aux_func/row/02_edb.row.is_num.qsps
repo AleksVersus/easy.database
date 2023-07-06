@@ -1,10 +1,7 @@
 QSP-Game проверка, является ли строка приемлемым числом
-# edb.row.isNum
-if strcomp($args[0],'[123456789]\d*'):
-	result=1
-else
-	result=0
-end
---- edb.row.isNum ---------------------------------
+
+# edb.row.is_num
+result = iif(strcomp($args[0],'[123456789]\d*'), 1, 0):
+--- edb.row.is_num ---------------------------------
 
 Это не метод, это вспомогательная функция

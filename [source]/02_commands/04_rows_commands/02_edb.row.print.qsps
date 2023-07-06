@@ -11,7 +11,7 @@ local $edb_row_print_column_list
 $args['columns_list']=$arritem('$'+$args[0],'columns')	& !@ список колонок в таблице данных
 pl $args['columns_list'] & wait 100 	& !@< выводим
 @em.str.inArr($args['columns_list'],'$edb_row_print_column_list','|',"[notspace][trim][strip]")
-if instr($args[2],'[idtype:')=0: args['idtype']=iif(@edb.row.isNum($args[1]),1,2) else args['idtype']=val(@em.tag.getNum($args[2],'idtype'))
+if instr($args[2],'[idtype:')=0: args['idtype']=iif(@eedb.row.is_num($args[1]),1,2) else args['idtype']=val(@em.tag.getNum($args[2],'idtype'))
 if instr($args[2],'[notable]')=0: $args['res']+='<table border=1 cellpadding=5><tramplin1></tramplin1><tramplin2></tramplin2>'
 !@ ----------------- непосредственно сборка информациии в переменную ----------------
 	loop args['i']=0 while args['i']<arrsize('$edb_row_print_column_list') step args['i']+=1:
