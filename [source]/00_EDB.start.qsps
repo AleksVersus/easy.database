@@ -14,10 +14,8 @@ usehtml=1
 
 @edb.init()
 @edb.new_table('objects', 'Main Table')
-
-@edb.print()
 *pl
-@edb.dt.print('objects')
+
 --- edb.start ---------------------------------
 
 
@@ -25,12 +23,17 @@ usehtml=1
 # edb.usercom
 !@ проверяем, присутствует ли в строке от пользователя команда к парсеру
 local $bd_command=$strfind($user_text,'^\s*(>\s*\S+|bd)(\.\S+(\{[\s\S]*?\})?)*\s*$')
-if $bd_command<>'':
-	!@ если команда есть, выполняем
-	$bd_command=$trim($replace($bd_command,$strfind($bd_command,'^\s*>\s*')))
-	@edb($bd_command)
-elseif $user_text='dt.objects':
-	@em.fewArrs.print('$objects_id','$objects_body','$objects_position','$objects_include','objects_kolvo','objects_charge','$objects_run')
+
+if instr($user_text, '>') = 1:
+	local $db_prove_
+	@em.str.inArr($user_text, '$db_prove_', '>', '[strip]')
+	if $user_text = '>':
+		@edb.print()
+	elseif arrsize('$db_prove_') = 2:
+		@edb.dt.print($db_prove_[1])
+	elseif arrsize('$db_prove_') = 2:
+		@edb.dt.print($db_prove_[1])
+	end
 else
 	dynamic $user_text
 end

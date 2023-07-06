@@ -7,7 +7,7 @@ $args[1]=$lcase($args[1])	& !@ переводим управление в ниж
 if instr($args[1],'[inres]')<>0: $args[1]=$replace($args[1],'[inres]','[inresult]')
 $args['res'], $args['nr'] = '','
 '
-$args['columns_list']=$arritem('$'+$args[0],'columns')	& !@ список колонок в таблице данных
+$args['columns_list'] = $arritem('$'+$args[0],'columns')	& !@ список колонок в таблице данных
 
 !@ ----------------- непосредственно сборка информациии в переменную ----------------
 	$args['res']+="Идентификатор Таблицы Данных: "+$arritem('$'+$args[0],'ID')+$args['nr']
