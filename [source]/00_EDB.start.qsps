@@ -1,4 +1,4 @@
-QSP-Game Стартовая локация Easy.DataBase
+QSP-Game Точка входа и отладчик
 
 # edb.start
 if $args[0] = '':
@@ -8,16 +8,37 @@ if $args[0] = '':
 	$usercom[] = 'edb.usercom'
 	!@ включаем распознавание html
 	usehtml=1
+	!@ моноширинный шрифт
+	$fname = 'Consolas'
 	!@ отключаем ненужные окна
 	showacts 0
 	showobjs 0
 
 	"
-		Easy DataBase -> Система Управления Базой Данных
+	Easy DataBase -> Система Управления Базой Данных.
 
-		Все команды для строки ввода должны начинаться с ключевого слова `edb`.
+	Репозиторий с исходниками библиотеки:
 
-		Для получения списка команд, введите команду `edb help`.
+	*	https://github.com/AleksVersus/easy.math
+
+	По всем вопросам и предложениям обращаться:
+
+	*	aleksversus@mail.ru
+	*	https://vk.com/id40090736
+
+	Заходите на мой сайт:
+
+	*	aleksversus.narod.ru
+	
+	Обучающие видео по программированию на QSP:
+	
+	*	https://www.youtube.com/channel/UCwX8RW2B9yTUFdlivtCGAgA
+
+	Вы можете опробовать управление базой данных, вводя команды в строку ввода.
+
+	Все команды должны начинаться с ключевого слова `edb`.
+
+	Для получения списка команд, введите `edb help` в строку ввода.
 
 	"
 elseif $args[0]='version':
@@ -27,7 +48,6 @@ elseif $args[0] = 'em-version':
 	$args['version'] = $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
 	msg "Используемая версия `easy.math`: <<$args['version']>>. Необходимая версия: 3.0.0"
 end
-
 
 --- edb.start ---------------------------------
 
@@ -44,11 +64,14 @@ if instr($user_text, 'edb') = 1:
 		*pl '* help - вывод справки по модулю `easy.database`.'
 		*pl '* verison — текущая версия модуля.'
 		*pl '* required em — информация по используемому и необходимому easy.math.'
+		*pl '* gen id - генерирует uuid.'
 	elseif $command_line_ = 'required em' or $command_line_ = 'required easy.math':
 		*pl @edb.start('em-version')
 	elseif $command_line_ = 'version':
 		local v = @edb.start('version')
 		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
+	elseif $command_line_ = 'gen id':
+		*pl @em.gen_uuid()
 	end
 end
 --- edb.usercom ---------------------------------
