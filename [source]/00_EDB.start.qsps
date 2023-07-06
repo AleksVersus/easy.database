@@ -1,20 +1,26 @@
 QSP-Game Стартовая локация Easy.DataBase
+
 # edb.start
+if $args[0] = '':
+	!@ подключение библиотеки easy.math:
+	inclib 'easy.math.qsp'
+end
+!@ включаем обработчик строки ввода
+$usercom[] = 'edb.usercom'
+!@ включаем распознавание html
+usehtml=1
+!@ отключаем ненужные окна
+showacts 0
+showobjs 0
+
 "
 	Easy DataBase -> Система Управления Базой Данных
 
-	bd - вывод информации о базе данных
+	Все команды для строки ввода должны начинаться с ключевого слова `edb`.
+
+	Для получения списка команд, введите команду `edb help`.
 
 "
-inclib 'easy.math.qsp'
-$usercom = 'edb.usercom'
-showacts 0
-showobjs 0
-usehtml=1
-
-@edb.init()
-@edb.new_table('objects', 'Main Table')
-*pl
 
 --- edb.start ---------------------------------
 
@@ -22,20 +28,14 @@ usehtml=1
 
 # edb.usercom
 !@ проверяем, присутствует ли в строке от пользователя команда к парсеру
-local $bd_command=$strfind($user_text,'^\s*(>\s*\S+|bd)(\.\S+(\{[\s\S]*?\})?)*\s*$')
+!@ local $bd_command=$strfind($user_text,'^\s*(>\s*\S+|bd)(\.\S+(\{[\s\S]*?\})?)*\s*$')
 
-if instr($user_text, '>') = 1:
-	local $db_prove_
-	@em.str.inArr($user_text, '$db_prove_', '>', '[strip]')
-	if $user_text = '>':
-		@edb.print()
-	elseif arrsize('$db_prove_') = 2:
-		@edb.dt.print($db_prove_[1])
-	elseif arrsize('$db_prove_') = 2:
-		@edb.dt.print($db_prove_[1])
+if instr($user_text, 'edb') = 1:
+	local $command_line_ = $trim($mid($user_text, 4))
+	if $command_line_ = 'help':
+		*pl 'Основные команды для работы с базой данных:'
+		*pl '* help - вывод справки по модулю `easy.database`.'
 	end
-else
-	dynamic $user_text
 end
 --- edb.usercom ---------------------------------
 

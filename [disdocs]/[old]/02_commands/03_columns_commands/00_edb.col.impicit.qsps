@@ -1,10 +1,13 @@
 QSP-Game функция применения неявного метода к объекту Колонка Таблицы Данных
-$args[0]	—	идентификатор таблицы данных
-$args[1]	—	идентификатор колонки
+
+$args[0]	—	идентификатор колонки
+$args[1]	—	идентификатор таблицы данных
 # edb.col.implicit
-$result=('table_col',$args[1],$arritem('$'+$args[0]+'_'+$args[1],0))
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+if $args[1] = '': msg 'col.implicit: Не выбрана таблица данных.' & exit
+$result=('table_col',$args[0],$arritem('$'+$args[1]+'_'+$args[0],0))
 !@ делаем колонку текущей
-@edb.col.setCur($args[0],$args[1])
+@edb.col.set_cur($args[0], $args[1])
 --- edb.col.implicit ---------------------------------
 
 Функция возвращает кортеж из трёх элементов

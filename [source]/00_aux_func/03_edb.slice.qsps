@@ -6,7 +6,7 @@ if start_ = 0: start_ = 2
 if end_ = 0: end_ = -2
 !@ если номер передан, как отрицательное число, вычисляем его как положительное
 if start_ < 0: start_ = len($string_) + 1 + start_
-if end_ < 0: end_ = len($string_) + 1 +end_
+if end_ < 0: end_ = len($string_) + 1 + end_
 !@ в конце концов вычисляем результат
 $result = $mid($string_, start_, end_ - start_ + 1)
 --- edb.slice ---------------------------------
