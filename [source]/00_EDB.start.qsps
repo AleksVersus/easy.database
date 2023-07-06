@@ -4,23 +4,30 @@ QSP-Game Стартовая локация Easy.DataBase
 if $args[0] = '':
 	!@ подключение библиотеки easy.math:
 	inclib 'easy.math.qsp'
+	!@ включаем обработчик строки ввода
+	$usercom[] = 'edb.usercom'
+	!@ включаем распознавание html
+	usehtml=1
+	!@ отключаем ненужные окна
+	showacts 0
+	showobjs 0
+
+	"
+		Easy DataBase -> Система Управления Базой Данных
+
+		Все команды для строки ввода должны начинаться с ключевого слова `edb`.
+
+		Для получения списка команд, введите команду `edb help`.
+
+	"
+elseif $args[0]='version':
+	result = 10
+elseif $args[0] = 'em-version':
+	local v = func('!easy.math!', 'version')
+	$args['version'] = $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
+	msg "Используемая версия `easy.math`: <<$args['version']>>. Необходимая версия: 3.0.0"
 end
-!@ включаем обработчик строки ввода
-$usercom[] = 'edb.usercom'
-!@ включаем распознавание html
-usehtml=1
-!@ отключаем ненужные окна
-showacts 0
-showobjs 0
 
-"
-	Easy DataBase -> Система Управления Базой Данных
-
-	Все команды для строки ввода должны начинаться с ключевого слова `edb`.
-
-	Для получения списка команд, введите команду `edb help`.
-
-"
 
 --- edb.start ---------------------------------
 
@@ -33,8 +40,15 @@ showobjs 0
 if instr($user_text, 'edb') = 1:
 	local $command_line_ = $trim($mid($user_text, 4))
 	if $command_line_ = 'help':
-		*pl 'Основные команды для работы с базой данных:'
+		*pl 'Основные команды для работы с модулем (ключевое слово `edb` опущено):'
 		*pl '* help - вывод справки по модулю `easy.database`.'
+		*pl '* verison — текущая версия модуля.'
+		*pl '* required em — информация по используемому и необходимому easy.math.'
+	elseif $command_line_ = 'required em' or $command_line_ = 'required easy.math':
+		*pl @edb.start('em-version')
+	elseif $command_line_ = 'version':
+		local v = @edb.start('version')
+		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
 	end
 end
 --- edb.usercom ---------------------------------
