@@ -71,13 +71,13 @@ loop local i,size=0,arrsize('$command_list') while i<size step i+=1:
 				!@ если предыдущего объекта в цепочке нет и ссылка похожа на ссылку на базу данных		
 				!@ значит объект, с которым мы работаем, является базой данных
 				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.bd.implicit()	& !@ неявный метод вызываем всегда
-			elseif $last_object['type']='data_base' and @edb.list.isEl($last_object['content'],$command_objects[i]):
+			elseif $last_object['type']='data_base' and @edb.list.is_el($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект база данных, а мы имеем дело с таблицей данных, которая в этой базе данных существует
 				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.dt.implicit($command_objects[i])	& !@ неявный метод вызываем всегда
-			elseif $last_object['type']='data_table' and @edb.list.isEl($last_object['content'],$command_objects[i]):
+			elseif $last_object['type']='data_table' and @edb.list.is_el($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект Таблица данных, а мы имеем дело с колонкой, которая в этой таблице данных существует
 				set $last_object['type'],$last_object['id'],$last_object['content']=@edb.col.implicit($EASY_DATABASE['current_data_table'],$command_objects[i])	& !@ неявный метод вызываем всегда
-			elseif $last_object['type']='data_table' and no @edb.list.isEl($last_object['content'],$command_objects[i]):
+			elseif $last_object['type']='data_table' and no @edb.list.is_el($last_object['content'],$command_objects[i]):
 				!@ если предыдущий объект Таблица данных, а мы имеем дело с не колонкой, которая в этой таблице данных существует
 				!@ значит, вероятнее всего мы имеем дело со строкой. тогда надо проверить правда ли это строка
 				args['isRow']=@edb.row.isThere($EASY_DATABASE['current_data_table'],$command_objects[i])
