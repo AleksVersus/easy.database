@@ -6,39 +6,39 @@ $args[2] - разделитель
 $args[3] - управляющее слово [union] или [un] - убирает из обоих списков повторяющиеся элементы, а на выход даёт неповторяющиеся
 # edb.list.diff
 !@ объявляем локальные переменные
-local $src_list,$del_list,$delimiter,$comm=$args[0],$args[1],$args[2],$lcase($args[3])
+local $src_list_, $del_list_, $delimiter_, $comm_ = $args[0], $args[1], $args[2], $lcase($args[3])
 !@ локальные массивы для списков
-local $first_list, $second_list
+local $first_list_, $second_list_
 !@ правильная упарвляющая конструкция
-if instr($comm,'[un]')<>0: $comm=$replace($comm,'[un]','[union]')
+if instr($comm_, '[un]') <> 0: $comm_ = $replace($comm_, '[un]', '[union]')
 !@ разделитель
-if $delimiter='': $delimiter='|'
+if $delimiter_ = '': $delimiter_ = '|'
 !@ оба списка запихиваем в массивы
-@em.str.inArr($args[0],'$first_list',$delimiter,"[notspace][trim][strip]")
-@em.str.inArr($args[1],'$second_list',$delimiter,"[notspace][trim][strip]")
+@em.str.inArr($src_list_, '$first_list_', $delimiter_, "[notspace][trim][strip]")
+@em.str.inArr($del_list_, '$second_list_', $delimiter_, "[notspace][trim][strip]")
 !@ теперь сравниваем списки, оставляя только несовпадающие значения
-loop local i,size,pos=0,max(arrsize('first_list'),arrsize('second_list')),-1 while i<size step i+=1:
-	if $first_list[i]<>'':
-		pos=arrpos('$second_list',$first_list[i])
-		if pos<>-1:
-			$first_list[i]=''
-			$second_list[pos]=''
+loop local i, size_, pos_ = 0, max(arrsize('first_list'), arrsize('second_list')), -1 while i<size_ step i+=1:
+	if $first_list_[i] <> '':
+		pos_ = arrpos('$second_list_', $first_list_[i])
+		if pos_ <> -1:
+			$first_list_[i] = ''
+			$second_list_[pos_] = ''
 		end
 	else
-		i=size
+		i = size_
 	end
 end
 !@ когда из списков удалены все совпадающие значения, составляем новый список
-loop local i,size=0,arrsize('first_list') while i<size step i+=1:
-	if $first_list[i]<>'': $result+=$delimiter+$first_list[i]
+loop local i, size_ = 0, arrsize('first_list') while i<size_ step i+=1:
+	if $first_list_[i] <> '': $result += $delimiter_ + $first_list_[i]
 end
-if instr($comm,'[union]')<>0:
-	loop local i,size=0,arrsize('second_list') while i<size step i+=1:
-		if $second_list[i]<>'': $result+=$delimiter+$second_list[i]
+if instr($comm_, '[union]') <> 0:
+	loop local i, size_ = 0, arrsize('second_list') while i<size_ step i+=1:
+		if $second_list_[i] <> '': $result += $delimiter_ + $second_list_[i]
 	end
 end
 !@ 
-$result=$mid($result,len($delimiter)+1)
+$result = $mid($result, len($delimiter_) + 1)
 --- edb.list.diff ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.

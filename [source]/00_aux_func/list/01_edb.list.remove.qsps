@@ -7,21 +7,21 @@ $args[3] - разделитель (по умолчанию вертикальн�
 $args[4] - управляющее слово [noclear] или [nclr] - запрещает удалять пустые элементы из списка
 # edb.list.remove
 !@ объявляем локальные переменные
-local $list,$old_el,$new_el,$delimiter,$comm=$args[0],$args[1],$args[2],$args[3],$lcase($args[4])
+local $list_, $old_el_, $new_el_, $delimiter_, $comm_ = $args[0], $args[1], $args[2], $args[3], $lcase($args[4])
 !@ разделитель по умолчанию
-if $delimiter='': $delimiter='|'
+if $delimiter_ = '': $delimiter_ = '|'
 !@ правильная упарвляющая конструкция
-if instr($comm,'[nclr]')<>0: $comm=$replace($comm,'[nclr]','[noclear]')
+if instr($comm_, '[nclr]') <> 0: $comm_ = $replace($comm_, '[nclr]', '[noclear]')
 !@ костылим список, чтобы легко убрать из него нужный элемент
-$list=$delimiter+$list+$delimiter
+$list_ = $delimiter_ + $list_ + $delimiter_
 !@ убираем элемент простой заменой
-$list=$replace($list,$delimiter+$old_el+$delimiter,$delimiter+$new_el+$delimiter)
+$list_ = $replace($list_, $delimiter_ + $old_el_ + $delimiter_, $delimiter_ + $new_el_ + $delimiter_)
 !@ если не запрещена очистка пустых элементов
-if instr($comm,'[noclear]')=0:
+if instr($comm_, '[noclear]') = 0:
 	!@ удаляем их
-	$list=$replace($list,$delimiter+$delimiter,$delimiter)
+	$list_ = $replace($list_, $delimiter_ + $delimiter_, $delimiter_)
 end
-$result=@edb.slice($list)
+$result = @edb.slice($list_)
 --- edb.list.remove ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
