@@ -65,6 +65,7 @@ if instr($user_text, 'edb') = 1:
 		*pl '* verison — текущая версия модуля.'
 		*pl '* required em — информация по используемому и необходимому easy.math.'
 		*pl '* gen id - генерирует uuid.'
+		*pl '* init - инициализирует базу данных' 
 	elseif $command_line_ = 'required em' or $command_line_ = 'required easy.math':
 		*pl @edb.start('em-version')
 	elseif $command_line_ = 'version':
@@ -72,6 +73,11 @@ if instr($user_text, 'edb') = 1:
 		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
 	elseif $command_line_ = 'gen id':
 		*pl @em.gen_uuid()
+	elseif $command_line_ = 'init':
+		@edb.init()
+		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
+	elseif $command_line_ = '>':
+		*pl @edb.print()
 	end
 end
 --- edb.usercom ---------------------------------

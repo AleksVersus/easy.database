@@ -1,0 +1,30 @@
+QSP-Game Просмотр информации о базе данных
+
+# edb.print
+local $mode_ = $lcase($args[0])
+local $export_, $nr_ = '', '
+'
+!@ ------------------ непосредственно информация о базе данных --------------------
+if $EASY_DATABASE['ID'] <> '':
+	$export_ += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + $nr_
+	$export_ += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables.ids'] + $nr_
+	$export_ += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables.counter'] + $nr_
+	$export_ += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables.number'] + $nr_
+	$export_ += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $nr_
+else:
+	$export_ += 'База данных не инициализирована'
+end
+!@ ------------------ непосредственно информация о базе данных --------------------
+if instr($command, '[inmain]') <> 0:
+	*pl $export_
+elseif instr($command, '[instat]') <> 0:
+	pl $export_
+else:
+	$result = $export_
+end
+--- edb.print ---------------------------------
+
+$args[0] - управление:
+	[inmain] - вывод в окно основного описания
+	[instat] - вывод в окно дополнительного описания
+	пустая строка или любое иное значение - возвращает результат
