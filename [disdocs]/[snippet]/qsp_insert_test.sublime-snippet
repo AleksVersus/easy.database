@@ -1,0 +1,13 @@
+<snippet>
+	<content><![CDATA[
+!@ ${1:location}
+if instr(\$args[0],'${1:location}')<>0 or \$args[0]='':
+\$functions[]='${1:location}'
+\$example['${1:location}']="${2:textforsimple}"
+end
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>testinsert</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.QSP</scope>
+</snippet>

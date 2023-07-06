@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+<a href=""EXEC: ${2:qsp_code}"" class=""plain"">${1:link name}</a>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>href</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.qsp</scope>
+</snippet>
