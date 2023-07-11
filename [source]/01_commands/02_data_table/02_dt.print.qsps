@@ -19,16 +19,19 @@ if instr($mode_, '[oi]') <> 0: $mode_ = $replace($mode_, '[oi]', '[only info]')
 if instr($mode_, '[ot]') <> 0: $mode_ = $replace($mode_, '[ot]', '[only table]')
 !@ ------------------ непосредственно информация о базе данных --------------------
 if instr($mode_, '[only info]') <> 0 or instr($mode_, '[only table]') = 0:
-	$export_ += "Идентификатор таблицы данных: " + $arritem('$<<$args[0]>>', 'ID') + $nr_
-	$export_ += "Название таблицы данных: " + $arritem('$<<$args[0]>>', 'NAME') + $nr_
-	$export_ += "Список колонок: " + $arritem('$<<$args[0]>>', 'columns') + $nr_
-	$export_ += "Текущая колонка: " + $arritem('$<<$args[0]>>', 'current_col') + $nr_
-	$export_ += "Вид первичных ключей (ID строк): " + $arritem('$<<$args[0]>>', 'primary_keys_type') + $nr_
-	$export_ += "Текущая строка: " + $arritem('$<<$args[0]>>', 'current_row') + $nr_
-	$export_ += "Последний первичный ключ: " + $dyneval('$result = $<<$args[0]>>_id[]') + $nr_
+	$export_ += "Идентификатор таблицы данных: '" + $arritem('$<<$args[0]>>', 'ID') + "'<<$nr_>>"
+	$export_ += "Название таблицы данных: '" + $arritem('$<<$args[0]>>', 'NAME') + "'<<$nr_>>"
+	$export_ += "Список колонок: '" + $arritem('$<<$args[0]>>', 'columns') + "'<<$nr_>>"
+	$export_ += "Текущая колонка: '" + $arritem('$<<$args[0]>>', 'current_col') + "'<<$nr_>>"
+	$export_ += "Вид первичных ключей (ID строк): '" + $arritem('$<<$args[0]>>', 'primary_keys_type') + "'<<$nr_>>"
+	$export_ += "Текущая строка: '" + $arritem('$<<$args[0]>>', 'current_row') + "'<<$nr_>>"
+	local $last_pk_ = $dyneval('$result = $<<$args[0]>>_id[]')
+	if $last_pk_ <> 'ids' and $last_pk_ <> '':
+		$export_ += "Последний первичный ключ: '" + $last_pk_ + "'<<$nr_>>"
+	end
 end
 if instr($mode_, '[only table]') <> 0 or instr($mode_, '[only info]') = 0:
-	local $arrays_ = '|'+$arritem('$<<$args[0]>>', 'columns')
+	local $arrays_ = $arritem('$<<$args[0]>>', 'columns')
 	local $callback_ = {
 		if $arritem('$<<$args[1]>>_<<$args[0]>>', 0) <> 'num':
 			$result = "'$<<$args[1]>>_<<$args[0]>>',"

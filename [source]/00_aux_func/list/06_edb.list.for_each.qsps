@@ -8,6 +8,7 @@ $args[3] ... $args[18] - аргументы, транслируемые в фу�
 # edb.list.for_each
 local $list_, $callback_, $delimiter_ = $args[0], $args[1], $args[2]
 if $delimiter_ = '': $delimiter_ = '|'
+$list_ += $delimiter_
 local instr_, $item_
 loop local run_ = 1 while run_ and $list_ <> '':
 	instr_ = instr($list_, $delimiter_)

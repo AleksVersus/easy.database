@@ -73,11 +73,32 @@ if instr($user_text, 'edb') = 1:
 		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
 	elseif $command_line_ = 'gen id':
 		*pl @em.gen_uuid()
+	elseif $command_line_ = 'test':
+		@edb.init()
+		@edb.new_table('objects')
+		!@ @edb.new_table('dialogs')
+		@edb.dt.print('objects', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
 	elseif $command_line_ = '>':
 		*pl @edb.print()
+	elseif instr($command_line_, '>') = 1:
+		local $commands_
+		@em.str.inArr($mid($command_line_, 2), '$commands_', '>', '[strip]')
+		if $commands_[0] = 'new_table' and $commands_[1] <> '':
+			@edb.new_table($commands_[1])
+			*pl "Создана таблица данных «<<$commands_[1]>>»."
+		elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
+			@edb.del_table($commands_[1])
+		elseif @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $commands_[0]):
+			if $commands_[1] = 'print':
+				@edb.dt.print($commands_[0], '[inmain]')
+			end
+		end
+		$commands_[0]
+		$commands_[1]
+		$commands_[2]
 	end
 end
 --- edb.usercom ---------------------------------
