@@ -15,9 +15,9 @@ else:
 	$export_ += 'База данных не инициализирована'
 end
 !@ ------------------ непосредственно информация о базе данных --------------------
-if instr($command, '[inmain]') <> 0:
+if instr($mode_, '[inmain]') <> 0:
 	*pl $export_
-elseif instr($command, '[instat]') <> 0:
+elseif instr($mode_, '[instat]') <> 0:
 	pl $export_
 else:
 	$result = $export_
