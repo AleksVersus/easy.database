@@ -1,0 +1,60 @@
+QSP-Game Вывод информации о таблице данных
+
+$args[0] - идентификатор таблицы данных
+$args[1] - управление
+
+# edb.dt.print
+if $EASY_DATABASE['ID'] = '':
+	msg "edb.dt.print: Ошибка. База данных не инициализирована."
+	exit
+end
+if $arritem('$<<$args[0]>>', 'ID') <> $args[0]:
+	msg "edb.dt.print: Ошибка. Таблица данных «<<$args[0]>>» не создана."
+	exit
+end
+local $mode_ = $lcase($args[1])
+local $export_, $nr_ = '', '
+'
+if instr($mode_, '[oi]') <> 0: $mode_ = $replace($mode_, '[oi]', '[only info]')
+if instr($mode_, '[ot]') <> 0: $mode_ = $replace($mode_, '[ot]', '[only table]')
+!@ ------------------ непосредственно информация о базе данных --------------------
+if instr($mode_, '[only info]') <> 0 or instr($mode_, '[only table]') = 0:
+	$export_ += "Идентификатор таблицы данных: " + $arritem('$<<$args[0]>>', 'ID') + $nr_
+	$export_ += "Название таблицы данных: " + $arritem('$<<$args[0]>>', 'NAME') + $nr_
+	$export_ += "Список колонок: " + $arritem('$<<$args[0]>>', 'columns') + $nr_
+	$export_ += "Текущая колонка: " + $arritem('$<<$args[0]>>', 'current_col') + $nr_
+	$export_ += "Вид первичных ключей (ID строк): " + $arritem('$<<$args[0]>>', 'primary_keys_type') + $nr_
+	$export_ += "Текущая строка: " + $arritem('$<<$args[0]>>', 'current_row') + $nr_
+	$export_ += "Последний первичный ключ: " + $dyneval('$result = $<<$args[0]>>_id[]') + $nr_
+end
+if instr($mode_, '[only table]') <> 0 or instr($mode_, '[only info]') = 0:
+	local $arrays_ = '|'+$arritem('$<<$args[0]>>', 'columns')
+	local $callback_ = {
+		if $arritem('$<<$args[1]>>_<<$args[0]>>', 0) <> 'num':
+			$result = "'$<<$args[1]>>_<<$args[0]>>',"
+		else
+			$result = "'<<$args[1]>>_<<$args[0]>>',"
+		end
+	}
+	local $args_string_ = @edb.list.for_each($arrays_, $callback_, $args[0])
+	$args_string_ = $mid($args_string_, 1, len($args_string_) - 1)
+	$export_ += $dyneval("$result = @em.fewArrs.print(<<$args_string_>>)")
+end
+!@ ------------------ непосредственно информация о базе данных --------------------
+if instr($mode_, '[inmain]') <> 0:
+	*pl $export_
+elseif instr($mode_, '[instat]') <> 0:
+	pl $export_
+else:
+	$result = $export_
+end
+--- edb.dt.print ---------------------------------
+
+$args[1] - управление:
+	Настройки вывода:
+	[oi] или [only info] — выводится информация о таблице данных
+	[ot] или [only table] — выводится только содержимое таблицы данных в виде таблицы
+	Назначение вывода:
+	[inmain] - вывод в окно основного описания
+	[instat] - вывод в окно дополнительного описания
+	пустая строка или любое иное значение - возвращает результат
