@@ -2,6 +2,7 @@ QSP-Game Создать новую таблицу данных
 
 $args[0] - идентификатор таблицы данных, он же является названием массива, описывающего таблицу данных
 $args[1] - название таблицы данных
+$args[2] - управляющая конструкция
 
 # edb.new_table
 !@ нельзя создать таблицу данных, если она уже создана, или база данных неинициализирована
@@ -17,6 +18,7 @@ if $args[0] = '':
 	msg 'edb.new_table: Ошибка. Не указан идентификатор таблицы данных.'
 	exit
 end
+local $mode_ = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
 !@ увеличиваем счётчик созданных баз:
@@ -40,4 +42,47 @@ dynamic "
 "
 !@ делаем созданную таблицу текущей
 @edb.dt.set_cur($args[0])
+
+!@ назначаем тип генерируемого первичного ключа
+local num_
+if instr($mode_, '[msecscount]') <> 0:
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[msecscount]'"
+elseif instr($mode_, '[uuid]') <> 0:
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uuid]'"
+elseif instr($mode_, '[uid]') <> 0:
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
+elseif instr($mode_, '[hex:') <> 0:
+	num_ = @em.tag.getNum($mode_, 'hex')
+	if num_ < 1: num_ = 1
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<num_>>]'"
+elseif instr($mode_, '[num:') <> 0:
+	num_ = @em.tag.getNum($mode_, 'num')
+	if num_ < 1: num_ = 1
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<num_>>]'"
+elseif instr($mode_, '[rhex:') <> 0:
+	num_ = @em.tag.getNum($mode_, 'rhex')
+	if num_ < 8: num_ = 8
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<num_>>]'"
+elseif instr($mode_, '[rnum:') <> 0:
+	num_ = @em.tag.getNum($mode_, 'rnum')
+	if num_ < 16: num_ = 16
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<num_>>]'"
+elseif instr($mode_, '[rstr:') <> 0:
+	num_ = @em.tag.getNum($mode_, 'rstr')
+	if num_ < 16: num_ = 16
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<num_>>]'"
+else:
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:16]'"
+end
 --- edb.new_table ---------------------------------
+
+Управление:
+	Управление генерацией первичных ключей
+	* [msecscount] - первичные ключи будут генерироваться на основе данных из функции msecscount.
+	* [uuid] - первичные ключи генерируются в формате UUID
+	* [hex:N] - первичные ключи генерируются, как порядковое шестнадцатерияное число из N символов. Это ограничит высоту таблицы данных максимальным возможным в этой таблице данных числом.
+	* [num:N] - первичные ключи генерируются в виде N-значного десятеричного числа. Это ограничит высоту таблицы данных максимальным возможным в такой таблице числом.
+	* [rhex:N] - первичным ключом будет назначаться случайное шестнадцатеричное число, состоящее из не менее, чем 8 символов.
+	* [rnum:N] - первичным ключом будет назначаться случайное десятерично число, состоящее из не менее, чем 16 символов.
+	* [uid] - первичный ключ будет генерироваться из строки случайных букв и цифр плюс текущее абсолютное значение от msecscount
+	* [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
