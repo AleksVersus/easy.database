@@ -36,7 +36,7 @@ if instr($mode_, '[only table]') <> 0 or instr($mode_, '[only info]') = 0:
 			$result = "'<<$args[1]>>_<<$args[0]>>',"
 		end
 	}
-	local $args_string_ = @edb.list.for_each($arrays_, $callback_, $args[0])
+	local $args_string_ = @edb.list.for_each($arrays_, $callback_, '|', $args[0])
 	$args_string_ = $mid($args_string_, 1, len($args_string_) - 1)
 	$export_ += $dyneval("$result = @em.fewArrs.print(<<$args_string_>>)")
 end
