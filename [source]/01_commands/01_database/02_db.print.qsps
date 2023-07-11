@@ -19,7 +19,7 @@ if instr($mode_, '[inmain]') <> 0:
 	*pl $export_
 elseif instr($mode_, '[instat]') <> 0:
 	pl $export_
-else:
+else
 	$result = $export_
 end
 --- edb.print ---------------------------------

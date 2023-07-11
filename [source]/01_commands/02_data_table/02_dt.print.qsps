@@ -4,20 +4,14 @@ $args[0] - идентификатор таблицы данных
 $args[1] - управление
 
 # edb.dt.print
-if $EASY_DATABASE['ID'] = '':
-	msg "edb.dt.print: Ошибка. База данных не инициализирована."
-	exit
-end
-if $arritem('$<<$args[0]>>', 'ID') <> $args[0]:
-	msg "edb.dt.print: Ошибка. Таблица данных «<<$args[0]>>» не создана."
-	exit
-end
+if $EASY_DATABASE['ID'] = '': msg "edb.dt.print: Ошибка. База данных не инициализирована." & exit
+if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "edb.dt.print: Ошибка. Таблица данных «<<$args[0]>>» не создана." & exit
 local $mode_ = $lcase($args[1])
 local $export_, $nr_ = '', '
 '
 if instr($mode_, '[oi]') <> 0: $mode_ = $replace($mode_, '[oi]', '[only info]')
 if instr($mode_, '[ot]') <> 0: $mode_ = $replace($mode_, '[ot]', '[only table]')
-!@ ------------------ непосредственно информация о базе данных --------------------
+!@ ------------------ непосредственно информация о таблице данных --------------------
 if instr($mode_, '[only info]') <> 0 or instr($mode_, '[only table]') = 0:
 	$export_ += "Идентификатор таблицы данных: '" + $arritem('$<<$args[0]>>', 'ID') + "'<<$nr_>>"
 	$export_ += "Название таблицы данных: '" + $arritem('$<<$args[0]>>', 'NAME') + "'<<$nr_>>"
@@ -43,7 +37,9 @@ if instr($mode_, '[only table]') <> 0 or instr($mode_, '[only info]') = 0:
 	$args_string_ = $mid($args_string_, 1, len($args_string_) - 1)
 	$export_ += $dyneval("$result = @em.fewArrs.print(<<$args_string_>>)")
 end
-!@ ------------------ непосредственно информация о базе данных --------------------
+!@ ------------------ непосредственно информация о таблице данных --------------------
+!@ делаем созданную таблицу текущей
+@edb.dt.set_cur($args[0])
 if instr($mode_, '[inmain]') <> 0:
 	*pl $export_
 elseif instr($mode_, '[instat]') <> 0:

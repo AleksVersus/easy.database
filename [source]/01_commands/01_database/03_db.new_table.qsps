@@ -6,18 +6,9 @@ $args[2] - управляющая конструкция
 
 # edb.new_table
 !@ нельзя создать таблицу данных, если она уже создана, или база данных неинициализирована
-if $EASY_DATABASE['ID'] = '':
-	msg "edb.new_table: Ошибка. База данных не инициализирована."
-	exit
-end
-if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]):
-	msg 'edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует.'
-	exit
-end
-if $args[0] = '':
-	msg 'edb.new_table: Ошибка. Не указан идентификатор таблицы данных.'
-	exit
-end
+if $EASY_DATABASE['ID'] = '': msg "edb.new_table: Ошибка. База данных не инициализирована." & exit
+if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
+if $args[0] = '': msg "edb.new_table: Ошибка. Не указан идентификатор таблицы данных." & exit
 local $mode_ = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
