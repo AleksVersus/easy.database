@@ -12,5 +12,5 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'dt.new_
 if $args[1] = '':	msg 'dt.new_col: Ошибка. Не указан идентификатор таблицы данных.' & exit
 if $args[0] = '': msg 'dt.new_col: Ошибка. Не указан идентификатор колонки.' &	exit
 !@ непосредственно делаем колонку текущей
-dynamic "$<<$args[1]>>['current_col'] = '<<$args[0]>>"
+dynamic "$<<$args[1]>>['current_col'] = '<<$args[0]>>'"
 --- edb.col.set_cur ---------------------------------

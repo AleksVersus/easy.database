@@ -32,7 +32,7 @@ if size_ > 1:
 	end
 end
 !@ добавляем колонку в список колонок
-dynamic "$<<$args[2]>>['columns'] = @edb.list.rappend($<<$args[2]>>['columns'], '<<$args[0]>>')"
+dynamic "$<<$args[2]>>['columns'] = @edb.list.append($<<$args[2]>>['columns'], '<<$args[0]>>')"
 !@ делаем колонку текущей
 @edb.col.set_cur($args[0], $args[2])
 --- edb.dt.new_col ---------------------------------

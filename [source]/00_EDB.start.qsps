@@ -77,6 +77,9 @@ if instr($user_text, 'edb') = 1:
 		@edb.init()
 		@edb.new_table('objects')
 		!@ @edb.new_table('dialogs')
+		@edb.dt.new_col('body', 'dict', 'objects')
+		@edb.dt.new_col('place', 'str', 'objects')
+		@edb.dt.new_col('count', 'num')
 		@edb.dt.print('objects', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
