@@ -2,17 +2,19 @@ QSP-Game Перебор списка
 
 $args[0] - список
 $args[1] - функция, применяющаяся к каждому элементу списка (условный колбэк)
-$args[2] ... $args[18] - аргументы, транслируемые в функцию, применяемую к каждому элементу списка. Только текстовые.
+$args[2] - разделитель. По умолчанию вертикальная черта
+$args[3] ... $args[18] - аргументы, транслируемые в функцию, применяемую к каждому элементу списка. Только текстовые.
 
 # edb.list.for_each
-local $list_, $callback_ = $args[0], $args[1]
+local $list_, $callback_, $delimiter_ = $args[0], $args[1], $args[2]
+if $delimiter_ = '': $delimiter_ = '|'
 local instr_, $item_
 loop local run_ = 1 while run_ and $list_ <> '':
-	instr_ = instr($list_, '|')
+	instr_ = instr($list_, $delimiter_)
 	$item_ = $mid($list_, 1, instr_-1)
 	$list_ = $mid($list_, instr_+1)
 	if $list_ = '': run_ = 0
-	$result += $dyneval($callback_, $item_, $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10], $args[11], $args[12], $args[13], $args[14], $args[15], $args[16], $args[17], $args[18])
+	$result += $dyneval($callback_, $item_, $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10], $args[11], $args[12], $args[13], $args[14], $args[15], $args[16], $args[17], $args[18])
 end
 if $result = '': killvar '$result'
 --- edb.list.for_each ---------------------------------
