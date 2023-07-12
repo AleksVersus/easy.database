@@ -11,6 +11,8 @@ if $EASY_DATABASE['ID'] = '':	msg "dt.new_col: Ошибка. База данны
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'dt.new_col: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
 if $args[1] = '':	msg 'dt.new_col: Ошибка. Не указан идентификатор таблицы данных.' & exit
 if $args[0] = '': msg 'dt.new_col: Ошибка. Не указан идентификатор колонки.' &	exit
+!@ нельзя установить колонку первичных ключей текущей, однако это не приводит к ошибке
+if $arritem("$<<$args[1]>>_<<$args[0]>>", 0) = 'ids': exit
 !@ непосредственно делаем колонку текущей
 dynamic "$<<$args[1]>>['current_col'] = '<<$args[0]>>'"
 --- edb.col.set_cur ---------------------------------
