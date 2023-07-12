@@ -19,3 +19,12 @@ loop local run_ = 1 while run_ and $list_ <> '':
 end
 if $result = '': killvar '$result'
 --- edb.list.for_each ---------------------------------
+
+Соответствие аргументов в колбэке
+
+{
+	$args[0] = $item_
+	$args[1] = $args[3]
+	$args[2] = $args[4]
+	и т.д.
+}
