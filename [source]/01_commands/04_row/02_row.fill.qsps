@@ -24,25 +24,31 @@ if $arritem('$<<$data_table_>>_id', $pk_) <> $pk_:
 end
 if $pk_ = '': msg "row.fill: Ошибка. Не указан идентификатор строки." & exit
 !@ если оказалось, что последний аргумент содержит как минимум один из идентификаторов, уничтожаем его
-if kill_last_:	killvar '$args', arrsize('$args')-1
-local $columns_list_ = $arritem('$<<$data_table_>>', 'columns')
+if kill_last_:	killvar '$args', arrsize('$args') - 1
+local $columns_list_ = @edb.list.remove($arritem('$<<$data_table_>>', 'columns'), 'id')
 local $columns_
 @em.str.inArr($columns_list_, '$columns_', '|')
-local $value_, $col_, $col_type_
+local $value_, $col_, $col_type_, one_value_
 loop local i = 0 while i < arrsize('$columns_') and i < arrsize('$args') step i += 1:
 	$value_, $col_ = $args[i]
 	if $value_ = $col_ or no @edb.list.is_el($columns_list_, $col_):
 		$col_ = $columns_[i]
+		one_value_ = 1
+	else
+		one_value_ = 0
 	end
-	$col_type_ = $dyneval("$result = $<<$data_table_>>_<<$col_>>[0]")
+	$col_type_ = $arritem("$<<$data_table_>>_<<$col_>>", 0)
 	if $col_type_ = 'num':
+		if one_value_: $value_ = $str(args[i])
 		dynamic "<<$data_table_>>_<<$col_>>['<<$pk_>>'] = <<$value_>>"
 	else:
 		dynamic "$<<$data_table_>>_<<$col_>>['<<$pk_>>'] = '<<$value_>>'"
 	end
-	!@ Не помечаем изменяемые колонки, как текущие, поскольку может статься так,
-	!@ что мы не будем знать, на какой колонке закончилось заполнение.
 end
+!@ Не помечаем изменяемые колонки, как текущие, поскольку может статься так,
+!@ что мы не будем знать, на какой колонке закончилось заполнение.
+!@ указанная таблица данных помечается, как текущая
+@edb.dt.set_cur($data_table_)
 !@ помечаем текущую строку, как текущую
 @edb.row.set_cur($pk_, $data_table_)
 --- edb.row.fill ---------------------------------
