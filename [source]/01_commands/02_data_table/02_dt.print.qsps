@@ -9,6 +9,7 @@ if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "edb.dt.print: Ошибка.
 local $mode_ = $lcase($args[1])
 local $export_, $nr_ = '', '
 '
+local $pk_type_ = $arritem('$<<$args[0]>>', 'primary_keys_type')
 if instr($mode_, '[oi]') <> 0: $mode_ = $replace($mode_, '[oi]', '[only info]')
 if instr($mode_, '[ot]') <> 0: $mode_ = $replace($mode_, '[ot]', '[only table]')
 !@ ------------------ непосредственно информация о таблице данных --------------------
@@ -17,7 +18,10 @@ if instr($mode_, '[only info]') <> 0 or instr($mode_, '[only table]') = 0:
 	$export_ += "Название таблицы данных: '" + $arritem('$<<$args[0]>>', 'NAME') + "'<<$nr_>>"
 	$export_ += "Список колонок: '" + $arritem('$<<$args[0]>>', 'columns') + "'<<$nr_>>"
 	$export_ += "Текущая колонка: '" + $arritem('$<<$args[0]>>', 'current_col') + "'<<$nr_>>"
-	$export_ += "Вид первичных ключей (ID строк): '" + $arritem('$<<$args[0]>>', 'primary_keys_type') + "'<<$nr_>>"
+	$export_ += "Вид первичных ключей (ID строк): '" + $pk_type_ + "'<<$nr_>>"
+	if instr($pk_type_, '[hex:') <> 0 or instr($pk_type_, '[num:') <> 0:
+		$export_ += "Список освободившихся ключей: '" + $arritem('$<<$args[0]>>', 'free_keys') + "'<<$nr_>>"
+	end
 	$export_ += "Текущая строка: '" + $arritem('$<<$args[0]>>', 'current_row') + "'<<$nr_>>"
 	local $last_pk_ = $dyneval('$result = $<<$args[0]>>_id[]')
 	if $last_pk_ <> 'ids' and $last_pk_ <> '':
