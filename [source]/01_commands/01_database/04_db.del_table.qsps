@@ -26,12 +26,13 @@ dynamic "
 	end
 	$<<$args[0]>>['columns'] = @edb.list.remove($<<$args[0]>>['columns'], 'id')
 "
-
 !@  -------------------- из базы данных удаляем записи --------------------
 !@ уменьшаем счётчик существующих таблиц
 EASY_DATABASE['data_tables.number'] -= 1
 !@ удаляяем запись о таблице из списка идентификаторов таблиц
-$EASY_DATABASE['data_table_ids'] = @edb.list.remove($EASY_DATABASE['data_table_ids'], $args[0])
+$EASY_DATABASE['data_tables.ids'] = @edb.list.remove($EASY_DATABASE['data_tables.ids'], $args[0])
 !@ снимаем указатель с базы данных, если это текущая база данных
 if $EASY_DATABASE['current_data_table'] = $args[0]: $EASY_DATABASE['current_data_table'] = ''
+!@ уничтожаем массив таблицы данных
+killvar $args[0]
 --- edb.del_table ---------------------------------
