@@ -62,6 +62,7 @@ if instr($user_text, 'edb') = 1:
 	if $command_line_ = 'help':
 		*pl 'Основные команды для работы с модулем (ключевое слово `edb` опущено):'
 		*pl '* help - вывод справки по модулю `easy.database`.'
+		*pl '* run - выполнить следующий после `run` текст, как строку кода QSP.'
 		*pl '* verison — текущая версия модуля.'
 		*pl '* required em — информация по используемому и необходимому easy.math.'
 		*pl '* gen id - генерирует uuid.'
@@ -99,9 +100,8 @@ if instr($user_text, 'edb') = 1:
 				@edb.dt.print($commands_[0], '[inmain]')
 			end
 		end
-		$commands_[0]
-		$commands_[1]
-		$commands_[2]
+	elseif instr($command_line_, 'run') <> 0:
+		dynamic $trim($mid($command_line_, 4))
 	end
 end
 --- edb.usercom ---------------------------------
