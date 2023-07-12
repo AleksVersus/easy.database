@@ -112,7 +112,7 @@ if $pk_ <> '':
 	}
 	$args['buffer'] = @edb.list.for_each($columns_, $callback_, '|', $args[0], $pk_)
 	!@ устанавливаем текущую строку
-	@edb.row.set_cur($pk_, $args[0])
+	@edb.row.set_cur($pk_, $data_table_)
 	!@ возвращаем идентификатор созданной строки
 	$result = $pk_ & exit
 else
