@@ -43,23 +43,23 @@ elseif instr($mode_, '[uuid]') <> 0:
 elseif instr($mode_, '[uid]') <> 0:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
 elseif instr($mode_, '[hex:') <> 0:
-	num_ = @em.tag.getNum($mode_, 'hex')
+	num_ = val(@em.tag.getNum($mode_, 'hex'))
 	if num_ < 1: num_ = 1
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<num_>>]'"
 elseif instr($mode_, '[num:') <> 0:
-	num_ = @em.tag.getNum($mode_, 'num')
+	num_ = val(@em.tag.getNum($mode_, 'num'))
 	if num_ < 1: num_ = 1
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<num_>>]'"
 elseif instr($mode_, '[rhex:') <> 0:
-	num_ = @em.tag.getNum($mode_, 'rhex')
+	num_ = val(@em.tag.getNum($mode_, 'rhex'))
 	if num_ < 8: num_ = 8
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<num_>>]'"
 elseif instr($mode_, '[rnum:') <> 0:
-	num_ = @em.tag.getNum($mode_, 'rnum')
+	num_ = val(@em.tag.getNum($mode_, 'rnum'))
 	if num_ < 16: num_ = 16
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<num_>>]'"
 elseif instr($mode_, '[rstr:') <> 0:
-	num_ = @em.tag.getNum($mode_, 'rstr')
+	num_ = val(@em.tag.getNum($mode_, 'rstr'))
 	if num_ < 16: num_ = 16
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<num_>>]'"
 else:
