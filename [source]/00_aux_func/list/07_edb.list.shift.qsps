@@ -1,0 +1,15 @@
+QSP-Game Извлечение первого значения из списка
+
+$args[0] - список
+$args[1] - разделитель. По-умолчанию вертикальная черта
+
+# edb.list.shift
+local $list_, $delimiter_, instr_ = $args[0], $args[1], 0
+if $delimiter_ = '': $delimiter_ = '|'
+instr_ = instr($list_, $delimiter_)
+if instr_ = 0:
+	$result = $list_
+else
+	$result = $mid($list_, 1, instr_-1)
+end
+--- edb.list.shift ---------------------------------
