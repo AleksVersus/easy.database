@@ -1,0 +1,28 @@
+QSP-Game Удаляет строку из таблицы данных по её идентификатору
+
+$args[0] - идентификатор строки (primary key)
+$args[1] - идентификатор таблицы данных
+
+# edb.dt.del_row
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@ Предохранители:
+if $EASY_DATABASE['ID'] = '': msg "dt.del_row: Ошибка. База данных не инициализирована." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "dt.del_row: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+if $args[1] = '': msg "dt.del_row: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@ Удалить строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
+if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
+local $data_table_, $pk_ = $args[1], $args[0]
+!@ вносим освободившийся ключ в список, если тип ключей порядковый:
+local $pk_type_ = $arritem('$<<$data_table_>>', 'primary_keys_type')
+if instr($pk_type_, '[hex:') <> 0 or instr($pk_type_, '[num:') <> 0:
+	dynamic "$<<$data_table_>>['free_keys'] = @edb.list.append($<<$data_table_>>['free_keys'], '<<$pk_>>')"
+end
+!@ Удаление строки производится путём удаления ячеек из каждого массива-столбца:
+local $columns_ = $arritem('$<<$data_table_>>', 'columns')
+local $callback_ = { killvar '$<<$args[1]>>_<<$args[0]>>', $args[2] }
+$args['buffer'] = @edb.list.for_each($columns_, $callback_, '|', $data_table_, $pk_)
+!@ если строка была текущей, снимаем указатель
+if $arritem('$<<$data_table_>>', 'current_row') = $pk_:
+	dynamic "$<<$data_table_>>['current_row'] = ''"
+end
+--- edb.dt.del_row ---------------------------------
