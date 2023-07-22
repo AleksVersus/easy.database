@@ -1,0 +1,45 @@
+QSP-Game Распечатка колонки
+
+$args[0] — идентификатор колонки
+$args[1] — идентификатор таблицы данных
+$args[2] — управление
+
+# edb.col.print
+!@ значения по умолчанию:
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@ предохранители:
+if $EASY_DATABASE['ID'] = '':	msg "col.print: Ошибка. База данных не инициализирована." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'col.print: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
+if $args[1] = '':	msg 'col.print: Ошибка. Не указан идентификатор таблицы данных.' & exit
+if $args[0] = '': msg 'col.print: Ошибка. Не указан идентификатор колонки.' &	exit
+!@ определяем локальные переменные:
+local $mode_ = $lcase($args[2])
+local $export_, $nr_ = '', '
+'
+local $col_type_ = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
+local $_ = $iif($col_type_ = 'num', '', '$')
+local $range_ = @em.tag.getNum($mode_, 'range')
+local start_ = val($strfind($range_, '(\d+)\-(\d+)', 1))
+local end_ = val($strfind($range_, '(\d+)\-(\d+)', 2))
+if start_ < 1: start_ = 1
+if end_ > arrsize('<<$_>><<$args[1]>>_<<$args[0]>>'): end_ = arrsize('<<$_>><<$args[1]>>_<<$args[0]>>')
+!@ получаем содержимое колонки с помощью em.arr.print
+$export_ = @em.arr.print('<<$_>><<$args[1]>>_<<$args[0]>>', '[only result] [not last]', ', ', start_, end_)
+!@ делаем созданную таблицу текущей
+@edb.dt.set_cur($args[1])
+!@ делаем созданную таблицу текущей
+@edb.col.set_cur($args[0])
+!@ выводим на экран
+if instr($mode_, '[inmain]') <> 0:
+	*pl $export_
+elseif instr($mode_, '[instat]') <> 0:
+	pl $export_
+else:
+	$result = $export_
+end
+--- edb.col.print ---------------------------------
+
+Управление:
+	[range:N-M] - вывод значений от элемента N до M в колонке
+	[inmain] — вывод значений в окно основного описания
+	[instat] — вывод значений в окно дополнительного описания
