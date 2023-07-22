@@ -93,6 +93,9 @@ if instr($user_text, 'edb') = 1:
 		@edb.dt.print('objects', '[inmain]')
 		@edb.dt.del_col('include', 'objects')
 		@edb.dt.print('objects', '[inmain]')
+		@edb.col.print('body', 'objects', '[inmain]')
+		@edb.col.print('count', 'objects', '[inmain] [range:3-5]')
+		@edb.row.print($i, 'objects', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
