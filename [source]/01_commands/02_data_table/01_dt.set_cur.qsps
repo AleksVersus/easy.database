@@ -8,5 +8,7 @@ if $EASY_DATABASE['ID'] = '': msg "dt.set_cur: Ошибка. База данны
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "dt.set_cur: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
 if $args[0] = '': msg "dt.set_cur: Ошибка. Не указан идентификатор таблицы данных." & exit
 !@ ту, что была текущей, делаем прошлой. Ту, что была прошлой, делаем текущей:
-set $EASY_DATABASE['last_data_table'], $EASY_DATABASE['current_data_table'] = $EASY_DATABASE['current_data_table'], $args[0]
+if $EASY_DATABASE['current_data_table'] <> $args[0]:
+	set $EASY_DATABASE['last_data_table'], $EASY_DATABASE['current_data_table'] = $EASY_DATABASE['current_data_table'], $args[0]
+end
 --- edb.dt.set_cur ---------------------------------

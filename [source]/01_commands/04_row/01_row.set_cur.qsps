@@ -13,4 +13,6 @@ if $args[1] = '': msg "row.set_cur: Ошибка. Не указан иденти
 if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
 !@ непосредственно делаем строку текущей
 dynamic "$<<$args[1]>>['current_row'] = '<<$args[0]>>'"
+!@ делаем текущей таблицу данных
+@edb.dt.set_cur($args[1])
 --- edb.row.set_cur ---------------------------------
