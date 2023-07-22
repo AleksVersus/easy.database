@@ -1,0 +1,41 @@
+QSP-Game Вывод информации о строке на экран
+
+$args[0] - идентификатор строки
+$args[1] - идентификатор таблицы данных
+$args[2] - управление
+
+# edb.row.print
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@ Предохранители:
+if $EASY_DATABASE['ID'] = '': msg "row.print: Ошибка. База данных не инициализирована." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "row.print: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+if $args[1] = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@ Сделать текущей строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
+if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
+local $mode_ = $lcase($args[2])
+local $export_, $nr_ = '', '
+'
+!@ получаем список колонок
+local $column_list_ = $arritem('$<<$args[1]>>', 'columns')
+!@ задаём описание строки
+$export += 'Строка: <<$args[0]>>'+$nr
+!@ извлекаем значения из колонок
+local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$args[0]>>', $args[1])}
+$export_ += @edb.list.for_each($column_list_, $callback_, '|', $args[0], $args[1])
+!@ делаем созданную таблицу текущей
+@edb.dt.set_cur($args[1])
+!@ делаем созданную таблицу текущей
+@edb.row.set_cur($args[0])
+!@ выводим на экран
+if instr($mode_, '[inmain]') <> 0:
+	*pl $export_
+elseif instr($mode_, '[instat]') <> 0:
+	pl $export_
+else:
+	$result = $export_
+end
+--- edb.row.print ---------------------------------
+
+Управление:
+	[inmain] — вывод значений в окно основного описания
+	[instat] — вывод значений в окно дополнительного описания
