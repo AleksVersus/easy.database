@@ -18,9 +18,9 @@ local $export_, $nr_ = '', '
 !@ получаем список колонок
 local $column_list_ = $arritem('$<<$args[1]>>', 'columns')
 !@ задаём описание строки
-$export += 'Строка: <<$args[0]>>'+$nr
+$export_ += 'Строка: <<$args[0]>>' + $nr_
 !@ извлекаем значения из колонок
-local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$args[0]>>', $args[1])}
+local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$args[0]>>', $args[1]) + '|'}
 $export_ += @edb.list.for_each($column_list_, $callback_, '|', $args[0], $args[1])
 !@ делаем созданную таблицу текущей
 @edb.dt.set_cur($args[1])
