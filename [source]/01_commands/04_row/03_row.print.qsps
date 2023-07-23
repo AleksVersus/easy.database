@@ -5,27 +5,30 @@ $args[1] - идентификатор таблицы данных
 $args[2] - управление
 
 # edb.row.print
-if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@ основные локальные переменные
+local $table_, $row_, $mode_= $args[1], $args[0], $args[2]
 !@ Предохранители:
+if $table_ = '': $table_ = $EASY_DATABASE['current_data_table']
 if $EASY_DATABASE['ID'] = '': msg "row.print: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "row.print: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
-if $args[1] = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
-!@ Сделать текущей строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
-if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
-local $mode_ = $lcase($args[2])
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $table_): msg "row.print: Ошибка. Таблица данных «<<$table_>>» не существует." & exit
+if $table_ = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $row_ = '': $row_ = $arritem('$<<$table_>>', 'current_row')
+!@ Распечатать строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
+if $arritem('$<<$table_>>_id', $row_) <> $row_: exit
+!@ объявляем дополнительные локальные переменные:
 local $export_, $nr_ = '', '
 '
-!@ получаем список колонок
-local $column_list_ = $arritem('$<<$args[1]>>', 'columns')
+!@ получаем список колонок:
+local $column_list_ = $arritem('$<<$table_>>', 'columns')
 !@ задаём описание строки
-$export_ += 'Строка: <<$args[0]>>' + $nr_
+$export_ += 'Строка: <<$row_>>' + $nr_
 !@ извлекаем значения из колонок
-local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$args[0]>>', $args[1]) + '|'}
-$export_ += @edb.list.for_each($column_list_, $callback_, '|', $args[0], $args[1])
+local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$row_>>', $table_) + '|'}
+$export_ += @edb.list.for_each($column_list_, $callback_, '|', $row_, $table_)
 !@ делаем созданную таблицу текущей
-@edb.dt.set_cur($args[1])
+@edb.dt.set_cur($table_)
 !@ делаем созданную таблицу текущей
-@edb.row.set_cur($args[0])
+@edb.row.set_cur($row_)
 !@ выводим на экран
 if instr($mode_, '[inmain]') <> 0:
 	*pl $export_
