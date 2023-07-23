@@ -92,10 +92,12 @@ if instr($user_text, 'edb') = 1:
 		@edb.row.fill(('Пепел', 'body'), (2, 'count'), $s)
 		@edb.dt.print('objects', '[inmain]')
 		@edb.dt.del_col('include', 'objects')
+		@edb.cell.set_value('Инвентарь', $s, 'place', 'objects')
 		@edb.dt.print('objects', '[inmain]')
 		@edb.col.print('body', 'objects', '[inmain]')
 		@edb.col.print('count', 'objects', '[inmain] [range:3-5]')
 		@edb.row.print($i, 'objects', '[inmain]')
+
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
@@ -120,4 +122,9 @@ if instr($user_text, 'edb') = 1:
 end
 --- edb.usercom ---------------------------------
 
+TODO: проставить в базе данных условия для препроцессора вокруг предохранителей
 
+Раскомментируйте следующую строку и включите препроцессор,
+если хотите отключить предохранители в собранной системе
+управления базой данных:
+!!@pp:var(fuse)

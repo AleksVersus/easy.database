@@ -30,9 +30,9 @@ local $args[23] = {
 }
 $args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[0], $args[1])
 $args[20] += $mid($args[24], 1, len($args[24]) - 1)
-!@ делаем созданную таблицу текущей
+!@ делаем таблицу текущей
 @edb.dt.set_cur($args[1])
-!@ делаем созданную таблицу текущей
+!@ делаем строку текущей
 @edb.row.set_cur($args[0])
 !@ выводим на экран
 if instr($args[2], '[inmain]') <> 0:
