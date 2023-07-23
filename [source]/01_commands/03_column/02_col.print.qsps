@@ -6,6 +6,7 @@ $args[2] — управление
 
 # edb.col.print
 !@ значения по умолчанию:
+$args[2] = $lcase($args[2])
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@ предохранители:
 if $EASY_DATABASE['ID'] = '':	msg "col.print: Ошибка. База данных не инициализирована." & exit
@@ -13,32 +14,42 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'col.pri
 if $args[1] = '':	msg 'col.print: Ошибка. Не указан идентификатор таблицы данных.' & exit
 if $args[0] = '': msg 'col.print: Ошибка. Не указан идентификатор колонки.' &	exit
 !@ определяем локальные переменные:
-local $mode_ = $lcase($args[2])
-local $export_, $nr_ = '', '
+$args[20], $args[21] = '', '
 '
-local $col_type_ = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
-local $_ = $iif($col_type_ = 'num', '', '$')
-local $range_ = @em.tag.getNum($mode_, 'range')
-local start_ = val($strfind($range_, '(\d+)\-(\d+)', 1))
-local end_ = val($strfind($range_, '(\d+)\-(\d+)', 2))
-if start_ < 1: start_ = 1
-if end_ > arrsize('<<$_>><<$args[1]>>_<<$args[0]>>'): end_ = arrsize('<<$_>><<$args[1]>>_<<$args[0]>>')
+$args[22] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
+$args[23] = $iif($args[22] = 'num', '', '$')
+$args[24] = @em.tag.getNum($args[2], 'range')
+args[25] = val($strfind($args[24], '(\d+)\-(\d+)', 1))
+args[26] = val($strfind($args[24], '(\d+)\-(\d+)', 2))
+if args[25] < 1: args[25] = 1
+if args[26] > arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]>>'): args[26] = arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]>>')
 !@ получаем содержимое колонки с помощью em.arr.print
-$export_ += 'Колонка: «<<$args[0]>>», тип: «<<$col_type_>>»'+$nr_
-$export_ += @em.arr.print('<<$_>><<$args[1]>>_<<$args[0]>>', '[only result] [not last]', '|', start_, end_)
+$args[20] += 'Колонка: «<<$args[0]>>», тип: «<<$args[22]>>»'+$args[21]
+$args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result] [not last]', '|', args[25], args[26])
 !@ делаем созданную таблицу текущей
 @edb.dt.set_cur($args[1])
 !@ делаем созданную таблицу текущей
 @edb.col.set_cur($args[0])
 !@ выводим на экран
-if instr($mode_, '[inmain]') <> 0:
-	*pl $export_
-elseif instr($mode_, '[instat]') <> 0:
-	pl $export_
+if instr($args[2], '[inmain]') <> 0:
+	*pl $args[20]
+elseif instr($args[2], '[instat]') <> 0:
+	pl $args[20]
 else:
-	$result = $export_
+	$result = $args[20]
 end
 --- edb.col.print ---------------------------------
+
+Поскольку функция работает с именами массивов, здесь не используются локальные переменные,
+чтобы избежать пересечения с именами массивов.
+
+$args[20] - содержит текст, возвращаемый функцией
+$args[21] - символ переноса строки
+$args[22] - тип колонки
+$args[23] - символ $, если колонка не числовая
+$args[24] - пределы из тега range в управлении.
+args[25] - начальная позиция к выводу
+args[26] - конечная позиция к выводу
 
 Управление:
 	[range:N-M] - вывод значений от элемента N до M в колонке
