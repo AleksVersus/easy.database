@@ -6,38 +6,46 @@ $args[2] - управление
 
 # edb.row.print
 !@ основные локальные переменные
-local $table_, $row_, $mode_= $args[1], $args[0], $args[2]
+$args[2]= $lcase($args[2])
 !@ Предохранители:
-if $table_ = '': $table_ = $EASY_DATABASE['current_data_table']
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 if $EASY_DATABASE['ID'] = '': msg "row.print: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $table_): msg "row.print: Ошибка. Таблица данных «<<$table_>>» не существует." & exit
-if $table_ = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
-if $row_ = '': $row_ = $arritem('$<<$table_>>', 'current_row')
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "row.print: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+if $args[1] = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Распечатать строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
-if $arritem('$<<$table_>>_id', $row_) <> $row_: exit
+if $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
 !@ объявляем дополнительные локальные переменные:
-local $export_, $nr_ = '', '
+$args[20], $args[21] = '', '
 '
 !@ получаем список колонок:
-local $column_list_ = $arritem('$<<$table_>>', 'columns')
+$args[22] = $arritem('$<<$args[1]>>', 'columns')
 !@ задаём описание строки
-$export_ += 'Строка: <<$row_>>' + $nr_
+$args[20] += 'Строка: <<$args[0]>>' + $args[21]
 !@ извлекаем значения из колонок
-local $callback_ = {$result = $arritem('$<<$args[2]>>_<<$row_>>', $table_) + '|'}
-$export_ += @edb.list.for_each($column_list_, $callback_, '|', $row_, $table_)
+local $args[23] = {$result = $arritem('$<<$args[2]>>_<<$args[0]>>', $args[1]) + '|'}
+$args[20] += @edb.list.for_each($args[22], $args[23], '|', $args[0], $args[1])
 !@ делаем созданную таблицу текущей
-@edb.dt.set_cur($table_)
+@edb.dt.set_cur($args[1])
 !@ делаем созданную таблицу текущей
-@edb.row.set_cur($row_)
+@edb.row.set_cur($args[0])
 !@ выводим на экран
-if instr($mode_, '[inmain]') <> 0:
-	*pl $export_
-elseif instr($mode_, '[instat]') <> 0:
-	pl $export_
+if instr($args[2], '[inmain]') <> 0:
+	*pl $args[20]
+elseif instr($args[2], '[instat]') <> 0:
+	pl $args[20]
 else:
-	$result = $export_
+	$result = $args[20]
 end
 --- edb.row.print ---------------------------------
+
+Поскольку функция работает с именами массивов, здесь не используются локальные переменные,
+чтобы избежать пересечения с именами массивов.
+
+$args[20] - $export_, переменная для фиксации возвращаемого текста
+$args[21] - $nr_, переменная для символа переноса строки
+$args[22] - $column_list_, переменная, в которую помещаем список колонок
+$args[23] - $callback_, переменная, в которую помещается "коллбэк"-функция для обработки элементов списка
 
 Управление:
 	[inmain] — вывод значений в окно основного описания

@@ -6,49 +6,64 @@ QSP-Game Заполнение строки значениями
 
 # edb.row.fill
 if $EASY_DATABASE['ID'] = '': msg "row.fill: Ошибка. База данных не инициализирована." & exit
-local $pk_, $data_table_ = $args[]
-local kill_last_ = 2
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $data_table_):
+args[20] = arrsize('$args')
+$args[21], $args[22] = $args[args[20]-1]
+args[23] = 2
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[22]):
 	!@ если последний аргумент не содержит идентификатор таблицы данных,
 	!@ значит он содержит либо только идентификатор строки, либо значение
 	!@ для размещения в строке:
-	$data_table_ = $EASY_DATABASE['current_data_table']
-	kill_last_ -= 1
+	$args[22] = $EASY_DATABASE['current_data_table']
+	args[23] -= 1
 end
-if $data_table_ = '': msg "row.fill: Ошибка. Не указан идентификатор таблицы данных." & exit
-if $arritem('$<<$data_table_>>_id', $pk_) <> $pk_:
+if $args[22] = '': msg "row.fill: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $arritem('$<<$args[22]>>_id', $args[21]) <> $args[21]:
 	!@ если последний аргумент не содержит идентификатор строки,
 	!@ значит он содержит значение для размещения в строке
-	$pk_ = $arritem('$<<$data_table_>>', 'current_row')
-	kill_last_ -= 1
+	$args[21] = $arritem('$<<$args[22]>>', 'current_row')
+	args[23] -= 1
 end
-if $pk_ = '': msg "row.fill: Ошибка. Не указан идентификатор строки." & exit
+if $args[21] = '': msg "row.fill: Ошибка. Не указан идентификатор строки." & exit
 !@ если оказалось, что последний аргумент содержит как минимум один из идентификаторов, уничтожаем его
-if kill_last_:	killvar '$args', arrsize('$args') - 1
-local $columns_list_ = @edb.list.remove($arritem('$<<$data_table_>>', 'columns'), 'id')
-local $columns_
-@em.str.inArr($columns_list_, '$columns_', '|')
-local $value_, $col_, $col_type_, one_value_
-loop local i = 0 while i < arrsize('$columns_') and i < arrsize('$args') step i += 1:
-	$value_, $col_ = $args[i]
-	if $value_ = $col_ or no @edb.list.is_el($columns_list_, $col_):
-		$col_ = $columns_[i]
-		one_value_ = 1
+if args[23]:	args[20] -= 1
+$args[24] = @edb.list.remove($arritem('$<<$args[22]>>', 'columns'), 'id')
+local $edb_row_fill_columns_
+@em.str.inArr($args[24], '$edb_row_fill_columns_', '|')
+loop args[29] = 0 while args[29] < arrsize('$edb_row_fill_columns_') and args[29] < args[20] step args[29] += 1:
+	$args[25], $args[26] = $args[args[29]]
+	if $args[25] = $args[26] or no @edb.list.is_el($args[24], $args[26]):
+		$args[26] = $edb_row_fill_columns_[args[29]]
+		args[28] = 1
 	else
-		one_value_ = 0
+		args[28] = 0
 	end
-	$col_type_ = $arritem("$<<$data_table_>>_<<$col_>>", 0)
-	if $col_type_ = 'num':
-		if one_value_: $value_ = $str(args[i])
-		dynamic "<<$data_table_>>_<<$col_>>['<<$pk_>>'] = <<$value_>>"
+	$args[27] = $arritem("$<<$args[22]>>_<<$args[26]>>", 0)
+	if $args[27] = 'num':
+		if args[28]: $args[25] = $str(args[args[29]])
+		dynamic "<<$args[22]>>_<<$args[26]>>['<<$args[21]>>'] = <<$args[25]>>"
 	else:
-		dynamic "$<<$data_table_>>_<<$col_>>['<<$pk_>>'] = '<<$value_>>'"
+		dynamic "$<<$args[22]>>_<<$args[26]>>['<<$args[21]>>'] = '<<$args[25]>>'"
 	end
 end
 !@ Не помечаем изменяемые колонки, как текущие, поскольку может статься так,
 !@ что мы не будем знать, на какой колонке закончилось заполнение.
 !@ указанная таблица данных помечается, как текущая
-@edb.dt.set_cur($data_table_)
+@edb.dt.set_cur($args[22])
 !@ помечаем текущую строку, как текущую
-@edb.row.set_cur($pk_, $data_table_)
+@edb.row.set_cur($args[21], $args[22])
 --- edb.row.fill ---------------------------------
+
+Внимание! Функция работает с массивами, поэтому большая часть локальных переменных заменена на значения массива args, дабы избежать пересечения имён.
+
+Функция использует локальный массив $edb_row_fill_columns_. Избегайте использовать массивы с таким названием в своей игре.
+
+args[20] — размер массива args на момент старта функции. То есть содержит строго число переданных аргументов.
+$args[21] - первичный ключ
+$args[22] - идентификатор таблицы данных
+args[23] - kill_last_, переменная для отслеживания, расположены ли в последнем элементе идентификаторы.
+$args[24] - $columns_list_, список колонок к заполнению
+$args[25] - значение, которое хотим разместить в строке
+$args[26] - название колонки, в которой хотим разместить значение
+$args[27] - тип колонки, в которой хотим разместить значение
+args[28] - маркер для определения одно значение в аргументе, или нет.
+args[29] - счётчик в цикле
