@@ -11,18 +11,23 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "dt.del_
 if $args[1] = '': msg "dt.del_row: Ошибка. Не указан идентификатор таблицы данных." & exit
 !@ Удалить строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
 if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
-local $data_table_, $pk_ = $args[1], $args[0]
 !@ вносим освободившийся ключ в список, если тип ключей порядковый:
-local $pk_type_ = $arritem('$<<$data_table_>>', 'primary_keys_type')
-if instr($pk_type_, '[hex:') <> 0 or instr($pk_type_, '[num:') <> 0:
-	dynamic "$<<$data_table_>>['free_keys'] = @edb.list.append($<<$data_table_>>['free_keys'], '<<$pk_>>')"
+$args[20] = $arritem('$<<$args[1]>>', 'primary_keys_type')
+if instr($args[20], '[hex:') <> 0 or instr($args[20], '[num:') <> 0:
+	dynamic "$<<$args[1]>>['free_keys'] = @edb.list.append($<<$args[1]>>['free_keys'], '<<$args[0]>>')"
 end
 !@ Удаление строки производится путём удаления ячеек из каждого массива-столбца:
-local $columns_ = $arritem('$<<$data_table_>>', 'columns')
-local $callback_ = { killvar '$<<$args[1]>>_<<$args[0]>>', $args[2] }
-$args['buffer'] = @edb.list.for_each($columns_, $callback_, '|', $data_table_, $pk_)
+$args[21] = $arritem('$<<$args[1]>>', 'columns')
+$args[22] = { killvar '$<<$args[1]>>_<<$args[0]>>', $args[2] }
+$args['buffer'] = @edb.list.for_each($args[21], $args[22], '|', $args[1], $args[0])
 !@ если строка была текущей, снимаем указатель
-if $arritem('$<<$data_table_>>', 'current_row') = $pk_:
-	dynamic "$<<$data_table_>>['current_row'] = ''"
+if $arritem('$<<$args[1]>>', 'current_row') = $args[0]:
+	dynamic "$<<$args[1]>>['current_row'] = ''"
 end
+!@ делаем таблицу данных текущей
+@edb.dt.set_cur($args[1])
 --- edb.dt.del_row ---------------------------------
+
+$args[20] - тип первичного ключа
+$args[21] - список колонок
+$args[22] - функция типа "колбэк" для обработки элементов списка

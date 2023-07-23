@@ -1,26 +1,26 @@
 QSP-Game Просмотр информации о базе данных
 
 # edb.print
-local $mode_ = $lcase($args[0])
-local $export_, $nr_ = '', '
+$args[0] = $lcase($args[0])
+local $args[20], $args[21] = '', '
 '
 !@ ------------------ непосредственно информация о базе данных --------------------
 if $EASY_DATABASE['ID'] <> '':
-	$export_ += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + $nr_
-	$export_ += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables.ids'] + $nr_
-	$export_ += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables.counter'] + $nr_
-	$export_ += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables.number'] + $nr_
-	$export_ += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $nr_
+	$args[20] += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + $args[21]
+	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables.ids'] + $args[21]
+	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables.counter'] + $args[21]
+	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables.number'] + $args[21]
+	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $args[21]
 else:
-	$export_ += 'База данных не инициализирована'
+	$args[20] += 'База данных не инициализирована'
 end
 !@ ------------------ непосредственно информация о базе данных --------------------
-if instr($mode_, '[inmain]') <> 0:
-	*pl $export_
-elseif instr($mode_, '[instat]') <> 0:
-	pl $export_
+if instr($args[0], '[inmain]') <> 0:
+	*pl $args[20]
+elseif instr($args[0], '[instat]') <> 0:
+	pl $args[20]
 else
-	$result = $export_
+	$result = $args[20]
 end
 --- edb.print ---------------------------------
 
@@ -28,3 +28,6 @@ $args[0] - управление:
 	[inmain] - вывод в окно основного описания
 	[instat] - вывод в окно дополнительного описания
 	пустая строка или любое иное значение - возвращает результат
+
+$args[20] - выходной текст, возращаемый функцией к выводу
+$args[21] - символ переноса строки

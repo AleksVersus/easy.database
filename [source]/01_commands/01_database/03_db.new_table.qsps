@@ -9,7 +9,7 @@ $args[2] - управляющая конструкция
 if $EASY_DATABASE['ID'] = '': msg "edb.new_table: Ошибка. База данных не инициализирована." & exit
 if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
 if $args[0] = '': msg "edb.new_table: Ошибка. Не указан идентификатор таблицы данных." & exit
-local $mode_ = $lcase($args[2])
+$args[2] = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
 !@ увеличиваем счётчик созданных баз:
@@ -35,33 +35,32 @@ dynamic "
 @edb.dt.set_cur($args[0])
 
 !@ назначаем тип генерируемого первичного ключа
-local num_
-if instr($mode_, '[msecscount]') <> 0:
+if instr($args[2], '[msecscount]') <> 0:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[msecscount]'"
-elseif instr($mode_, '[uuid]') <> 0:
+elseif instr($args[2], '[uuid]') <> 0:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uuid]'"
-elseif instr($mode_, '[uid]') <> 0:
+elseif instr($args[2], '[uid]') <> 0:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
-elseif instr($mode_, '[hex:') <> 0:
-	num_ = val(@em.tag.getNum($mode_, 'hex'))
-	if num_ < 1: num_ = 1
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<num_>>]'"
-elseif instr($mode_, '[num:') <> 0:
-	num_ = val(@em.tag.getNum($mode_, 'num'))
-	if num_ < 1: num_ = 1
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<num_>>]'"
-elseif instr($mode_, '[rhex:') <> 0:
-	num_ = val(@em.tag.getNum($mode_, 'rhex'))
-	if num_ < 8: num_ = 8
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<num_>>]'"
-elseif instr($mode_, '[rnum:') <> 0:
-	num_ = val(@em.tag.getNum($mode_, 'rnum'))
-	if num_ < 16: num_ = 16
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<num_>>]'"
-elseif instr($mode_, '[rstr:') <> 0:
-	num_ = val(@em.tag.getNum($mode_, 'rstr'))
-	if num_ < 16: num_ = 16
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<num_>>]'"
+elseif instr($args[2], '[hex:') <> 0:
+	args[20] = val(@em.tag.getNum($args[2], 'hex'))
+	if args[20] < 1: args[20] = 1
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<args[20]>>]'"
+elseif instr($args[2], '[num:') <> 0:
+	args[20] = val(@em.tag.getNum($args[2], 'num'))
+	if args[20] < 1: args[20] = 1
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<args[20]>>]'"
+elseif instr($args[2], '[rhex:') <> 0:
+	args[20] = val(@em.tag.getNum($args[2], 'rhex'))
+	if args[20] < 8: args[20] = 8
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<args[20]>>]'"
+elseif instr($args[2], '[rnum:') <> 0:
+	args[20] = val(@em.tag.getNum($args[2], 'rnum'))
+	if args[20] < 16: args[20] = 16
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<args[20]>>]'"
+elseif instr($args[2], '[rstr:') <> 0:
+	args[20] = val(@em.tag.getNum($args[2], 'rstr'))
+	if args[20] < 16: args[20] = 16
+	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<args[20]>>]'"
 else:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:16]'"
 end
@@ -77,3 +76,5 @@ end
 	* [rnum:N] - первичным ключом будет назначаться случайное десятерично число, состоящее из не менее, чем 16 символов.
 	* [uid] - первичный ключ будет генерироваться из строки случайных букв и цифр плюс текущее абсолютное значение от msecscount
 	* [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
+
+args[20] - num_

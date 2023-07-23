@@ -10,118 +10,141 @@ if $EASY_DATABASE['ID'] = '':	msg "dt.new_col: Ошибка. База данны
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]):	msg 'dt.new_col: Ошибка. Таблица данных «<<$args[0]>>» не существует.' & exit
 if $args[0] = '':	msg 'dt.new_col: Ошибка. Не указан идентификатор таблицы данных.' & exit
 !@ название колонки первичных ключей и таблицы данных
-local $pk_column_, $data_table_ = '$<<$args[0]>>_id', $args[0]
+$args[20] = '$<<$args[0]>>_id'
 !@ получаем тип первичных ключей
-local $pk_type_ = $arritem('$<<$data_table_>>', 'primary_keys_type')
+$args[21] = $arritem('$<<$args[0]>>', 'primary_keys_type')
 !@ получаем последний первичный ключ
-local $last_pk_ = $dyneval('$result = <<$pk_column_>>[]')
+$args[22] = $dyneval('$result = <<$args[20]>>[]')
 !@ локальная переменная для списка освободившихся ключей
-local $free_keys_
-$last_pk_ = iif($last_pk_ <> 'ids' and $last_pk_ <> '', $last_pk_, '')
-local $pk_, num_
-if instr($pk_type_, '[msecscount]') <> 0:
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = $str(@em.abs(msecscount))
+$args[22] = iif($args[22] <> 'ids' and $args[22] <> '', $args[22], '')
+if instr($args[21], '[msecscount]') <> 0:
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = $str(@em.abs(msecscount))
 		!@ если указанный ключ не существует, прерываем цикл
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
-	$pk_ = ''
-elseif instr($pk_type_, '[uuid]') <> 0:
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.gen_uuid()
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+	$args[24] = ''
+elseif instr($args[21], '[uuid]') <> 0:
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.gen_uuid()
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
-	$pk_ = ''
-elseif instr($pk_type_, '[uid]') <> 0:
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.str.random(16,'[inc][\d][\z][\я]') + $str(@em.abs(msecscount))
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+	$args[24] = ''
+elseif instr($args[21], '[uid]') <> 0:
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.str.random(16,'[inc][\d][\z][\я]') + $str(@em.abs(msecscount))
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
-	$pk_ = ''
-elseif instr($pk_type_, '[hex:') <> 0:
-	num_ = val(@em.tag.getNum($pk_type_, 'hex'))
-	if num_ < 1: num_ = 1
-	$free_keys_ = $arritem('$<<$data_table_>>', 'free_keys')
-	if $free_keys_ = '':
-		$pk_ = @edb.gen_next_hex($last_pk_, num_)
+	$args[24] = ''
+elseif instr($args[21], '[hex:') <> 0:
+	args[25] = val(@em.tag.getNum($args[21], 'hex'))
+	if args[25] < 1: args[25] = 1
+	$args[23] = $arritem('$<<$args[0]>>', 'free_keys')
+	if $args[23] = '':
+		$args[24] = @edb.gen_next_hex($args[22], args[25])
 	else
 		!@ если список освобождённых ключей не пуст, извлекаем освобождённый ключ
-		$pk_ = @edb.list.shift($free_keys_)
-		dynamic "$<<$data_table_>>['free_keys'] = @edb.list.remove($<<$data_table_>>['free_keys'], '<<$pk_>>')"
+		$args[24] = @edb.list.shift($args[23])
+		dynamic "$<<$args[0]>>['free_keys'] = @edb.list.remove($<<$args[0]>>['free_keys'], '<<$args[24]>>')"
 	end
 	!@ если ключ существует в таблице данных, значит предел заполнения достигнут,
 	!@ и новая запись не создаётся. 
-	if $arritem('$<<$pk_column_>>', $pk_) <> '': $pk_ = ''
+	if $arritem('$<<$args[20]>>', $args[24]) <> '': $args[24] = ''
 	jump 'key_create_end'
-elseif instr($pk_type_, '[num:') <> 0:
-	num_ = val(@em.tag.getNum($pk_type_, 'num'))
-	if num_ < 1: num_ = 1
-	$free_keys_ = $arritem('$<<$data_table_>>', 'free_keys')
-	if $free_keys_ = '':
-		$pk_ = @edb.gen_next_num($last_pk_, num_)
+elseif instr($args[21], '[num:') <> 0:
+	args[25] = val(@em.tag.getNum($args[21], 'num'))
+	if args[25] < 1: args[25] = 1
+	$args[23] = $arritem('$<<$args[0]>>', 'free_keys')
+	if $args[23] = '':
+		$args[24] = @edb.gen_next_num($args[22], args[25])
 	else
 		!@ если список освобождённых ключей не пуст, извлекаем освобождённый ключ
-		$pk_ = @edb.list.shift($free_keys_)
-		dynamic "$<<$data_table_>>['free_keys'] = @edb.list.remove($<<$data_table_>>['free_keys'], '<<$pk_>>')"
+		$args[24] = @edb.list.shift($args[23])
+		dynamic "$<<$args[0]>>['free_keys'] = @edb.list.remove($<<$args[0]>>['free_keys'], '<<$args[24]>>')"
 	end
 	!@ если ключ существует в таблице данных, значит предел заполнения достигнут,
 	!@ и новая запись не создаётся. 
-	if $arritem('$<<$pk_column_>>', $pk_) <> '': $pk_ = ''
+	if $arritem('$<<$args[20]>>', $args[24]) <> '': $args[24] = ''
 	jump 'key_create_end'
-elseif instr($pk_type_, '[rhex:') <> 0:
-	num_ = val(@em.tag.getNum($pk_type_, 'rhex'))
-	if num_ < 8: num_ = 8
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.str.random(num_,'[inc][\h]')
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+elseif instr($args[21], '[rhex:') <> 0:
+	args[25] = val(@em.tag.getNum($args[21], 'rhex'))
+	if args[25] < 8: args[25] = 8
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.str.random(args[25],'[inc][\h]')
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
-elseif instr($pk_type_, '[rnum:') <> 0:
-	num_ = val(@em.tag.getNum($pk_type_, 'rnum'))
-	if num_ < 16: num_ = 16
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.str.random(num_,'[inc][\d]')
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+elseif instr($args[21], '[rnum:') <> 0:
+	args[25] = val(@em.tag.getNum($args[21], 'rnum'))
+	if args[25] < 16: args[25] = 16
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.str.random(args[25],'[inc][\d]')
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
-elseif instr($pk_type_, '[rstr:') <> 0:
-	num_ = val(@em.tag.getNum($pk_type_, 'rstr'))
-	if num_ < 16: num_ = 16
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.str.random(num_,'[inc][\d][\z][\я]')
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+elseif instr($args[21], '[rstr:') <> 0:
+	args[25] = val(@em.tag.getNum($args[21], 'rstr'))
+	if args[25] < 16: args[25] = 16
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.str.random(args[25],'[inc][\d][\z][\я]')
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
 else
-	loop local i = 0 while i < 100000 step i += 1:
-		$pk_ = @em.str.random(16,'[inc][\d][\z][\я]')
-		if $arritem('$<<$pk_column_>>', $pk_) = '': jump 'key_create_end'
+	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
+		$args[24] = @em.str.random(16,'[inc][\d][\z][\я]')
+		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
 end
 :key_create_end
-if $pk_ <> '':
+if $args[24] <> '':
 	!@ если ключ сгенерирован, создаём строку.
 	!@ Строка создаётся генерацией новых элементов во всех массивах столбцов.
-	local $columns_ = $arritem('$<<$args[0]>>', 'columns')
-	local $callback_ = {
-		local $col_type_ = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
-		if $col_type_ = 'num':
+	$args[27] = $arritem('$<<$args[0]>>', 'columns')
+	$args[28] = {
+		$args[20] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
+		if $args[20] = 'num':
 			dynamic "<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = 0"
-		elseif $col_type_ = 'ids':
+		elseif $args[20] = 'ids':
 			dynamic "$<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = '<<$args[2]>>'"
 		else
 			dynamic "$<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = ''"
 		end
 	}
-	$args['buffer'] = @edb.list.for_each($columns_, $callback_, '|', $args[0], $pk_)
+	$args['buffer'] = @edb.list.for_each($args[27], $args[28], '|', $args[0], $args[24])
 	!@ устанавливаем текущую строку
-	@edb.row.set_cur($pk_, $data_table_)
+	@edb.row.set_cur($args[24], $args[0])
 	!@ возвращаем идентификатор созданной строки
-	$result = $pk_ & exit
+	$result = $args[24] & exit
 else
 	!@ если ключ не сгенерирован (например, таблица достигла предела),
 	!@ возвращаем пустое значение, не создавая строку:
 	$result = '' & exit
 end
 --- edb.dt.new_row ---------------------------------
-* [num:N] - первичные ключи генерируются в виде N-значного десятеричного числа. Это ограничит высоту таблицы данных максимальным возможным в такой таблице числом.
+
+
+$args[20] - название колонки первичных ключей
+$args[21] - тип первичных ключей
+$args[22] - последний первичный ключ в таблице
+$args[23] - список освободившихся ключей
+$args[24] - первичный ключ
+args[25] - num_
+args[26] - заменяет i
+$args[27] - список колонок
+$args[28] - функция типа колбэк для обработки списка колонок
+
+
+=Типы первичных ключей=
+
+--Порядковые ключи--
+
+* [hex:N] - первичные ключи генерируются, как порядковое шестнадцатерияное число из N символов. Это ограничит высоту таблицы данных максимальным возможным в этой таблице данных числом. Чтобы повторно использовать ключи от ранее созданных, а затем удалённых строк, введён специальный список освободившихся ключей. 
+* [num:N] - первичные ключи генерируются в виде N-значного десятеричного числа. Это ограничит высоту таблицы данных максимальным возможным в такой таблице числом. Чтобы повторно использовать ключи от ранее созданных, а затем удалённых строк, введён специальный список освободившихся ключей.
+
+--Псевдослучайные ключи--
+
+* [msecscount] - первичные ключи будут генерироваться на основе данных из функции msecscount. Число преобразуется к положительному, затем к строке.
+* [uuid] - первичные ключи генерируются в формате UUID.
 * [rhex:N] - первичным ключом будет назначаться случайное шестнадцатеричное число, состоящее из не менее, чем 8 символов.
 * [rnum:N] - первичным ключом будет назначаться случайное десятерично число, состоящее из не менее, чем 16 символов.
+* [uid] - первичный ключ будет генерироваться из строки случайных букв и цифр плюс текущее абсолютное значение от msecscount
 * [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
+
