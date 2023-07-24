@@ -1,0 +1,43 @@
+QSP-Game Две простые локации для извлечения первого и последнего элементов из списка
+
+$args[0] - список элементов
+$args[1] - разделитель
+
+# edb.list.first
+local $delimiter_, instr_ = $args[1], 0
+if $delimiter_ = '': $delimiter_ = '|'
+instr_ = instr($args[0], $delimiter_)
+if instr_ = 0:
+	$result = $args[0]
+else:
+	$result =$mid($args[0], 1, instr_ - 1)
+end
+--- edb.list.first ---------------------------------
+
+@edb.list.first('id|body|count|place|include')
+@edb.list.first('body|count|place|include')
+@edb.list.first('count|place|include')
+@edb.list.first('place|include')
+@edb.list.first('include')
+
+# edb.list.last
+local $delimiter_ = $args[1]
+if $delimiter_ = '': $delimiter_ = '|'
+if instr($args[0], $delimiter_) = 0:
+	$result = $args[0]
+else:
+	!@ local $elements_
+	!@ @em.str.inArr($args[0], '$elements_', $delimiter_)
+	!@ $result = $elements_[]
+	if $delimiter_ = '%avs_delimiter%': msg 'list.last: don''t use ''%avs_delimiter%'' delimiter.' & exit
+	$args[0] = $replace($args[0], $delimiter_, '%avs_delimiter%')
+	$delimiter_ = '%avs_delimiter%'
+	$result = $strfind($args[0], '^(.*?<<$delimiter_>>)+(.*?)$', 2) 
+end
+--- edb.list.last ---------------------------------
+
+@edb.list.last('id|body|count|place|include')
+@edb.list.last('body|count|place|include')
+@edb.list.last('count|place|include')
+@edb.list.last('place|include')
+@edb.list.last('include')
