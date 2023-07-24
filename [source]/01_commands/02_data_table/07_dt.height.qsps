@@ -1,0 +1,13 @@
+QSP-Game Высота таблицы данных
+
+$args[0] - идентификатор таблицы данных
+
+# edb.dt.height
+!@pp:if(fuse):include
+! предохранители
+if $EASY_DATABASE['ID'] = '': msg "dt.set_cur: Ошибка. База данных не инициализирована." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "dt.set_cur: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
+if $args[0] = '': msg "dt.set_cur: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@pp:endif
+result = arrsize('$<<$args[0]>>_id')
+--- edb.dt.height ---------------------------------

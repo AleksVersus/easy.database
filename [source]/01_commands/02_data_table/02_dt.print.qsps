@@ -18,6 +18,7 @@ if instr($args[1], '[only info]') <> 0 or instr($args[1], '[only table]') = 0:
 	$args[20] += "Название таблицы данных: '" + $arritem('$<<$args[0]>>', 'NAME') + "'<<$args[21]>>"
 	$args[20] += "Список колонок: '" + $arritem('$<<$args[0]>>', 'columns') + "'<<$args[21]>>"
 	$args[20] += "Текущая колонка: '" + $arritem('$<<$args[0]>>', 'current_col') + "'<<$args[21]>>"
+	$args[20] += "Высота: " + $str(arrsize('$<<$args[0]>>_id'))
 	$args[20] += "Вид первичных ключей (ID строк): '" + $args[22] + "'<<$args[21]>>"
 	if instr($args[22], '[hex:') <> 0 or instr($args[22], '[num:') <> 0:
 		$args[20] += "Список освободившихся ключей: '" + $arritem('$<<$args[0]>>', 'free_keys') + "'<<$args[21]>>"
