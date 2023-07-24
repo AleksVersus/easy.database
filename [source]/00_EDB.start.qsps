@@ -112,6 +112,10 @@ if instr($user_text, 'edb') = 1:
 			@edb.col.set_next(i * 10 + 1)
 		end
 		@edb.dt.print('objects', '[inmain]')
+		@edb.cell.add(34)
+		@edb.col.set_cur('place')
+		@edb.cell.add('34')
+		@edb.dt.print('objects', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
