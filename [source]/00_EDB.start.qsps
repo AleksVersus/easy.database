@@ -100,6 +100,12 @@ if instr($user_text, 'edb') = 1:
 		@edb.cell.get_value($i, 'place', 'objects')
 		@edb.cell.get_value($s, 'place')
 		@edb.cell.get_value($n)
+		@edb.row.set_cur($r)
+		@edb.col.set_cur('body')
+		@edb.row.set_next('Яблоко')
+		@edb.row.set_next('Инвентарь')
+		@edb.row.set_next(25)
+		@edb.dt.print('objects', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
