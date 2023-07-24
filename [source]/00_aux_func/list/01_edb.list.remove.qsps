@@ -24,7 +24,7 @@ if instr($comm_, '[noclear]') = 0:
 	!@ удаляем их
 	$list_ = $replace($list_, $delimiter_ + $delimiter_, $delimiter_)
 end
-$result = @edb.slice($list_)
+$result = @em.str.slice($list_)
 --- edb.list.remove ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
