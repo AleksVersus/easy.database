@@ -24,8 +24,7 @@ $args[25] = $arritem('$<<$args[2]>>_<<$args[20]>>', 0)
 $args[21] = $arritem('$<<$args[2]>>', 'columns')
 !@ получаем вхождение текущей колонки в список
 args[22] = instr($args[21], '<<$args[20]>>|')
-!@ если за текущей больше нет колонок, ничего не делаем
-pl "value: <<$args[0]>>, cur_col: <<$args[20]>>, cols: <<$args[21]>>, instr: <<args[22]>>"
+
 !@ присваиваем значение ячейке
 if $args[25] = 'num':
 	@edb.cell.set_value(args[0], $args[1], $args[20], $args[2])
@@ -33,6 +32,7 @@ else:
 	@edb.cell.set_value($args[0], $args[1], $args[20], $args[2])
 end
 if args[22] = 0:
+	!@ если за текущей больше нет колонок, ничего не делаем
 	exit
 else:
 	!@ вырезаем остаток списка:
