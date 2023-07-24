@@ -6,7 +6,7 @@ $args[0] - строка, список
 $args[1] - старое значение
 $args[2] - новое значение
 $args[3] - разделитель (по умолчанию вертикальная черта)
-$args[4] - управляющее слово [noclear] или [nclr] - запрещает удалять пустые элементы из списка
+$args[4] - управляющее слово [no clear] или [nclr] - запрещает удалять пустые элементы из списка
 
 # edb.list.remove
 !@ объявляем локальные переменные
@@ -14,13 +14,13 @@ local $list_, $old_el_, $new_el_, $delimiter_, $comm_ = $args[0], $args[1], $arg
 !@ разделитель по умолчанию
 if $delimiter_ = '': $delimiter_ = '|'
 !@ правильная упарвляющая конструкция
-if instr($comm_, '[nclr]') <> 0: $comm_ = $replace($comm_, '[nclr]', '[noclear]')
+if instr($comm_, '[nclr]') <> 0: $comm_ = $replace($comm_, '[nclr]', '[no clear]')
 !@ костылим список, чтобы легко убрать из него нужный элемент
 $list_ = $delimiter_ + $list_ + $delimiter_
 !@ убираем элемент простой заменой
 $list_ = $replace($list_, $delimiter_ + $old_el_ + $delimiter_, $delimiter_ + $new_el_ + $delimiter_)
 !@ если не запрещена очистка пустых элементов
-if instr($comm_, '[noclear]') = 0:
+if instr($comm_, '[no clear]') = 0:
 	!@ удаляем их
 	$list_ = $replace($list_, $delimiter_ + $delimiter_, $delimiter_)
 end
