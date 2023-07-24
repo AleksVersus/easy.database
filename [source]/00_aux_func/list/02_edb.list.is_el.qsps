@@ -17,4 +17,4 @@ if instr($list_, $delimiter_ + $element_ + $delimiter_) <> 0:
 else
 	result = 0
 end
---- edb.list.remove ---------------------------------
+--- edb.list.is_el ---------------------------------
