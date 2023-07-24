@@ -1,0 +1,44 @@
+==TODO==
+
+row
+
+set_next - присваивает значение текущей колнке, а затем делает следующую колонку текущей согласно списке
+
+col
+
+set_next - присваивает значение текущей строке, а затем делает следующую строку текущей.
+
+Когда строки и столбцы исчерпаны, снимает указатель с колонки или столбца
+
+cell.add - увеличение значения. Для числовых столбцов - сложение. Для нечисловых - конкатенация.
+
+
+Псевдословарь с более сложной структурой, чем теперешний.
+[hash:[0:name|klo|put:0]:hash][name.0:[p1.0:[name.1:Aleks:name.1]:p1.0]:name.0]
+
+name.p1.name - доступ к словарю
+
+=Переменные=
+
+--База--
+
+$EASY_DATABASE['ID']
+EASY_DATABASE['data_tables.counter']
+EASY_DATABASE['data_tables.number']
+$EASY_DATABASE['data_tables.ids']
+$EASY_DATABASE['last_data_table']
+$EASY_DATABASE['current_data_table']
+
+--Таблица--
+
+$objects['id']
+$objects['name']
+$objects['columns']
+$objects['current_col']
+$objects['current_row']
+$objects['primary_keys_type']
+$objects['free_keys']
+
+--Колонка--
+
+$objects_body[0] = 'dict' <-- тип колонки
