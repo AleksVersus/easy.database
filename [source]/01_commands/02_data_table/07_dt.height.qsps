@@ -5,9 +5,23 @@ $args[0] - идентификатор таблицы данных
 # edb.dt.height
 !@pp:if(fuse):include
 ! предохранители
-if $EASY_DATABASE['ID'] = '': msg "dt.set_cur: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "dt.set_cur: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
-if $args[0] = '': msg "dt.set_cur: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $EASY_DATABASE['ID'] = '': msg "dt.height: Ошибка. База данных не инициализирована." & exit
+if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
+if $args[0] = '': msg "dt.height: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "dt.height: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
 !@pp:endif
 result = arrsize('$<<$args[0]>>_id')
 --- edb.dt.height ---------------------------------
+
+Внимание!!! Функция возвращает размер массива. Это значит,
+что действительная высота таблицы на 1 меньше возвращаемого значения,
+поскольку нулевая ячейка используется для служебной информации.
+
+0 - column type
+1 - data
+2 - data
+3 - data
+4 - data
+5 - data 
+
+arrsize = 6, number of rows = 5, last row number = 5
