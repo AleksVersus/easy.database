@@ -68,7 +68,7 @@
 		if $strfind($args[0],'<заголовок>')<>'' or $args[2] = 'INVENTORY' or $args[2]='RESPAWNER':
 			$id_array[args['num']]=$args[2]
 		elseif $strfind($args[0],'<link>')<>'':
-			$id_array[args['num']]='link.'+TRIM($args[2])
+			$id_array[args['num']]='link.'+$TRIM($args[2])
 		else
 			$id_array[args['num']]=$args[2]+'.'+$func('#rndstr#',8,'буквы и цифры')
 		end
