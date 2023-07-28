@@ -1,0 +1,16 @@
+QSP-Game длина списка
+
+$args[0] - список
+$args[1] - разделитель
+
+# edb.list.length
+if len($args[0])=0: result = 0 & exit
+if $args[1] = '': $args[1] = '|'
+loop local i, run = 0, 1 while run:
+	i = instr($args[0], $args[1], i+1)
+	if i > 0: result += 1 else: run = 0
+end
+result += 1
+--- edb.list.length ---------------------------------
+
+

@@ -1,0 +1,15 @@
+QSP-Game Удаление столбца из таблицы данных
+
+$args[0] -  идентификатор таблицы данных
+
+# edb.dt.width
+!@pp:if(fuse):include
+!@ предохранители
+if $EASY_DATABASE['ID'] = '': msg "dt.width: Ошибка. База данных не инициализирована." & exit
+if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
+if $args[0] = '': msg "dt.width: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "dt.width: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+!@pp:endif
+result = @edb.list.length($arritem('$<<$args[0]>>', 'columns'))
+--- edb.dt.width ---------------------------------
+
