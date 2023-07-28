@@ -44,7 +44,7 @@ elseif instr($args[21], '[hex:') <> 0:
 		$args[24] = @edb.gen_next_hex($args[22], args[25])
 	else
 		!@ если список освобождённых ключей не пуст, извлекаем освобождённый ключ
-		$args[24] = @edb.list.shift($args[23])
+		$args[24] = @edb.list.first($args[23])
 		dynamic "$<<$args[0]>>['free_keys'] = @edb.list.remove($<<$args[0]>>['free_keys'], '<<$args[24]>>')"
 	end
 	!@ если ключ существует в таблице данных, значит предел заполнения достигнут,
@@ -59,7 +59,7 @@ elseif instr($args[21], '[num:') <> 0:
 		$args[24] = @edb.gen_next_num($args[22], args[25])
 	else
 		!@ если список освобождённых ключей не пуст, извлекаем освобождённый ключ
-		$args[24] = @edb.list.shift($args[23])
+		$args[24] = @edb.list.first($args[23])
 		dynamic "$<<$args[0]>>['free_keys'] = @edb.list.remove($<<$args[0]>>['free_keys'], '<<$args[24]>>')"
 	end
 	!@ если ключ существует в таблице данных, значит предел заполнения достигнут,
