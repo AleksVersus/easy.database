@@ -10,16 +10,15 @@ $args[2] - идентификатор таблицы данных
 
 # edb.row.inject
 if instr($args[0], '$') = 1: $args[0] = $mid($args[0], 2) & !@ название массива не должно содержать символ доллара
-!@pp:if(fuse):include
-!@ Предохранители:
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.inject: Ошибка. База данных не инициализирована." & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]): msg "row.inject: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
 if $args[2] = '': msg "row.inject: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_row')
 !@ невозможно вписать содержимое в несуществующую строку, однако ошибки это не вызовет
 if $arritem('$<<$args[2]>>_id', $args[1]) <> $args[1]: exit
-!@pp:endif
 !@ получаем список колонок
 $args[20] = $arritem('$<<$args[2]>>', 'columns')
 pl $args[20]

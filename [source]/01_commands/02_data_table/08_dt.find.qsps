@@ -15,15 +15,17 @@ $args[4] ... $args[18] — дополнительные фильтры в вид
 		[strict] (или не указанное значение) - проверяем на точное соответствие.
 
 # edb.dt.find
+if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(fuse):include
 !@ проверка инициализации базы данных
 if $EASY_DATABASE['ID'] = '': msg "edb.dt.find: Ошибка. База данных не инициализирована." & exit
 !@ проверка существования указанной таблицы данных
-if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 if $args[2] = '': msg "edb.dt.find: Ошибка. Не указан идентификатор таблицы данных" & exit
 if $arritem('$<<$args[2]>>', 'ID') <> $args[2]: msg "edb.dt.find: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
+!@pp:endif
 !@ проверка существования колонки
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_col')
+!@pp:if(fuse):include
 if $args[1] = '': msg "edb.dt.find: Ошибка. Не указана колонка поиска." & exit
 if arrsize('$<<$args[2]>>_<<$args[1]>>') < 1: msg "edb.dt.find: Ошибка. Колонка «<<$args[1]>>» не существует." & exit
 !@pp:endif

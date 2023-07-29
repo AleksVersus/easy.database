@@ -5,15 +5,16 @@ $args[1] - тип колонки
 $args[2] - идентификатор таблицы данных
 
 # edb.dt.new_col
-!@ значения по умолчанию:
-if $args[1] = '': $args[1] = 'str'
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
-!@ предохранители:
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "dt.new_col: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]):	msg 'dt.new_col: Ошибка. Таблица данных «<<$args[2]>>» не существует.' & exit
 if $args[2] = '':	msg 'dt.new_col: Ошибка. Не указан идентификатор таблицы данных.' & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]):	msg 'dt.new_col: Ошибка. Таблица данных «<<$args[2]>>» не существует.' & exit
 if $args[0] = '': msg 'dt.new_col: Ошибка. Не указан идентификатор колонки.' &	exit
 if $args[0] = 'id' or $args[1] = 'ids':	msg 'dt.new_col: Колонка первичных ключей уже создана.' & exit
+!@pp:endif
+!@ значения по умолчанию:
+if $args[1] = '': $args[1] = 'str'
 !@ создаём массив, который является колонкой, и задаём тип данных для колонки.
 dynamic "$<<$args[2]>>_<<$args[0]>>[0] = '<<$args[1]>>'"
 !@ если размер колонки первичных ключей больше единицы, циклом заполняем указанную колонку пустыми значениями.

@@ -5,12 +5,13 @@ $args[1] - идентификатор таблицы данных
 
 # edb.dt.del_col
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
-!@ предохранители
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '': msg "dt.del_col: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "dt.del_col: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
 if $args[1] = '': msg "dt.del_col: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "dt.del_col: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
 if $args[0] = '': msg "dt.del_col: Ошибка. Не указан идентификатор колонки." & exit
 if $args[0] = 'id': msg "dt.del_col: Нельзя удалить колонку первичных ключей без удаления таблицы данных." & exit
+!@pp:endif
 !@ удаляем массив колонки
 killvar '$<<$args[1]>>_<<$args[0]>>'
 dynamic "

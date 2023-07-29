@@ -3,10 +3,13 @@ QSP-Game Удалить таблицу данных
 $args[0] - идентификатор таблицы данных
 
 # edb.del_table
-!@ предохранители
+
+if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.del_table: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.del_table: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
 if $args[0] = '': msg "edb.del_table: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.del_table: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
+!@pp:endif
 
 !@ получаем список колонок в таблице данных:
 local $edb_bd_deltable_columns_list_

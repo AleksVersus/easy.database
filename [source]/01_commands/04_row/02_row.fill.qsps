@@ -5,7 +5,9 @@ QSP-Game Заполнение строки значениями
 столбца и значения.
 
 # edb.row.fill
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.fill: Ошибка. База данных не инициализирована." & exit
+!@pp:endif
 args[20] = arrsize('$args')
 $args[21], $args[22] = $args[args[20]-1]
 args[23] = 2
@@ -16,14 +18,18 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[22]):
 	$args[22] = $EASY_DATABASE['current_data_table']
 	args[23] -= 1
 end
+!@pp:if(fuse):include
 if $args[22] = '': msg "row.fill: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@pp:endif
 if $arritem('$<<$args[22]>>_id', $args[21]) <> $args[21]:
 	!@ если последний аргумент не содержит идентификатор строки,
 	!@ значит он содержит значение для размещения в строке
 	$args[21] = $arritem('$<<$args[22]>>', 'current_row')
 	args[23] -= 1
 end
+!@pp:if(fuse):include
 if $args[21] = '': msg "row.fill: Ошибка. Не указан идентификатор строки." & exit
+!@pp:endif
 !@ если оказалось, что последний аргумент содержит как минимум один из идентификаторов, уничтожаем его
 if args[23]:	args[20] -= 1
 $args[24] = @edb.list.remove($arritem('$<<$args[22]>>', 'columns'), 'id')
@@ -47,9 +53,7 @@ loop args[29] = 0 while args[29] < arrsize('$edb_row_fill_columns_') and args[29
 end
 !@ Не помечаем изменяемые колонки, как текущие, поскольку может статься так,
 !@ что мы не будем знать, на какой колонке закончилось заполнение.
-!@ указанная таблица данных помечается, как текущая
-@edb.dt.set_cur($args[22])
-!@ помечаем текущую строку, как текущую
+!@ помечаем текущую строку, как текущую:
 @edb.row.set_cur($args[21], $args[22])
 --- edb.row.fill ---------------------------------
 

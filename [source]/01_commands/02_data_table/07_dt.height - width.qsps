@@ -1,0 +1,40 @@
+QSP-Game Высота таблицы данных
+
+$args[0] - идентификатор таблицы данных
+
+# edb.dt.height
+if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
+!@pp:if(fuse):include
+if $EASY_DATABASE['ID'] = '': msg "dt.height: Ошибка. База данных не инициализирована." & exit
+if $args[0] = '': msg "dt.height: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "dt.height: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
+!@pp:endif
+result = arrsize('$<<$args[0]>>_id')
+--- edb.dt.height ---------------------------------
+
+Внимание!!! Функция возвращает размер массива. Это значит,
+что действительная высота таблицы на 1 меньше возвращаемого значения,
+поскольку нулевая ячейка используется для служебной информации.
+
+0 - column type
+1 - data
+2 - data
+3 - data
+4 - data
+5 - data 
+
+arrsize = 6, number of rows = 5, last row number = 5
+
+QSP-Game Ширина таблицы данных (число колонок)
+
+$args[0] -  идентификатор таблицы данных
+
+# edb.dt.width
+if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
+!@pp:if(fuse):include
+if $EASY_DATABASE['ID'] = '': msg "dt.width: Ошибка. База данных не инициализирована." & exit
+if $args[0] = '': msg "dt.width: Ошибка. Не указан идентификатор таблицы данных." & exit
+if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "dt.width: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+!@pp:endif
+result = @edb.list.length($arritem('$<<$args[0]>>', 'columns'))
+--- edb.dt.width ---------------------------------

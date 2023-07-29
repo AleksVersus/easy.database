@@ -5,14 +5,18 @@ $args[1] — идентификатор таблицы данных
 $args[2] — управление
 
 # edb.col.print
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@pp:if(fuse):include
+if $EASY_DATABASE['ID'] = '':	msg "col.print: Ошибка. База данных не инициализирована." & exit
+if $args[1] = '':	msg 'col.print: Ошибка. Не указан идентификатор таблицы данных.' & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'col.print: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
+!@pp:endif
+if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_col')
+!@pp:if(fuse):include
+if $args[0] = '': msg 'col.print: Ошибка. Не указан идентификатор колонки.' &	exit
+!@pp:endif
 !@ значения по умолчанию:
 $args[2] = $lcase($args[2])
-if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
-!@ предохранители:
-if $EASY_DATABASE['ID'] = '':	msg "col.print: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]):	msg 'col.print: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
-if $args[1] = '':	msg 'col.print: Ошибка. Не указан идентификатор таблицы данных.' & exit
-if $args[0] = '': msg 'col.print: Ошибка. Не указан идентификатор колонки.' &	exit
 !@ определяем локальные переменные:
 $args[20], $args[21] = '', '
 '
@@ -27,9 +31,7 @@ args[27] = iif(args[26], args[26], arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]
 !@ получаем содержимое колонки с помощью em.arr.print
 $args[20] += 'Колонка: «<<$args[0]>>», тип: «<<$args[22]>>», строки с <<args[25]>> по <<args[27]>>'+$args[21]
 $args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result] [not last]', '|', args[25], args[26])
-!@ делаем созданную таблицу текущей
-@edb.dt.set_cur($args[1])
-!@ делаем созданную таблицу текущей
+!@ делаем распечатанную колонку текущей
 @edb.col.set_cur($args[0])
 !@ выводим на экран
 if instr($args[2], '[inmain]') <> 0:

@@ -6,12 +6,13 @@ $args[2] - управление
 
 # edb.row.print
 !@ основные локальные переменные
-$args[2]= $lcase($args[2])
-!@ Предохранители:
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+$args[2]= $lcase($args[2])
+!@pp:if(fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.print: Ошибка. База данных не инициализирована." & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "row.print: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
 if $args[1] = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
+!@pp:endif
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Распечатать строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
 if $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit

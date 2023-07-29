@@ -5,10 +5,14 @@ $args[1] - название таблицы данных
 $args[2] - управляющая конструкция
 
 # edb.new_table
+
+!@pp:if(fuse):include
 !@ нельзя создать таблицу данных, если она уже создана, или база данных неинициализирована
 if $EASY_DATABASE['ID'] = '': msg "edb.new_table: Ошибка. База данных не инициализирована." & exit
-if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
 if $args[0] = '': msg "edb.new_table: Ошибка. Не указан идентификатор таблицы данных." & exit
+if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
+!@pp:endif
+
 $args[2] = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
