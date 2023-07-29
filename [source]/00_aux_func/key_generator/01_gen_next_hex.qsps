@@ -20,3 +20,6 @@ else
 	exit
 end
 --- edb.gen_next_hex ---------------------------------
+
+!@pp:var(em_zero)
+!@pp:var(em_hex_add)
