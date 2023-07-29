@@ -12,7 +12,7 @@ if $EASY_DATABASE['ID'] = '': msg "edb.new_table: Ошибка. База дан�
 if $args[0] = '': msg "edb.new_table: Ошибка. Не указан идентификатор таблицы данных." & exit
 if @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
 !@pp:endif
-
+if instr($args[0], '$') = 1: $args[0] = $mid($args[0], 2)
 $args[2] = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])

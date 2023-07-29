@@ -12,6 +12,18 @@ if $EASY_DATABASE['ID'] <> '':
 	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables.counter'] + $args[21]
 	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables.number'] + $args[21]
 	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $args[21]
+	if instr($args[0], '[all arrays]') <> 0:
+		$args[20] += "Все занятые массивы: " + $args[21]
+		$args[20] += "$EASY_DATABASE" + $args[21]
+		$args[22] = {
+			$result = '$<<$args[0]>>' + $args[1]
+			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[2], '|', $args[0], $args[1])
+		}
+		$args[23] = {
+			$result = '$<<$args[1]>>_<<$args[0]>>' + $args[2]
+		}
+ 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables.ids'], $args[22], '|', $args[21], $args[23])
+	end
 else:
 	$args[20] += 'База данных не инициализирована'
 end
@@ -31,5 +43,8 @@ $args[0] - управление:
 	[instat] - вывод в окно дополнительного описания
 	пустая строка или любое иное значение - возвращает результат
 
+	[all arrays] - увидим на экране названия всех массивов
+
 $args[20] - выходной текст, возращаемый функцией к выводу
 $args[21] - символ переноса строки
+$args[22] - колбэк

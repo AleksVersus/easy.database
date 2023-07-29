@@ -14,7 +14,6 @@ if $delimiter_ = '': $delimiter_ = '|'
 !@ костылим список, чтобы легко искать элемент
 $list_ = $delimiter_ + $list_ + $delimiter_ 
 !@ ищем элемент
-!@ pl "edb.list.is_el «<<$list>>» «<<$element>>»" & wait 100 	& !@< выводим
 if instr($list_, $delimiter_ + $element_ + $delimiter_) <> 0:
 	result = 1
 else

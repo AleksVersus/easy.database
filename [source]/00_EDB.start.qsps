@@ -67,7 +67,8 @@ if instr($user_text, 'edb') = 1:
 		*pl '* verison — текущая версия модуля.'
 		*pl '* required em — информация по используемому и необходимому easy.math.'
 		*pl '* gen id - генерирует uuid.'
-		*pl '* init - инициализирует базу данных' 
+		*pl '* init - инициализирует базу данных'
+		*pl '* > - выводит информацию о базе данных' 
 	elseif $command_line_ = 'required em' or $command_line_ = 'required easy.math':
 		*pl @edb.start('em-version')
 	elseif $command_line_ = 'version':
@@ -124,13 +125,12 @@ if instr($user_text, 'edb') = 1:
 		@edb.row.inject('septem', $n)
 		@em.arr.print('$septem')
 		@edb.dt.print('objects', '[inmain]')
-		@edb.dt.height()
-		@edb.dt.width()
+		@edb.print('[all arrays]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
 	elseif $command_line_ = '>':
-		*pl @edb.print()
+		*pl @edb.print('[all arrays]')
 	elseif instr($command_line_, '>') = 1:
 		local $commands_
 		@em.str.inArr($mid($command_line_, 2), '$commands_', '>', '[strip]')
@@ -139,6 +139,7 @@ if instr($user_text, 'edb') = 1:
 			*pl "Создана таблица данных «<<$commands_[1]>>»."
 		elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
 			@edb.del_table($commands_[1])
+			*pl "Удалена таблица данных «<<$commands_[1]>>»."
 		elseif @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $commands_[0]):
 			if $commands_[1] = 'print':
 				@edb.dt.print($commands_[0], '[inmain]')
