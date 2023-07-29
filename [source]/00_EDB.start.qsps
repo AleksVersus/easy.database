@@ -1,6 +1,7 @@
 QSP-Game Точка входа и отладчик
 
 # edb.start
+
 if $args[0] = '':
 	!@ подключение библиотеки easy.math:
 	inclib 'easy.math.qsp'
