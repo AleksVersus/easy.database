@@ -2,17 +2,17 @@
 	"project":
 	[
 		{
-			"build":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
-			"folders":[{"path":".\\[source]"}]
+			"build":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
+			"folders":[{"path":"."}]
 		},
 		{
-			"build":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.math.qsp",
+			"build":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.math.qsp",
 			"folders":[
-				{"path":"..\\easy.math.3\\[source]"}
+				{"path":"..\\..\\easy.math.3\\[source]"}
 			]
 		}
 	],
-	"player":"D:\\my\\GameDev\\QuestSoftPlayer\\QSP 580 QG 400b\\qspgui.exe",
+	"player":"..\\..\\..\\..\\QSP 580 QG 400b\\qspgui.exe",
 	"save_txt2gam":"False",
-	"start":"..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp"
+	"start":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp"
 }
