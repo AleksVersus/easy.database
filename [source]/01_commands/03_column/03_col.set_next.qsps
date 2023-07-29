@@ -9,13 +9,13 @@ $args[2] - идентификатор таблицы данных
 
 # edb.col.set_next
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
-!@pp:if(fuse):include
+!@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "col.set_next: Ошибка. База данных не инициализирована." & exit
 if $args[2] = '':	msg 'col.set_next: Ошибка. Не указан идентификатор таблицы данных.' & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]):	msg 'col.set_next: Ошибка. Таблица данных «<<$args[2]>>» не существует.' & exit
 !@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_col')
-!@pp:if(fuse):include
+!@pp:if(edb_fuse):include
 if $args[1] = '': msg 'col.set_next: Ошибка. Не указан идентификатор колонки.' &	exit
 if no @edb.list.is_el($arritem('$<<$args[2]>>', 'columns'), $args[1]): msg 'col.set_next: Ошибка. Неверно указан идентификатор колонки «<<$args[1]>>».' & exit
 !@pp:endif

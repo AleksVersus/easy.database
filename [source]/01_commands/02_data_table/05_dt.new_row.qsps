@@ -4,7 +4,7 @@ $args[0] - идентификатор таблицы данных
 
 # edb.dt.new_row
 if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
-!@pp:if(fuse):include
+!@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "dt.new_row: Ошибка. База данных не инициализирована." & exit
 if $args[0] = '':	msg 'dt.new_row: Ошибка. Не указан идентификатор таблицы данных.' & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]):	msg 'dt.new_row: Ошибка. Таблица данных «<<$args[0]>>» не существует.' & exit
