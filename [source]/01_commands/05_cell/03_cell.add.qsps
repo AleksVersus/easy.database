@@ -41,11 +41,12 @@ elseif $args[20] = 'tuple':
 	"
 elseif $args[20] = 'str':
 	!@ для строки это просто конкатенация
-	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
+	jump 'string_and_other'
 elseif $args[20] = 'dict':
 	!@ TODO: для словаря пока что это просто конкатенация
-	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
+	jump 'string_and_other'
 else:
+	:string_and_other
 	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
 end
 !@ делаем строку и столбец текущими
