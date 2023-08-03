@@ -82,5 +82,7 @@ end
 	* [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
 
 args[20] - num_
-
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_tag_getnum)
+!@pp:endif
+

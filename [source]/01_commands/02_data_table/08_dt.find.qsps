@@ -158,4 +158,6 @@ $args[31], $args[32], $args[33] - колонка, значение, управл
 $args[34] - тип колонки в цикле доп фильтров
 args[35] - цикл фильтров. Маркер true|false - пройдены ли все фильтры или нет
 
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_tag_getnum)
+!@pp:endif

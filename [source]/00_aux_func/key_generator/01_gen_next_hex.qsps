@@ -20,6 +20,7 @@ else
 	exit
 end
 --- edb.gen_next_hex ---------------------------------
-
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_zero)
 !@pp:var(em_hex_add)
+!@pp:endif

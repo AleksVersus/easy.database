@@ -41,3 +41,6 @@ end
 @edb.list.last('count|place|include')
 @edb.list.last('place|include')
 @edb.list.last('include')
+!@pp:if(build_easy_math!=Off):nopp
+!@pp:var(em_str_slice)
+!@pp:endif

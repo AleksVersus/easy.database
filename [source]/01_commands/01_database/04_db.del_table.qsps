@@ -36,4 +36,6 @@ killvar $args[0]
 
 Функция использует локальный массив $edb_bd_deltable_columns_list_. Избегайте использования данного массива в своей игре.
 
-@pp:var(em_str_inarr)
+!@pp:if(build_easy_math!=Off):nopp
+!@pp:var(em_str_inarr)
+!@pp:endif

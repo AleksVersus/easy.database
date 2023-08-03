@@ -45,5 +45,6 @@ $result = $mid($result, len($delimiter_) + 1)
 --- edb.list.diff ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
-
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_str_inarr)
+!@pp:endif

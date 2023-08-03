@@ -75,4 +75,7 @@ $args[24] - список колонок
 $args[25] - функция типа колбэк для обработки элементов списка колонок
 $args[26] - строка аргументов
 
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_fewarrs_print)
+!@pp:endif
+

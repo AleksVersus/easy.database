@@ -21,5 +21,7 @@ else
 end
 --- edb.gen_next_num ---------------------------------
 
+!@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_zero)
-!@pp:var(em_hex_add)
+!@pp:var(em_add)
+!@pp:endif

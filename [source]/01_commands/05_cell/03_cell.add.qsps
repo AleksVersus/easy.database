@@ -18,10 +18,33 @@ if $args[2] = '': $args[2] = $arritem('$<<$args[3]>>', 'current_col')
 if $arritem('$<<$args[3]>>_id', $args[1]) <> $args[1] or arrsize('$<<$args[3]>>_<<$args[2]>>') = 0: exit
 !@ так же невозможно присвоить значение ячейке, которая находится в столбце первичных ключей
 if $args[2] = 'id' or $arritem('$<<$args[3]>>_<<$args[2]>>', 0) = 'ids': exit
-!@ непосредственно присваиваем значение ячейке
-if $arritem('$<<$args[3]>>_<<$args[2]>>', 0) = 'num':
-	!@ присваиваем число
+$args[20] = $arritem('$<<$args[3]>>_<<$args[2]>>', 0)
+!@ непосредственно добавляем значение ячейке
+if $args[20] = 'num':
+	!@ увеличиваем значение на указанное число
 	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += <<args[0]>>"
+elseif $args[20] = 'list':
+	!@ если тип колонки список, добавляем в список новый элемент
+	dynamic "
+		$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = @edb.list.append($<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'], '<<$args[0]>>')
+	"
+elseif $args[20] = 'tuple':
+	!@ если тип колонки кортеж, увеличить число его элементов нельзя,
+	!@ зато можно изменить значения уже существующих элементов
+	!@ в $args[0] так же должен быть передан кортеж ($value, #position)
+	$args[21], args[22] = $args[0]
+	local $edb_cell_add_temp_array_
+	@em.str.inArr($arritem('$<<$args[3]>>_<<$args[2]>>', '<<$args[1]>>'), '$edb_cell_add_temp_array_', '')
+	$edb_cell_add_temp_array_[args[22]] = $args[21]
+	dynamic "
+		$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = @em.arr.print('$edb_cell_add_temp_array_', '[only result] [not last]', '')
+	"
+elseif $args[20] = 'str':
+	!@ для строки это просто конкатенация
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
+elseif $args[20] = 'dict':
+	!@ TODO: для словаря пока что это просто конкатенация
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
 else:
 	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
 end
@@ -29,3 +52,12 @@ end
 @edb.row.set_cur($args[1])
 @edb.col.set_cur($args[2])
 --- edb.cell.add ---------------------------------
+
+$args[20] - тип колонки
+$args[21] - значение, если передан кортеж
+args[22] - индекс в кортеже, если передан кортеж
+
+!@pp:if(build_easy_math!=Off):nopp
+!@pp:var(em_arr_print)
+!@pp:var(em_str_inarr)
+!@pp:endif
