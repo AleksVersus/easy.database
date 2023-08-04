@@ -10,6 +10,7 @@ if $EASY_DATABASE['ID'] = '': msg "dt.del_row: Ошибка. База данны
 if $args[1] = '': msg "dt.del_row: Ошибка. Не указан идентификатор таблицы данных." & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[1]): msg "dt.del_row: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
 !@pp:endif
+if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Удалить строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
 if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
 !@ вносим освободившийся ключ в список, если тип ключей порядковый:
