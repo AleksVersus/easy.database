@@ -43,7 +43,12 @@ if instr($args[1], '[only table]') <> 0 or instr($args[1], '[only info]') = 0:
 		end
 	}
 	$args[26] = @edb.list.for_each($args[24], $args[25], '|', $args[0])
-	$args[26] = $mid($args[26], 1, len($args[26]) - 1)
+	if instr($args[1], '[range:') <> 0:
+		$args[27] = $strfind($args[1], '\[range:(\d+\-\d+)\]', 1)
+		$args[26] += "'[range onscreen:<<$args[27]>>]'"
+	else:
+		$args[26] = $mid($args[26], 1, len($args[26]) - 1)
+	end
 	$args[20] += $dyneval("$result = @em.fewArrs.print(<<$args[26]>>)")
 end
 !@ ------------------ непосредственно информация о таблице данных --------------------
@@ -62,6 +67,7 @@ $args[1] - управление:
 	Настройки вывода:
 	[oi] или [only info] — выводится информация о таблице данных
 	[ot] или [only table] — выводится только содержимое таблицы данных в виде таблицы
+		[range:N-M] - выведутся только строки с N по M включительно.
 	Назначение вывода:
 	[inmain] - вывод в окно основного описания
 	[instat] - вывод в окно дополнительного описания
