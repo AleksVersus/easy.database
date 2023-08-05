@@ -14,5 +14,6 @@
 	],
 	"player":"..\\..\\..\\..\\QSP 580 QG 400b\\qspgui.exe",
 	"save_txt2gam":"False",
-	"start":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp"
+	"start":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
+	"preprocessor": "Off"
 }
