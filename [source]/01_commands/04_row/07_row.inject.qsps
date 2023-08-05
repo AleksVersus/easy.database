@@ -9,6 +9,7 @@ $args[1] - идентификатор строки
 $args[2] - идентификатор таблицы данных
 
 # edb.row.inject
+if $args[0] = '': exit & !@ нельзя добавить данные, если массив не указан
 if instr($args[0], '$') = 1: $args[0] = $mid($args[0], 2) & !@ название массива не должно содержать символ доллара
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include

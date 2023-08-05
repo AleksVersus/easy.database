@@ -10,15 +10,18 @@ $args[1] - идентификатор строки
 $args[2] - идентификатор таблицы данных
 
 # edb.row.extract
+if $args[0] = '': exit & !@ нельзя извлечь данные, если массив не указан
 if instr($args[0], '$') = 1: $args[0] = $mid($args[0], 2) & !@ название массива не должно содержать символ доллара
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 !@ Предохранители:
 if $EASY_DATABASE['ID'] = '': msg "row.extract: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]): msg "row.extract: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
 if $args[2] = '': msg "row.extract: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[2]): msg "row.extract: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
 !@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_row')
+!@ Извлекать данные из строки, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
+if $arritem('$<<$args[2]>>_id', $args[1]) <> $args[1]: exit
 !@ получаем список колонок
 $args[20] = $arritem('$<<$args[2]>>', 'columns')
 !@ используем функцию типа колбэк для применения к каждому элементу списка
