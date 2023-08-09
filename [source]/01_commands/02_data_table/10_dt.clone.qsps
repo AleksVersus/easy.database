@@ -15,7 +15,7 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "edb.dt.
 !@pp:endif
 !@ получаем номер элемента, с которого мы начинаем копирование таблицы данных
 if $args[2] = '' or $arritem('$<<$args[1]>>_id', $args[2]) <> $args[2]:
-	args[2] = args[2]
+	args[2] = (args[2] = 0, 1, args[2])
 else:
 	args[2] = arrpos('$<<$args[1]>>_id', $args[2])
 end
