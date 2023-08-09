@@ -25,7 +25,7 @@ end
 killvar '$<<$args[0]>>_id'
 !@  -------------------- из базы данных удаляем записи --------------------
 !@ уменьшаем счётчик существующих таблиц
-EASY_DATABASE['data_tables.number'] -= 1
+EASY_DATABASE['data_tables_number'] -= 1
 !@ удаляяем запись о таблице из списка идентификаторов таблиц
 $EASY_DATABASE['data_tables_ids'] = @edb.list.remove($EASY_DATABASE['data_tables_ids'], $args[0])
 !@ снимаем указатель с базы данных, если это текущая база данных

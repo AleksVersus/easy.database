@@ -15,8 +15,8 @@ name.p1.name - доступ к словарю
 --База--
 
 $EASY_DATABASE['ID']
-EASY_DATABASE['data_tables.counter']
-EASY_DATABASE['data_tables.number']
+EASY_DATABASE['data_tables_counter']
+EASY_DATABASE['data_tables_number']
 $EASY_DATABASE['data_tables_ids']
 $EASY_DATABASE['last_data_table']
 $EASY_DATABASE['current_data_table']

@@ -8,9 +8,9 @@ if $EASY_DATABASE['ID'] = '':
 	!@ генерируем идентификатор базы данных
 	$EASY_DATABASE['ID'] = @em.gen_uuid()
 	!@ счётчик созданных таблиц данных
-	EASY_DATABASE['data_tables.counter'] = 0
+	EASY_DATABASE['data_tables_counter'] = 0
 	!@ количество существующих в настоящий момент таблиц
-	EASY_DATABASE['data_tables.number'] = 0
+	EASY_DATABASE['data_tables_number'] = 0
 	!@ список таблиц данных
 	$EASY_DATABASE['data_tables_ids'] = ''
 	!@ указатель на предыдущую активную таблицу данных
