@@ -124,9 +124,15 @@ if instr($user_text, 'edb') = 1:
 		@edb.row.extract('septem', $i)
 		@edb.row.inject('septem', $n)
 		@em.arr.print('$septem')
+		@edb.row.clone($n)
+		@edb.row.clone($n)
+		@edb.row.clone($n)
+		@edb.row.clone($n)
 		@edb.dt.print('objects', '[inmain]')
 		@edb.print('[all arrays]')
 		@edb.dt.print('objects', '[inmain] [range:2-4]')
+		@edb.dt.clone('new_obj', 'objects', '000002', 4)
+		@edb.dt.print('new_obj', '[inmain]')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']

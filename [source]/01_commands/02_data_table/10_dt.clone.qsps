@@ -1,0 +1,54 @@
+QSP-Game Очистка таблицы данных
+
+$args[0] - идентификатор новой таблицы данных
+$args[1] - идентификатор исходной таблицы данных
+$args[2] или args[2] - идентификатор строки или номер, с которого начинается клонирование таблицы данных
+args[3] - число элементов к копированию (по умолчанию все оставшиеся.)
+
+# edb.dt.clone
+if $args[0] = '': msg "edb.dt.clone: Ошибка. Не указан идентификатор приёмника." & exit
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+!@pp:if(edb_fuse):include
+if $EASY_DATABASE['ID'] = '': msg "edb.dt.clone: Ошибка. База данных не инициализирована." & exit
+if $args[1] = '': msg "edb.dt.clone: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "edb.dt.clone: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+!@pp:endif
+!@ получаем номер элемента, с которого мы начинаем копирование таблицы данных
+if $args[2] = '' or $arritem('$<<$args[1]>>_id', $args[2]) <> $args[2]:
+	args[2] = args[2]
+else:
+	args[2] = arrpos('$<<$args[1]>>_id', $args[2])
+end
+!@ получаем число элементов к копированию
+if args[3] = 0: args[3] = arrsize('$<<$args[1]>>_id') - args[2]
+!@ получаем список колонок исходной страницы
+$args[20] = $arritem('$<<$args[1]>>', 'columns')
+!@ колбэк
+$args[21] = {
+	args[3] = val($args[3]) & args[4] = val($args[4])
+	if args[3] <> 0: args[3] -= 1 & args[4] += 1
+	copyarr '<<$args[1]>>_<<$args[0]>>', '<<$args[2]>>_<<$args[0]>>', args[3], args[4]
+	dynamic "$<<$args[1]>>_<<$args[0]>>[0] = $<<$args[2]>>_<<$args[0]>>[0]"
+}
+!@ циклически копируем колонки
+@edb.list.for_each($args[20], $args[21], '|', $args[0], $args[1], $str(args[2]), $str(args[3]))
+!@ копируем массив, описывающий таблицу данных
+copyarr $args[0], $args[1]
+!@ заменяем некоторые значения:
+dynamic "
+!@pp:удаляем идентификатор текущей колонки
+$<<$args[0]>>['current_col'] = ''
+!@pp:удаляем идентификатор текущей строки
+$<<$args[0]>>['current_row'] = ''
+!@pp:меняем идентификатор таблицы данных
+$<<$args[0]>>['ID'] = '<<$args[0]>>'
+"
+!@ добавляем таблицу в список таблиц данных
+$EASY_DATABASE['data_tables_ids'] = @edb.list.append($EASY_DATABASE['data_tables_ids'], $args[0])
+!@ делаем новую таблицу данных текущей
+@edb.dt.set_cur($args[0])
+--- edb.dt.clone ---------------------------------
+
+$args[]:
+	20 - список колонок
+	21 - колбэк очистки
