@@ -25,7 +25,7 @@ else:
 	!@ убираем только первый встреченный элемент
 	local instr_ = instr($list_, $delimiter_ + $old_el_ + $delimiter_)
 	if instr_ <> 0:
-		$list_ = $mid($list_, 1, instr_-1) + $delimiter_ + $new_el_ + $delimiter_ + $mid($list_, instr_+len($delimiter_ + $old_el_ + $delimiter_)
+		$list_ = $mid($list_, 1, instr_-1) + $delimiter_ + $new_el_ + $delimiter_ + $mid($list_, instr_+len($delimiter_ + $old_el_ + $delimiter_))
 	end
 end
 !@ если не запрещена очистка пустых элементов
