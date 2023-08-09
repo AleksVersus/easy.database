@@ -3,7 +3,7 @@ QSP-Game Генерирует следующее по порядку десят�
 $args[0] - последний ключ
 args[1] - максимальная длина ключа
 
-# edb.gen_next_num
+# edb.key.next_num
 local $new_key_ = @em.add($args[0], '1')
 local len_key_ = len($new_key_)
 if len_key_ > args[1]:
@@ -19,7 +19,7 @@ else
 	$result = $new_key_
 	exit
 end
---- edb.gen_next_num ---------------------------------
+--- edb.key.next_num ---------------------------------
 
 !@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_zero)
