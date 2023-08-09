@@ -55,8 +55,6 @@ end
 
 
 # edb.usercom
-!@ проверяем, присутствует ли в строке от пользователя команда к парсеру
-!@ local $bd_command=$strfind($user_text,'^\s*(>\s*\S+|bd)(\.\S+(\{[\s\S]*?\})?)*\s*$')
 
 if instr($user_text, 'edb') = 1:
 	local $command_line_ = $trim($mid($user_text, 4))
