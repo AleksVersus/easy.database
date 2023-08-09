@@ -1,9 +1,0 @@
-QSP-Game Проверка наличия колонки в таблице данных
-
-$args[0] - идентификатор таблицы данных
-$args[1] - название колонки
-
-# edb.dt.is_col
-if $arritem('$'+$args[0],'ID') = '': msg 'dt.is_col: таблица данных «<<$args[0]>>» не создана.' & exit
-result = @edb.list.is_el($arritem('$'+$args[0], 'columns'), $args[1])
---- edb.dt.is_col ---------------------------------
