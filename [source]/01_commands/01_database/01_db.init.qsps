@@ -12,7 +12,7 @@ if $EASY_DATABASE['ID'] = '':
 	!@ количество существующих в настоящий момент таблиц
 	EASY_DATABASE['data_tables.number'] = 0
 	!@ список таблиц данных
-	$EASY_DATABASE['data_tables.ids'] = ''
+	$EASY_DATABASE['data_tables_ids'] = ''
 	!@ указатель на предыдущую активную таблицу данных
 	$EASY_DATABASE['last_data_table'] = ''
 	!@ указатель на текущую (активную) таблицу данных

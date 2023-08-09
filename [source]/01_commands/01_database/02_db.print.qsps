@@ -8,7 +8,7 @@ $args[20], $args[21] = '', '
 !@ ------------------ непосредственно информация о базе данных --------------------
 if $EASY_DATABASE['ID'] <> '':
 	$args[20] += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + $args[21]
-	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables.ids'] + $args[21]
+	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables_ids'] + $args[21]
 	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables.counter'] + $args[21]
 	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables.number'] + $args[21]
 	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $args[21]
@@ -22,7 +22,7 @@ if $EASY_DATABASE['ID'] <> '':
 		$args[23] = {
 			$result = '$<<$args[1]>>_<<$args[0]>>' + $args[2]
 		}
- 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables.ids'], $args[22], '|', $args[21], $args[23])
+ 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], '|', $args[21], $args[23])
 	end
 else:
 	$args[20] += 'База данных не инициализирована'

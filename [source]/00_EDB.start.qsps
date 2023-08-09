@@ -141,7 +141,7 @@ if instr($user_text, 'edb') = 1:
 		elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
 			@edb.del_table($commands_[1])
 			*pl "Удалена таблица данных «<<$commands_[1]>>»."
-		elseif @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $commands_[0]):
+		elseif @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $commands_[0]):
 			if $commands_[1] = 'print':
 				@edb.dt.print($commands_[0], '[inmain]')
 			end

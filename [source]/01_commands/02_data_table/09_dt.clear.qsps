@@ -8,7 +8,7 @@ if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.dt.clear: Ошибка. База данных не инициализирована." & exit
 if $args[0] = '': msg "edb.dt.clear: Ошибка. Не указан идентификатор таблицы данных." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]): msg "edb.dt.clear: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.dt.clear: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
 !@pp:endif
 !@ очищаем таблицу данных
 $args[20] = $arritem('$<<$args[0]>>', 'columns')

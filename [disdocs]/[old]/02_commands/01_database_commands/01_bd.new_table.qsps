@@ -7,9 +7,9 @@ $args[1] - название таблицы NAME
 if $EASY_DATABASE['id'] = '':  msg 'bd.new_table: база данных не инициализирована.' & exit
 if $args[0]='': msg 'bd.new_table: не передан ID таблицы данных.' & exit
 if instr($args[0],'$') = 1: $args[0]=$mid($args[0],2)	& !@ отрезаем первый символ, если это символ $
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[0]):
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]):
 	!@ Вносим идентификатор таблицы данных в список
-	$EASY_DATABASE['data_tables.ids'] = @edb.list.append($EASY_DATABASE['data_tables.ids'], $args[0])
+	$EASY_DATABASE['data_tables_ids'] = @edb.list.append($EASY_DATABASE['data_tables_ids'], $args[0])
 	!@ увеличиваем счётчик созданных баз
 	EASY_DATABASE['data_table.counter'] += 1
 	!@ увеличиваем число существующих баз

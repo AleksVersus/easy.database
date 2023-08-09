@@ -10,7 +10,7 @@ if $EASY_DATABASE['ID'] = '': msg "row.fill: Ошибка. База данных
 args[20] = arrsize('$args')
 $args[21], $args[22] = $args[args[20]-1]
 args[23] = 2
-if no @edb.list.is_el($EASY_DATABASE['data_tables.ids'], $args[22]):
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[22]):
 	!@ если последний аргумент не содержит идентификатор таблицы данных,
 	!@ значит он содержит либо только идентификатор строки, либо значение
 	!@ для размещения в строке:

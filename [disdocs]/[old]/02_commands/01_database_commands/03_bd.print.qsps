@@ -10,7 +10,7 @@ if instr($command,'[inres]')<>0: $command=$replace($command,'[inres]','[inresult
 !@ ------------------ непосредственно информация о базе данных --------------------
 if arrsize('EASY_DATABASE') <> 0:
 	$export+="Идентификатор базы данных: "+$EASY_DATABASE['id']+$nr
-	$export+="Идентификаторы Таблиц Данных: "+$EASY_DATABASE['data_tables.ids']+$nr
+	$export+="Идентификаторы Таблиц Данных: "+$EASY_DATABASE['data_tables_ids']+$nr
 	$export+="Число созданных Таблиц Данных: "+EASY_DATABASE['data_tables.counter']+$nr
 	$export+="Число существующих Таблиц Данных: "+EASY_DATABASE['data_tables.number']+$nr
 	$export+="Текущая Таблица Данных: "+$EASY_DATABASE['current_data_table']+$nr
