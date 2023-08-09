@@ -6,7 +6,7 @@ $args[0] - строка, список
 $args[1] - старое значение
 $args[2] - новое значение
 $args[3] - разделитель (по умолчанию вертикальная черта)
-$args[4] - управляющее слово [no clear] или [nclr] - запрещает удалять пустые элементы из списка
+$args[4] - управление
 
 # edb.list.remove
 !@ объявляем локальные переменные
@@ -15,10 +15,19 @@ local $list_, $old_el_, $new_el_, $delimiter_, $comm_ = $args[0], $args[1], $arg
 if $delimiter_ = '': $delimiter_ = '|'
 !@ правильная упарвляющая конструкция
 if instr($comm_, '[nclr]') <> 0: $comm_ = $replace($comm_, '[nclr]', '[no clear]')
+if instr($comm_, '[of') <> 0: $comm_ = $replace($comm_, '[of]', '[only first]')
 !@ костылим список, чтобы легко убрать из него нужный элемент
 $list_ = $delimiter_ + $list_ + $delimiter_
-!@ убираем элемент простой заменой
-$list_ = $replace($list_, $delimiter_ + $old_el_ + $delimiter_, $delimiter_ + $new_el_ + $delimiter_)
+if instr($comm_, '[only first]') = 0:
+	!@ убираем элементы простой заменой
+	$list_ = $replace($list_, $delimiter_ + $old_el_ + $delimiter_, $delimiter_ + $new_el_ + $delimiter_)
+else:
+	!@ убираем только первый встреченный элемент
+	local instr_ = instr($list_, $delimiter_ + $old_el_ + $delimiter_)
+	if instr_ <> 0:
+		$list_ = $mid($list_, 1, instr_-1) + $delimiter_ + $new_el_ + $delimiter_ + $mid($list_, instr_+len($delimiter_ + $old_el_ + $delimiter_)
+	end
+end
 !@ если не запрещена очистка пустых элементов
 if instr($comm_, '[no clear]') = 0:
 	!@ удаляем их
@@ -30,3 +39,7 @@ $result = @em.str.slice($list_)
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
 
 !@pp:var(em_str_slice)
+
+Управление:
+	[no clear] или [nclr] - запрещает удалять пустые элементы из списка
+	[only first] или [of] - удаляем только первый встреченный в списке элемент
