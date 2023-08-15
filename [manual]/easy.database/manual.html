@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<!-- TODO: favicon -->
+<link href="../res/css/easy.library.css" rel="stylesheet"/></head>
+<body>
+<div class="avs-page-wrapper">
+<div class="easy-lib-page">
+<article class="e-block">
+<a class="avs-article-h1__link" href="https://github.com/AleksVersus/easy.nrBD/releases" id="UP" target="_blank" title="Скачать последнюю версию библиотеки со страницы релизов">
+<h1 class="avs-article-h1">easy.database.qsp v. 0.2</h1>
+</a>
+<p class="avs-articles-underhead">Библиотека организации базы данных для <a class="avs-page-external-link" href="https://qsp.org" target="_blank">Quest Soft Player</a></p>
+<p class="avs-article-p">
+          Разрабатывалась для плееров версий 5.8.0 — это: <a class="avs-page-external-link" href="https://qsp.org/index.php?option=com_content&amp;view=article&amp;id=64&amp;Itemid=87">классический плеер</a> версии 5.8.0 и <a class="avs-page-external-link" href="https://github.com/QSPFoundation/qspider">qSpider</a> версии 0.12.0 и выше. Не гарантируется правильная работа на плеерах иных версий. Некоторые функции имеют ограничения на значение числовых аргументов, это связано с используемыми плеером библиотеками. Для разных версий плеера могут быть разные ограничения, поэтому внимательно читайте документацию к плееру, под который разрабатываете игру.
+        </p>
+<section>
+<p class="avs-article-p">
+            Система управления базой данных "easy.database" — это модуль (библиотека), предназначенный для простого редактирования нереляционной базы данных на QSP.
+          </p>
+<p class="avs-article-p">
+            Существует модуль Олегуса, реализующий то же самое, но через другие механизмы:
+            <a class="avs-page-external-link" href="https://forum.ifiction.ru/viewtopic.php?id=1522" rel="nofollow">https://forum.ifiction.ru/viewtopic.php?id=1522</a>.
+          </p>
+<p class="avs-article-p">
+            Исходный код "easy.database" всегда доступен по адресу:
+            <a class="avs-page-external-link" href="https://github.com/AleksVersus/easy.nrBD">https://github.com/AleksVersus/easy.nrBD</a>
+</p>
+</section>
+<section data-head="Подключение">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="podkljuchenie"></a>
+            Подключение
+          </h2>
+<p class="avs-article-p">
+            "easy.database" подключается как любой другой модуль QSP, то есть с использованием команды
+            <code>inclib</code>. Скачайте архив со
+            <a class="avs-page-external-link" href="https://github.com/AleksVersus/easy.nrBD/releases">страницы релизов</a>, распакуйте и скопируйте папку "<code>lib</code>" в папку с вашей игрой. Тогда на самой первой локации в игре достаточно будет прописать такую команду подключения:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator">inclib</span>
+<span class="Monokai-String">'lib/easy.database.qsp'</span>
+</div>
+<p class="avs-article-p">
+            Для работы модуля требуется так же подключить и библиотеку "easy.math". Она поставляется вместе с модулем. Подключение аналогичное:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator">inclib</span>
+<span class="Monokai-String">'lib/easy.math.qsp'</span>
+</div>
+<p class="avs-article-p">
+            Если вы уже используете библиотеку "easy.math" в своей игре, убедитесь, что версия "easy.math" совместима с "easy.database". Для этого в любом месте вашей игры используйте команду:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator">*</span><span class="Monokai-Operator">pl</span>
+<span class="Monokai-UnFunc">@edb.start</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'em-version'</span><span class="Monokai-Operator">)</span>
+</div>
+<p class="avs-article-p">
+            При запуске игры вы увидите на экране текущую и необходимую версии модуля "easy.math".
+          </p>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="работа-с-исходниками"></a>
+            Работа с исходниками
+          </h3>
+<p class="avs-article-p">
+            Если вы пишете игру, используя Sublime Text с подключённым пакетом QSP, у вас есть возможность самостоятельно собирать модуль из исходников.
+          </p>
+<p class="avs-article-p">
+            В папке "
+            <code>[source]</code>
+            " размещены исходные тексты модуля, а так же файл "
+            <code>project.json</code>
+            ", отредактировав который вы наладите сборку модуля в папку с вашей игрой.
+          </p>
+<p class="avs-article-p">
+            Так же вы можете собирать игру, напрямую включая в неё все локации модуля, если это необходимо. В этом случае вам не потребуется подключать модуль к игре — он уже будет в неё встроен.
+          </p>
+<p class="avs-article-p">
+            В исходниках предусмотрены два режима сборки: без обработки препроцессором и с обработкой препроцессором.
+          </p>
+<p class="avs-article-p">
+            В первом случае модуль будет собран, как есть, включая все служебные комментарии и наборы "предохранителей" — сообщений, которые всплывают в виде модальных окон и предупреждают о некоторых наиболее распространённых ошибках при работе с модулем. Данный режим сборки необходим на этапе разработки, отладки и тестирования игры.
+          </p>
+<p class="avs-article-p">
+            Во втором случае необходимо включить препроцессор в "
+            <code>project.json</code>
+            ", тогда из собранного модуля будут удалены все служебные комментарии, а так же блоки "предохранителей". Данный режим рекомендуется использовать при сборке релизной версии игры, когда большая часть ошибок уже отловлена.
+          </p>
+<p class="avs-article-p">
+            Вы также можете включить препроцессор, но сохранить блоки предохранителей в конечной сборке модуля. Для этого в исходном файле "
+            <code>00_edb.start.qsps</code>
+            " в любом месте пропишите строку:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator"> </span>
+<span class="Monokai-Comment">!@pp:var(edb_fuse)</span>
+</div>
+<p class="avs-article-p">
+<strong>
+              Обратите внимание!
+            </strong>
+            Исходники библиотеки "easy.math" необходимо скачивать отдельно:
+            <a class="avs-page-external-link" href="https://github.com/AleksVersus/easy.math.3">easy.math на github</a>
+</p>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="подключение-встроенного-отладчика"></a>
+            Подключение встроенного отладчика
+          </h3>
+<p class="avs-article-p">
+            Вы можете подключить отладочные команды модуля к командной строке (полю ввода), прописав в самом начале игры следующую команду:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-SysVar">$usercom</span><span class="Monokai-Operator">[</span><span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'edb.usercom'</span>
+</div>
+<p class="avs-article-p">
+            Это добавит новый обработчик строки ввода к уже работающим. Обратите внимание на квадратные скобки. Если вы используете свой собственный обработчик строки ввода и хотите, чтобы обработчик модуля работал совместно (параллельно) с вашим, обязательно ставьте квадратные скобки после
+            <code>$usercom</code>.
+          </p>
+<p class="avs-article-p">
+            Все команды модуля должны начинаться с ключевого слова
+            <code>edb</code>. Для вывода списка всех доступных команд, введите в строке ввода
+            <code>edb help</code>.
+          </p>
+<p class="avs-article-p">
+            Также список всех доступных команд для поля ввода представлен в разделе данной документации "Команды отладки".
+          </p>
+</section>
+<section data-head="Особенности работы">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="osobennosti_raboty"></a>
+            Особенности работы
+          </h2>
+<p class="avs-article-p">
+            Технически база данных представляет собой наборы массивов, описывающих таблицы данных, а так же массивы, реализующие поведение колонок в таблицах данных. Основные свойства базы данных записываются в массив $EASY_DATABASE.
+          </p>
+<p class="avs-article-p">
+            Поскольку все массивы, входящие в базу данных являются глобальными, недопустимо использовать их в других местах игры. Ввиду чего необходимо чётко понимать, какие имена будут заняты под базу данных. Эту информацию можно проверить, воспользовавшись функцией
+            <code>edb.print</code>, или через встроенный отладчик, введя команду
+            <code>edb &gt;</code>.
+          </p>
+<p class="avs-article-p">
+            При создании таблицы данных инициализируется массив, название которого совпадает с названием идентификатора таблицы данных, поэтому требования к такому идентификатору такие же, как и к названию массива, плюс идентификатор не должен начинаться с символа
+            <code>$</code>.
+          </p>
+<p class="avs-article-p">
+            Также при создании таблицы данных автоматически генерируется колонка первичных ключей. Она является служебной, и с ней нельзя напрямую взаимодействовать, хотя технически это такой же массив, как и все прочие, поэтому при желании вы можете изменять колонку первичных ключей, используя чистый QSP. Колонка первичных ключей всегда представляет собой массив, название которого состоит из идентификатора таблицы данных и слова '
+            <code>_id</code>
+            '.
+          </p>
+<p class="avs-article-p">
+            Примеры имён массивов, представляющих колонки первичных ключей для разных таблиц данных:
+          </p>
+<div class="Monokai-Code">
+            $objects_id
+            <br/>
+            $dialogs_id
+            <br/>
+            $potions_id
+            <br/>
+            $temp_id
+          </div>
+<p class="avs-article-p">
+            Основные функции, реализующие работу с базой данных, представленны в виде локаций-функций. Названия всех таких локаций начинаются с
+            <code>edb</code>. Для удобства чтения кода названия локаций содержат точки, это не мешает использовать их при неявном вызове
+            <code>func</code>
+            :
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.fill</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый меч'</span><span class="Monokai-Operator">,</span>
+<span class="Monokai-String">'сумка'</span><span class="Monokai-Operator">,</span>
+<span class="Monokai-Numeric">1</span><span class="Monokai-Operator">,</span>
+<span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">,</span>
+<span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)</span><span class="Monokai-Operator">)</span>
+</div>
+<p class="avs-article-p">
+            Также для улучшения семантики в названиях локаций-функций указывается сущность, с которой они работают, и только затем непосредственно названия функций. Исключение составляют функции, работающие непосредственно с сущностью базы данных:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.init</span><span class="Monokai-Operator">()</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'[all arrays]'</span><span class="Monokai-Operator">)</span>
+</div>
+<p class="avs-article-p">
+            В базе данных работает система указателей, которые позволяют не писать каждый раз в каждой команде полностью, с какой строкой, колонкой и таблицей сейчас нужно работать. Указатели автоматически изменяются по последнему явно прописанному значению.
+          </p>
+</section>
+<section data-head="Сущности">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="suschnosti"></a>
+            Сущности
+          </h2>
+<p class="avs-article-p">
+            В модуле реализована работа с некоторыми абстрактными сущностями, представляя которые легче работать с подобной псевдо-базой данных. В данном разделе приводится краткое описание этих сущностей, а так же общее описание функций для работы с ними. Можно представить, что такие функции являются неотъемлемым свойством указанных сущностей, поэтому эти функции в рамках руководства называются методами. Технически они методами не являются.
+          </p>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="база-данных-data-base"></a>
+            База данных. Data Base
+          </h3>
+<p class="avs-article-p">
+            QSP не позволяет организовать полноценную базу данных, но в большинстве игр она и не нужна. Тем не менее можно реализовать некий аналог базы данных, чтобы облегчить себе работу с различными игровыми объектами.
+          </p>
+<p class="avs-article-p">
+            Технически База данных в QSP — это набор массивов, которым мы можем тем или иным образом управлять через специальные механизмы Системы Управления Базой Данных. Последнее воплощено в данном модуле.
+          </p>
+<p class="avs-article-p">
+            Непосредственно База Данных, как сущность, представлена в виде глобального массива
+            <code>$EASY_DATABASE[]</code>, в котором хранятся некоторые настройки, позволяющие Базой Данных управлять.
+          </p>
+<p class="avs-article-p">
+            Чтобы использовать Базу Данных в своей игре, её необходимо инициализировать, то есть создать. А в дальнейшем применять методы для управления составляющими этой базы данных.
+          </p>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы"></a>
+            Методы
+          </h4>
+<p class="avs-article-p">
+            Методы Базы Данных представлены в виде соответствующих функций. С подробным описанием можно ознакомиться в разделе
+            <a class="avs-page-internal-link" href="../easy.database/funkcii_modulja/0-85.html#funktsii_modulja">"Функции модуля"</a>.
+          </p>
+<ul class="avs-articles-structure">
+<li>
+<code>init</code>
+              - инициализация базы данных. Требуется в самом начале игры, чтобы заполнить массив
+              <code>$EASY_DATABASE[]</code>
+              исходными значениями. (
+              <code>edb.init</code>).
+            </li>
+<li>
+<code>print</code>
+              — вывод на экран, или в виде возвращаемого результата, человекочитаемой информации о базе данных. (
+              <code>edb.print</code>).
+            </li>
+<li>
+<code>new_table</code>
+              — создание таблицы данных с указанным идентификатором в базе данных. (
+              <code>edb.new_table</code>).
+            </li>
+<li>
+<code>del_table</code>
+              — удаление таблицы данных с указанным идентификатором из базы данных. (
+              <code>edb.del_table</code>).
+            </li>
+</ul>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="свойства"></a>
+            Свойства
+          </h4>
+<p class="avs-article-p">
+            Свойства базы данных соответствуют значениям в массиве
+            <code>$EASY_DATABASE</code>. См. функцию
+            <a class="avs-page-internal-link" href="../easy.database/funkcii_modulja/0-85.html#funktsii_modulja#edbinit">
+<code>edb.init</code>
+</a>.
+          </p>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="таблица-данных-data-table"></a>
+            Таблица Данных. Data Table
+          </h3>
+<p class="avs-article-p">
+            Таблица данных — это наибольшая структурная единица базы данных. Именно из множества таблиц данных состоит вся база данных игры.
+          </p>
+<p class="avs-article-p">
+            Технически Таблица Данных — это набор массивов, каждый из которых является столбцом такой таблицы. Соответственно строкой можно считать ряд записей во все массивы Таблицы Данных под одним индексом.
+          </p>
+<p class="avs-article-p">
+            Непосредственно, как сущность, Таблица Данных представлена в виде массива, имя которого совпадает с названием идентификатора таблицы данных. В этом массиве хранятся некоторые настройки, позволяющие управлять таблицей данных.
+          </p>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы-1"></a>
+            Методы
+          </h4>
+<p class="avs-article-p">
+            Методы Таблицы Данных представлены в виде соответствующих функций. С подробным описанием можно ознакомиться в разделе
+            <a class="avs-page-internal-link" href="../easy.database/funkcii_modulja/0-85.html#funktsii_modulja#edbdtset_cur">"Функции модуля"</a>.
+          </p>
+<ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+              - устанавливает указанную таблицу данных в качестве текущей. (
+              <code>edb.dt.set_cur</code>).
+            </li>
+<li>
+<code>print</code>
+              - выводит на экран, или возвращает в виде результата, человекочитаемую информацию об указанной таблице данных. (
+              <code>edb.dt.</code>).
+            </li>
+<li>
+<code>new_col</code>
+              - создаёт в таблице данных колонку с указанным идентификатором. (
+              <code>edb.dt.new_col</code>).
+            </li>
+<li>
+<code>del_col</code>
+              - удаляет из таблицы данных колонку с указанным идентификатором. (
+              <code>edb.dt.del_col</code>).
+            </li>
+<li>
+<code>new_row</code>
+              - создаёт в таблице данных строку и возвращает её идентификатор. (
+              <code>edb.dt.new_row</code>).
+            </li>
+<li>
+<code>del_row</code>
+              - удаляет из таблицы данных строку с указанным идентификатором. (
+              <code>edb.dt.del_row</code>).
+            </li>
+<li>
+<code>height</code>
+              - возвращает высоту таблицы данных, то есть число строк. (
+              <code>edb.dt.height</code>).
+            </li>
+<li>
+<code>width</code>
+              - возвращает ширину таблицы данных, то есть число колонок. (
+              <code>edb.dt.width</code>).
+            </li>
+<li>
+<code>find</code>
+              - возвращает идентификатор строки, в которой найдено указанное значение. Данный метод позволяет использовать дополнительные фильтры для более точного поиска информации в таблице данных. (
+              <code>edb.dt.find</code>).
+            </li>
+<li>
+<code>clear</code>
+              - удаляет все строки в указанной таблице данных. (
+              <code>edb.dt.clear</code>).
+            </li>
+<li>
+<code>clone</code>
+              - копирует таблицу данных, или её часть, в новую таблицу данных. (
+              <code>edb.dt.clone</code>).
+            </li>
+</ul>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="свойства-1"></a>
+            Свойства
+          </h4>
+<p class="avs-article-p">
+            Свойства таблицы данных соответствуют значениям в массиве, имя которого совпадает с идентификатором таблицы данных. См. функцию
+            <a class="avs-page-internal-link" href="../easy.database/funkcii_modulja/0-85.html#funktsii_modulja#edbnew_table"><code>edb.new_table</code></a>. Помимо этого механизмы "easy.database" используют не обозначенные в данном массиве свойства:
+          </p>
+<ul class="avs-articles-structure">
+<li>
+              высота таблицы данных — определяется числом строк в таблице данных. Технически получается из размера массива, соответствующего колонке первичных ключей.
+            </li>
+<li>
+              ширина таблицы данных — число колонок в таблице данных.
+            </li>
+<li>
+              последний первичный ключ — индекс последней в таблице данных строки.
+            </li>
+</ul>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="колонка-column"></a>
+            Колонка. Column
+          </h3>
+<p class="avs-article-p">
+            Таблица данных разбивается на колонки для удобства размещения информации. Как правило, колонка используется для хранения неких однотипных данных, реализующих какое-либо свойство для хранимой записи. Например, в таблице предметов может быть создана отдельная колонка для хранения названия, отдельная — для хранения веса, для хранения количества, и так далее.
+          </p>
+<p class="avs-article-p">
+            Технически колонка представляет собой массив, название которого состоит из идентификатора таблицы данных и идентификатора колонки, разделённых символом нижнего подчёркивания. В нулевой ячейке такого массива прописывается тип данных, которые можно хранить в колонке (тип колонки). Возможные типы колонок можно посмотреть в описании функции
+            <a class="avs-page-internal-link" href="../easy.database/funkcii_modulja/0-85.html#funktsii_modulja#edbdtnew_col"><code>edb.dt.new_col</code></a>.
+          </p>
+<p class="avs-article-p">
+            Примеры массивов, реализующих колонки:
+          </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$objects_sid</code>
+              - колонка таблицы данных objects под именем sid.
+            </li>
+<li>
+<code>$objects_body</code>
+              - колонка таблицы данных objects под именем body
+            </li>
+</ul>
+<p class="avs-article-p">
+            Колонки в данном руководстве могут называться столбцами.
+          </p>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы-2"></a>
+            Методы
+          </h4>
+<ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+              - устанавливает указанную колонку в качестве текущей. (
+              <code>edb.col.set_cur</code>).
+            </li>
+<li>
+<code>print</code>
+              - выводит на экран, или возвращает в виде результата, содержимое колонки или части колонки. (
+              <code>edb.col.print</code>).
+            </li>
+<li>
+<code>set_next</code>
+              - в указанной колонке присваивает значение ячейке текущей строки, затем перемещает указатель на следующую строку. (
+              <code>edb.col.set_next</code>).
+            </li>
+</ul>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="свойства-2"></a>
+            Свойства
+          </h4>
+<p class="avs-article-p">
+            У любой колонки есть всего два свойства:
+          </p>
+<ul class="avs-articles-structure">
+<li>
+              высота — совпадает с размером массива, описывающего колонку.
+            </li>
+<li>
+              тип данных, хранящихся в колонке.
+            </li>
+</ul>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="строка-row"></a>
+            Строка. Row
+          </h3>
+<p class="avs-article-p">
+            Таблица данных разбивается на отдельные записи — строки — для удобства размещения информации. Как правило, строка используется для хранения отдельных сложных записей. Например, в таблице предметов каждая отдельная запись соответствует одному предмету.
+          </p>
+<p class="avs-article-p">
+            Технически строки в таблице данных представляют собой записи в ячейки всех массивов, описывающих столбцы, под одним (одинаковым) индексом.
+          </p>
+<p class="avs-article-p">
+            Например, наша таблица данных
+            <code>objects</code>
+            состоит из трёх колонок
+            <code>id</code>,
+            <code>body</code>,
+            <code>position</code>, это означает, что строки в такой таблице можно сформировать следующим образом:
+          </p>
+<div class="Monokai-Code">
+            $objects_id
+            <span class="Monokai-Operator">[</span><span class="Monokai-String">'001'</span><span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'001'</span>
+            &amp; $objects_body
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'001'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'Старый меч'</span>
+            &amp; $objects_position
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'001'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'loc1'</span>
+<br/>
+            $objects_id
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'002'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'002'</span>
+            &amp; $objects_body
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'002'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'Сумка для продуктов'</span>
+            &amp; $objects_position
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'002'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'hero:inventory'</span>
+<br/>
+            $objects_id
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'003'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'003'</span>
+            &amp; $objects_body
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'003'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'Яблоко'</span>
+            &amp; $objects_position
+            <span class="Monokai-Operator">[</span>
+<span class="Monokai-String">'003'</span>
+<span class="Monokai-Operator">]</span>
+<span class="Monokai-Operator">=</span>
+<span class="Monokai-String">'002'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы-3"></a>
+            Методы
+          </h4>
+<ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+              — устанавливает указанную строку в качестве текущей. (
+              <code>edb.row.set_cur</code>).
+            </li>
+<li>
+<code>fill</code>
+              — заполняет строку группой значений. (
+              <code>edb.row.fill</code>). Значения могут быть перечисленны по порядку в соответствующих аргументах (и таким образом будут размещены в колонках соответственно порядку идентификаторов колонок в списке колонок таблицы данных), либо в качестве аргументов можно указывать кортежи, состоящие из значения и идентификатора колонки. В последнем случае значения не обязательно передавать в порядке, соответствующем списку колонок. Если будут переданы одновременно аргументы в виде кортежей и отдельных значений, это может привести к ошибкам заполнения вроде перезаписи только что внесённых значений.
+            </li>
+<li>
+<code>print</code>
+              — выводит на экран, или возвращает в виде результата, содержимое строки, которое оформляется в виде списка. (
+              <code>edb.row.print</code>). Данный метод подходит только для контроля содержимого строк со стороны разработчика, и его нельзя использовать для получения содержимого строки в механизмах игры, т.к. многие ячейки могут содержать в себе списки.
+            </li>
+<li>
+<code>set_next</code>
+              — присваивает ячейке (в текущей колонке и указнной строке) значение, а затем сдвигает указатель на следующую строку. Когда указатель достигает последнего столбца, он больше не сдвигается. Таким образом при постоянном обращении к этой функции происходит выход за пределы таблицы данных, а значит значение будет присваиваться всегда последней ячейке в строке.. (
+              <code>edb.row.set_next</code>).
+            </li>
+<li>
+<code>exchange</code>
+              — обменивает содержимое строк, но сами строки позициями не меняются. Т.е. их идентификаторы в таблице данных не перемещаются. (
+              <code>edb.row.exchange</code>).
+            </li>
+<li>
+<code>extract</code>
+              — извлекает из строки содержимое, помещая значения в указанный массив, при этом индексами элементов массива выступают названия колонок. (
+              <code>edb.row.extract</code>).
+            </li>
+<li>
+<code>inject</code>
+              — вводит в указанную строку данные из указанного массива. При этом предполагается, что данные лежат в ячейках, индексы которых соответствуют названиям колонок таблицы данных. (
+              <code>edb.row.inject</code>).
+            </li>
+<li>
+<code>clone</code>
+              — дублирует строку в таблице данных. То есть создаётся новая строка, идентичная указанной, но с отличающимся идентификатором. (
+              <code>edb.row.clone</code>).
+            </li>
+</ul>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="ячейка-cell"></a>
+            Ячейка. Cell
+          </h3>
+<p class="avs-article-p">
+            Ячейка — наименьшая структурная единица таблицы данных. Ячейки создаются в пересечениях строк и столбцов.
+          </p>
+<p class="avs-article-p">
+            Технически Ячейка Таблицы Данных представляет собой ячейку массива, соответствующего колонке, под указанным индексом, являющимся идентификатором строки. Каждая ячейка содержит лишь одно значение.
+          </p>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы-4"></a>
+            Методы
+          </h4>
+<ul class="avs-articles-structure">
+<li>
+<code>set_value</code>
+              — устанавливает значение ячейки. Если в ячейке уже было значение, оно затирается. При этом не важно, какой тип имеет столбец, в ячейку технически записываются либо число (для столбцов типа 'num'), либо строка (для столбцов всех остальных типов). (
+              <code>edb.cell.set_value</code>).
+            </li>
+<li>
+<code>get_value</code>
+              — извлекает значение из ячейки. (
+              <code>edb.cell.get_value</code>).
+            </li>
+<li>
+<code>add</code>
+              — добавляет значение к значению ячейки. Результат работы данной функции будет отличаться в зависимости от типа колонки. (
+              <code>edb.cell.add</code>).
+            </li>
+<li>
+<code>del</code>
+              — вычитает значение из значения ячейки. Результат работы данной функции будет отличаться в зависимости от типа колонки. (
+              <code>edb.cell.del</code>).
+            </li>
+</ul>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="список-list"></a>
+            Список. List
+          </h3>
+<p class="avs-article-p">
+            Список — это сложное структурированное значение, позволяющее упаковать несколько значений в одну ячейку таблицы данных.
+          </p>
+<p class="avs-article-p">
+            Технически список — это строка, состоящая из подстрок, разделённых вертикальной чертой. Это означает, что значения, хранящиеся в списке, не должны содержать символа вертикальной черты. Поэтому списки целесообразно использовать там, где вы точно знаете, какие данные будут в этот список помещены. Например, списки удобны для хранения перечня идентификаторов таблиц данных, или для хранения перечня колонок, и т.д.
+          </p>
+<p class="avs-article-p">
+            Примеры списков:
+          </p>
+<div class="Monokai-Code">
+            aaaa|bbbb|....|zzzzz
+            <br/>
+            AAA|BBB|CCC|AAA|BBB|DDD|EEE
+            <br/>
+            sid|uid|body|position|include|charge|count|run
+          </div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="методы-5"></a>
+            Методы
+          </h4>
+<ul class="avs-articles-structure">
+<li>
+<code>remove</code>
+              - заменяет указанное значение в списке на новое значение. Позволяет заменить самое первое указанное значение в списке, либо сразу все значения в списке. (
+              <code>edb.list.remove</code>).
+            </li>
+<li>
+<code>is_el</code>
+              - проверяет, является ли указанное значение элементом списка. (
+              <code>edb.list.is_el</code>).
+            </li>
+<li>
+<code>first</code>
+              - получает первое значение в списке. (
+              <code>edb.list.first</code>).
+            </li>
+<li>
+<code>last</code>
+              - получает последнее значение в списке. (
+              <code>edb.list.last</code>).
+            </li>
+<li>
+<code>append</code>
+              - добавляет элемент в конец списка. (
+              <code>edb.list.append</code>).
+            </li>
+<li>
+<code>diff</code>
+              - возвращает разницу двух списков. (
+              <code>edb.list.diff</code>).
+            </li>
+<li>
+<code>for_each</code>
+              - перебирает элементы списка, и для каждого вызывает переданный в качестве аргумента код. В этот код нулевым аргументом передаётся значение элемента списка. Таким образом можно довольно гибко обрабатывать любые списки. (
+              <code>edb.list.for_each</code>)
+            </li>
+<li>
+<code>length</code>
+              - возвращает длину списка. (
+              <code>edb.list.length</code>).
+            </li>
+</ul>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="свойства-3"></a>
+            Свойства
+          </h4>
+<p class="avs-article-p">
+            Единственным свойством списка является его длина.
+          </p>
+</section>
+<section data-head="Команды отладки">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="komandy_otladki"></a>
+            Команды отладки
+          </h2>
+<p class="avs-article-p">
+<strong>
+              Внимание!!!
+            </strong>
+            Отладчик ещё не доработан. Команды могут отличаться от версии к версии. Если вы вводите команду, а она не работает, или работает некорректно, проверьте локацию
+            <code>edb.usercom</code>, чтобы убедиться, что ваша версия модуля поддерживает данную команду.
+          </p>
+<p class="avs-article-p">
+            Все команды отладки начинаются с ключевого слова
+            <code>edb</code>. Без этого ключевого слова отладчик просто не сработает. Ниже команды отладки приводятся без этого ключевого слова. Пример правильно введённой команды к отладчику:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Markup">edb</span> help
+          </div>
+<ul class="avs-articles-structure">
+<li>
+<code>help</code>
+              - вывод справки по модулю
+              <code>easy.database</code>.
+            </li>
+<li>
+<code>run</code>
+              - выполнить следующий после
+              <code>run</code>
+              текст, как строку кода QSP.
+            </li>
+<li>
+<code>verison</code>
+              — текущая версия модуля.
+            </li>
+<li>
+<code>required em</code>
+              — информация по используемому и необходимому easy.math.
+            </li>
+<li>
+<code>gen id</code>
+              - генерирует uuid.
+            </li>
+<li>
+<code>init</code>
+              - инициализирует базу данных.
+            </li>
+<li>
+<code>&gt;</code>
+              - выводит информацию о базе данных.
+            </li>
+</ul>
+<p class="avs-article-p">
+            Последняя команда может быть расширена через доп инструкции, идентификаторы сущностей и инструкции к ним. Большинство инструкций к сущностям совпадают с названиями методов для этих сущностей. Однако не все методы можно использовать. Ниже приводится список, соответствующий расширениям команды. Идентификаторы сущностей и инструкций должны разделяться символом
+            <code>&gt;</code>. Пример:
+          </p>
+<div class="Monokai-Code">
+<span class="Monokai-Markup">edb</span> &gt; objects &gt; body &gt; 000005 &gt; get_value
+          </div>
+<ul class="avs-articles-structure">
+<li>
+<code>new_table</code>
+              - создать новую таблицу данных. Идентификатор указывается далее через
+              <code>&gt;</code>.
+            </li>
+<li>
+<code>del_table</code>
+              - удалить таблицу данных. Идентификатор указывается далее через
+              <code>&gt;</code>.
+            </li>
+<li>
+<strong>
+                идентификатор таблицы данных
+              </strong>
+              - работа с указанной таблицей данных. Через
+              <code>&gt;</code>
+              указывается:
+              <ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+                  — установить таблицу данных текущей.
+                </li>
+<li>
+<code>print</code>
+                  - распечатать информацию по таблице данных в основном описании.
+                </li>
+<li>
+<code>new_col</code>
+                  - создать новую колонку в таблице данных. Идентификатор колонки указывается далее через
+                  <code>&gt;</code>.
+                </li>
+<li>
+<code>del_col</code>
+                  - удалить колонку из таблицы данных. Идентификатор колонки указывается далее через
+                  <code>&gt;</code>.
+                </li>
+<li>
+<code>new_row</code>
+                  - создать новую строку в таблице данных. Идентификатор строки указывается далее через
+                  <code>&gt;</code>.
+                </li>
+<li>
+<code>del_row</code>
+                  - удалить строку из таблицы данных. Идентификатор строки указывается далее через
+                  <code>&gt;</code>.
+                </li>
+<li>
+<code>height</code>
+                  - получить высоту таблицы данных.
+                </li>
+<li>
+<code>width</code>
+                  - получить ширину таблицы данных.
+                </li>
+<li>
+<code>clear</code>
+                  - очистить таблицу данных от строк.
+                </li>
+<li>
+<code>clone</code>
+                  - полное клонирование таблицы данных в новую таблицу данных. Идентификатор новой таблицы данных указывается далее через
+                  <code>&gt;</code>.
+                </li>
+<li>
+<strong>
+                    идентификатор строки
+                  </strong>
+                  - работа с указанной строкой в таблице данных. Через
+                  <code>&gt;</code>
+                  указывается:
+                  <ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+                      — установить строку текущей.
+                    </li>
+<li>
+<code>print</code>
+                      — вывести на экран содержимое строки в виде списка.
+                    </li>
+</ul>
+</li>
+<li>
+<strong>
+                    идентификатор колонки
+                  </strong>
+                  - работа с указанной колонкой в таблице данных. Через
+                  <code>&gt;</code>
+                  указывается:
+                  <ul class="avs-articles-structure">
+<li>
+<code>set_cur</code>
+                      — установить колонку текущей.
+                    </li>
+<li>
+<code>print</code>
+                      — вывести на экран содержимое колонки.
+                      <strong>
+                        идентификатор строки
+                      </strong>
+                      - работа с ячейкой в указанных колонке и строке. Через
+                      <code>&gt;</code>
+                      указывается:
+                      <ul class="avs-articles-structure">
+<li>
+<code>set_value</code>
+                          - установить значение ячейки. Значение указывается через
+                          <code>&gt;</code>
+                          без пробелов. Все последующие символы
+                          <code>&gt;</code>
+                          считаются относящимися к значению.
+                        </li>
+<li>
+<code>get_value</code>
+                          - вывести на экран значение ячейки. Значение можно сразу записать в глобальную переменную, для этого через
+                          <code>&gt;</code>
+                          указывается название переменной.
+                        </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section><h2 class="avs-article-h2">Подробнее:</h2>
+<div class="avs-pages-button__columner">
+<a class="avs-pages-button__link" href="../easy.database/funkcii_modulja/0-85.html"><div class="avs-pages-button">Функции работы с базой данных. База, Таблицы, Колонки, Строки</div></a>
+<a class="avs-pages-button__link" href="../easy.database/funkcii_modulja_rabota_s_bazoj_jachejk/0-86.html">
+<div class="avs-pages-button">Функции работы с базой данных. Ячейки</div>
+</a>
+<a class="avs-pages-button__link" href="../easy.database/funkcii_modulja_vspomogatelnye/0-87.html">
+<div class="avs-pages-button">Вспомогательные функции</div>
+</a>
+<a class="avs-pages-button__link" href="../easy.database/istorija_versij/0-88.html">
+<div class="avs-pages-button">История версий</div>
+</a>
+</div></section>
+</article>
+<aside class="e-block">
+<div class="avs-page-stamp" id="em_subscribe">
+<p>Aleks Versus'Easy Libraries'2022-<span class="subscribe-year">2023</span></p>
+<p>Aleks Versus'Game Adventure Making'Really Unimaginable Stories'2022-<span class="subscribe-year">2023</span></p>
+</div>
+</aside>
+</div>
+</div><div class="em-stick-upper"><a href="#UP" title="Вверх"><img class="em-stick-upper__image" src="../res/img/uparrow_btn_.png"/></a></div></body>
+</html>

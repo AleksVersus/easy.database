@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<!-- TODO: favicon -->
+<link href="../../res/css/easy.library.css" rel="stylesheet"/></head>
+<body>
+<div class="avs-page-wrapper">
+<div class="easy-lib-page">
+<article class="e-block">
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja/0-85.html">
+<div class="avs-pages-button">⇐ Функции для работы с Базой, стр. 1</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_vspomogatelnye/0-87.html">
+<div class="avs-pages-button">Вспомогательные функции ⇒</div>
+</a>
+</div>
+<a class="avs-article-h1__link" href="https://github.com/AleksVersus/easy.nrBD/releases" id="UP" target="_blank" title="Скачать последнюю версию библиотеки со страницы релизов">
+<h1 class="avs-article-h1">easy.database.qsp v. 0.2</h1>
+</a>
+<p class="avs-articles-underhead">Библиотека организации базы данных для <a class="avs-page-external-link" href="https://qsp.org" target="_blank">Quest Soft Player</a></p>
+<section data-head="Функции модуля">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="funktsii_modulja">
+</a>
+       Функции модуля
+      </h2>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="функции-для-работы-с-базой-данных">
+</a>
+       Функции для работы с базой данных. Ячейки
+      </h3>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbcellset_value">
+</a>
+       edb.cell.set_value
+      </h4>
+<p class="avs-article-p">
+       Устанавливает значение ячейки.
+      </p>
+<p class="avs-article-p">
+<strong>
+        Внимание!!!
+       </strong>
+       Если в ячейке уже присутствует значение, оно будет затёрто новым.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        или
+        <code>args[0]</code>
+        - значение, присваиваемое ячейке.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[3]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.cell.set_value</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Инвентарь'</span><span class="Monokai-Operator">,
+       </span>
+       $s<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'place'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbcellget_value">
+</a>
+       edb.cell.get_value
+      </h4>
+<p class="avs-article-p">
+       Возвращает значение ячейки.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.cell.get_value</span><span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'place'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.cell.get_value</span><span class="Monokai-Operator">(</span>$s<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'place'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.cell.get_value</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbcelladd">
+</a>
+       edb.cell.add
+      </h4>
+<p class="avs-article-p">
+       Прибавляет значение ячейке.
+      </p>
+<p class="avs-article-p">
+       Данная функция по разному обрабатывает ячейки в колонках разных типов:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+        'num' — значение ячейки увеличивается на указанное число.
+       </li>
+<li>
+        'str' — к значению ячейки приклеивается переданное значение (конкатенация).
+       </li>
+<li>
+        'list' — добавляет к списку указанное значение.
+       </li>
+<li>
+        'tuple' — увеличить число элементов в ячейке, в которой хранится кортеж, нельзя, однако можно изменить уже записанное в кортеж значение. В
+        <code>$args[0]</code>
+        при этом так же должен быть передан кортеж типа
+        <code>($значение, #позиция)</code>.
+       </li>
+<li>
+        'dict' — то же, что и 'str'.
+       </li>
+<li>
+        'ids' — значения в колонке такого типа нельзя изменять через функции 'easy.database'.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        или
+        <code>args[0]</code>
+        - значение, присваиваемое ячейке.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[3]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.cell.add</span><span class="Monokai-Operator">(</span><span class="Monokai-Numeric">34</span><span class="Monokai-Operator">,
+       </span>
+       $d<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.cell.add</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'34'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbcelldel">
+</a>
+       edb.cell.del
+      </h4>
+<p class="avs-article-p">
+       Удаляет значение ячейки.
+      </p>
+<p class="avs-article-p">
+       Данная функция по разному обрабатывает ячейки в колонках разных типов:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+        'num' — значение ячейки уменьшается на указанное число.
+       </li>
+<li>
+        'str' — из значения ячейки удаляется первое вхождение переданного значения.
+       </li>
+<li>
+        'list' — удаляет из списка указанное значение. Если значение повторяется в списке, будут удалены все.
+       </li>
+<li>
+        'tuple' — уменьшить число элементов в ячейке, в которой хранится кортеж, нельзя, однако можно изменить уже записанное в кортеж значение. В
+        <code>$args[0]</code>
+        при этом должно быть передано либо значение, либо номер очищаемого элемента кортежа.
+       </li>
+<li>
+        'dict' — то же, что и 'str'.
+       </li>
+<li>
+        'ids' — значения в колонке такого типа нельзя изменять через функции 'easy.database'.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        или
+        <code>args[0]</code>
+        - значение, присваиваемое ячейке.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[3]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.cell.del</span><span class="Monokai-Operator">(</span><span class="Monokai-Numeric">34</span><span class="Monokai-Operator">,
+       </span>
+       $d<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.cell.del</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+</section>
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja/0-85.html">
+<div class="avs-pages-button">⇐ Функции для работы с Базой, стр. 1</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_vspomogatelnye/0-87.html">
+<div class="avs-pages-button">Вспомогательные функции ⇒</div>
+</a>
+</div>
+</article>
+<aside class="e-block">
+<div class="avs-page-stamp" id="em_subscribe">
+<p>Aleks Versus'Easy Libraries'2022-<span class="subscribe-year">2023</span></p>
+<p>Aleks Versus'Game Adventure Making'Really Unimaginable Stories'2022-<span class="subscribe-year">2023</span></p>
+</div>
+</aside>
+</div>
+</div><div class="em-stick-upper"><a href="#UP" title="Вверх"><img class="em-stick-upper__image" src="../../res/img/uparrow_btn_.png"/></a></div></body>
+</html>

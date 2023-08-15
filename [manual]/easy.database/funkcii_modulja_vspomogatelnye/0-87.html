@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<!-- TODO: favicon -->
+<link href="../../res/css/easy.library.css" rel="stylesheet"/></head>
+<body>
+<div class="avs-page-wrapper">
+<div class="easy-lib-page">
+<article class="e-block">
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_rabota_s_bazoj_jachejk/0-86.html">
+<div class="avs-pages-button">⇐ Функции для работы с Базой, стр. 2</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/manual.html">
+<div class="avs-pages-button">Назад</div>
+</a>
+</div>
+<a class="avs-article-h1__link" href="https://github.com/AleksVersus/easy.nrBD/releases" id="UP" target="_blank" title="Скачать последнюю версию библиотеки со страницы релизов">
+<h1 class="avs-article-h1">easy.database.qsp v. 0.2</h1>
+</a>
+<p class="avs-articles-underhead">Библиотека организации базы данных для <a class="avs-page-external-link" href="https://qsp.org" target="_blank">Quest Soft Player</a></p>
+<section data-head="Функции модуля">
+<h2 class="avs-article-h2">
+<a aria-hidden="true" id="funktsii_modulja">
+</a>
+       Функции модуля
+      </h2>
+<h3 class="avs-article-h3">
+<a aria-hidden="true" id="вспомогательные-функции">
+</a>
+       Вспомогательные функции
+      </h3>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbkeynext_hex">
+</a>
+       edb.key.next_hex
+      </h4>
+<p class="avs-article-p">
+       Вспомогательная функция для генерации следующего порядкового номера в виде шестнадцатеричного ключа.
+      </p>
+<p class="avs-article-p">
+       Аргументы (обязательные):
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - последний сгенерированный ключ.
+       </li>
+<li>
+<code>args[1]</code>
+        - необходимая длина ключа.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает шестнадцатеричный ключ следующий за указанным по порядку, либо, если длина сгенерированного ключа превышает необходимую, возвращает нулевой ключ. Длина ключа всегда соответствует необходимой длине.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.key.next_hex</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'0'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; ! '00000001'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_hex</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'00055'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000056'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_hex</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'0ff'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !'00000100'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_hex</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'ffffffff'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000000'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_hex</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'fffffffd'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'fffffffe'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edbkeynext_num">
+</a>
+       edb.key.next_num
+      </h4>
+<p class="avs-article-p">
+       Вспомогательная функция для генерации следующего порядкового номера в виде десятеричного ключа.
+      </p>
+<p class="avs-article-p">
+       Аргументы (обязательные):
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - последний сгенерированный ключ.
+       </li>
+<li>
+<code>args[1]</code>
+        - необходимая длина ключа.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает десятеричный ключ следующий за указанным по порядку, либо, если длина сгенерированного ключа превышает необходимую, возвращает нулевой ключ. Длина ключа всегда соответствует необходимой длине.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'0'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000001'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'00055'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000056'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'0ff'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000001'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'ffffffff'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000001'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'99999999'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '00000000'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.key.next_num</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'99999994'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">8</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       '99999995'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistremove">
+</a>
+       edb.list.remove
+      </h4>
+<p class="avs-article-p">
+       Заменяет в списке первое вхождение, или все вхождения, указанного значения на новое значение, если указанное значение присутствует в списке.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - Список вида
+        <code>aaaa|bbbb|....|zzzzz</code>. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - старое значение.
+       </li>
+<li>
+<code>$args[2]</code>
+        - новое начение. Если не указано, элемент удаляется из списка.
+       </li>
+<li>
+<code>$args[3]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+<li>
+<code>$args[4]</code>
+        - управление:
+        <ul class="avs-articles-structure">
+<li>
+<code>[nclr]</code>
+          или
+          <code>[no clear]</code>
+          - пустые значения между разделителями не удаляются.
+         </li>
+<li>
+<code>[of]</code>
+          или
+          <code>[only first]</code>
+          - заменяется только первое вхождение указанного значения.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Возвращает видоизменённый список.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.remove</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">!                    'BBB|CCC|BBB|DDD|EEE'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.remove</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'aaa'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">!                'aaa|BBB|CCC|aaa|BBB|DDD|EEE'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.remove</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">''</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'|'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[no clear]'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">!                   '|BBB|CCC||BBB|DDD|EEE'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.remove</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">''</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'|'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[only first]'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">!                    'BBB|CCC|AAA|BBB|DDD|EEE'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistis_el">
+</a>
+       edb.list.is_el
+      </h4>
+<p class="avs-article-p">
+       Проверяет наличие указанного элемента в списке.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - Список вида
+        <code>aaaa|bbbb|....|zzzzz</code>. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - элемент, искомое значение. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[2]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает единицу, если элемент в списке присутствует. Если элемента в списке нет, возвращает 0.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.is_el</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       1</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.is_el</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'BBB'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       1</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.is_el</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'FFF'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       0</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.is_el</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'EEE'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       1</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistfirst">
+</a>
+       edb.list.first
+      </h4>
+<p class="avs-article-p">
+       Извлекает из списка первый элемент. Преимущество перед
+       <code>em.str.getWord</code>
+       в том, что функция не использует цикл.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - Список вида
+        <code>aaaa|bbbb|....|zzzzz</code>. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает значение элемента до первого разделителя. Если разделителя в списке нет, возвращает исходное значение.
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.first</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id|body|count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.first</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body|count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment"> &amp; !
+       'body'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.first</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'count'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.first</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'place'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.first</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistlast">
+</a>
+       edb.list.last
+      </h4>
+<p class="avs-article-p">
+       Извлекает из списка последний элемент. Преимущество перед
+       <code>em.str.getWord</code>
+       в том, что функция не использует цикл.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - Список вида
+        <code>aaaa|bbbb|....|zzzzz</code>. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает значение элемента после последнего разделителя. Если разделителя в списке нет, возвращает исходное значение.
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.last</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id|body|count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.last</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body|count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.last</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count|place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.last</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'place|include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.last</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'include'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistappend">
+</a>
+       edb.list.append
+      </h4>
+<p class="avs-article-p">
+       Добавляет новый элемент в конец списка.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - Список вида
+        <code>aaaa|bbbb|....|zzzzz</code>. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - элемент, добавляемое значение. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[2]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает новый список с добавленным элементом, либо, если исходный список пуст, возвращает указанный элемент.
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.append</span><span class="Monokai-Operator">(</span><span class="Monokai-String">''</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'id'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.append</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id|body'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.append</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id|body'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id|body|count'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.append</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id|body|count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'place'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id|body|count|place'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.append</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'id|body|count|place'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'include'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'id|body|count|place|include'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistdiff">
+</a>
+       edb.list.diff
+      </h4>
+<p class="avs-article-p">
+       Функция получения разницы между двумя списками.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - уменьшаемый список вида
+        <code>aaaa|bbbb|....|zzzzz</code>.
+       </li>
+<li>
+<code>$args[1]</code>
+        - вычитаемый список вида
+        <code>aaaa|bbbb|....|zzzzz</code>.
+       </li>
+<li>
+<code>$args[2]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+<li>
+<code>$args[3]</code>
+        - управление:
+        <ul class="avs-articles-structure">
+<li>
+<code>[union]</code>
+          или
+          <code>[un]</code>
+          - в этом режиме из обоих списков исключаются совпадающие значения, а все оставшиеся возвращаются в виде нового списка.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Возвращает новый список.
+      </p>
+<p class="avs-article-p">
+<strong>
+        Внимание!!!
+       </strong>
+       Удаляется только первое совпадение в списке. Ввиду того, что функция не используется в модуле, она не доработана. Вы можете самостоятельно написать похожую функцию, используя иные функции работы со списками.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.diff</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA|BBB|CCC'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'AAA|BBB|DDD|EEE'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.diff</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA|DDD|EEE'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'BBB|CCC|AAA|BBB'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.diff</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'JJJ|FFF|GGG'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.diff</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'AAA|FFF|GGG|EEE'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'|'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[union]'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       'BBB|CCC|AAA|BBB|DDD|FFF|GGG'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistfor_each">
+</a>
+       edb.list.for_each
+      </h4>
+<p class="avs-article-p">
+       Функция перебора элементов списка с вызовом функции, переданной в виде текстового значения.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - список вида
+        <code>aaaa|bbbb|....|zzzzz</code>.
+       </li>
+<li>
+<code>$args[1]</code>
+        - функция, применяющаяся к каждому элементу списка (условный колбэк).
+       </li>
+<li>
+<code>$args[2]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+<li>
+<code>$args[3]</code>...
+        <code>$args[18]</code>
+        - аргументы, транслируемые в функцию-колбэк.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Данная функция циклически перебирает все элементы списка, вызывая переданную в виде текстового значения функцию (условный колбэк) через
+       <code>$dyneval</code>. При этом в
+       <code>$dyneval</code>
+       в нулевом аргументе передаётся значение - элемент списка, а во все остальные аргументы транслируются значения из аргументов с 3-его по 18-ый. Это позволяет использовать переданную в виде текстового значения функцию, как колбэк, и таким образом гибко обрабатывать элементы списка.
+      </p>
+<p class="avs-article-p">
+<code>edb.list.for_each</code>
+       может возвращать текстовое (только текстовое!) значение, получаемое путём склейки (конкатенация) полученных из колбэка значений. Если колбэк не возвращает никаких значений,
+       <code>edb.list.for_each</code>
+       так же ничего не вернёт.
+      </p>
+<p class="avs-article-p">
+       Все аргументы, принимаемые колбэком, должны передаваться в текстовом виде, поэтому если вам нужно передать в колбэк число, сначала преобразуйте его в строковое значение. В колбэке строку снова можно преобразовать в число.
+      </p>
+<p class="avs-article-p">
+       В колбэк всегда предаётся 16 аргументов от
+       <code>$args[0]</code>
+       до
+       <code>$args[15]</code>, учитывайте это при оформлении колбэка. Соответствие аргументов, переданных в
+       <code>edb.list.for_each</code>, аргументам в колбэке:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - значение, элемент списка,
+       </li>
+<li>
+<code>$args[1] = $args[3]</code>
+</li>
+<li>
+<code>$args[2] = $args[4]</code>
+</li>
+<li>
+<code>$args[3] = $args[5]</code>
+</li>
+<li>
+<code>$args[4] = $args[6]</code>
+</li>
+<li>
+        и т.д.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<br/>
+       $list_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">
+<br/>
+<br/>
+</span><span class="Monokai-Comment">! склейка значений списка, с исключением 'AAA':</span>
+<br/>
+<br/>
+       $callback_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-Operator">{</span> <span class="Monokai-SysVar">$result</span> <span class="Monokai-Operator">=</span> <span class="Monokai-Func">iif</span><span class="Monokai-Operator">(</span><span class="Monokai-SysVar">$args</span><span class="Monokai-Operator">[</span><span class="Monokai-Numeric">0</span><span class="Monokai-Operator">]</span> <span class="Monokai-Operator">=</span> <span class="Monokai-String">'AAA'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">''</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-SysVar">$args</span><span class="Monokai-Operator">[</span><span class="Monokai-Numeric">0</span><span class="Monokai-Operator">]</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator">}</span>
+<br/>
+<br/>
+<span class="Monokai-Operator">*pl</span> <span class="Monokai-UnFunc">@edb.list.for_each</span><span class="Monokai-Operator">(</span>$list_<span class="Monokai-Operator">,
+       </span> $callback_<span class="Monokai-Operator">)</span>
+<br/><br/>
+<span class="Monokai-Comment">! 'BBBCCCBBBDDDEEE'</span><span class="Monokai-Operator">
+<br/>
+<br/>
+</span><span class="Monokai-Comment">! подсчёт числа элементов списка</span>
+<br/>
+<br/>
+       $callback_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-Operator">{ </span><span class="Monokai-SysVar">$result</span> <span class="Monokai-Operator">=</span> <span class="Monokai-String">'0'</span><span class="Monokai-Operator"> }</span>
+<br/>
+<span class="Monokai-Operator">*pl</span> <span class="Monokai-Func">len</span><span class="Monokai-Operator">(</span><span class="Monokai-UnFunc">@edb.list.for_each</span><span class="Monokai-Operator">(</span>$list_<span class="Monokai-Operator">,
+       </span>
+       $callback_<span class="Monokai-Operator">)</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator">
+<br/>
+<br/>
+</span><span class="Monokai-Comment">! 7</span><span class="Monokai-Operator">
+<br/>
+<br/>
+</span><span class="Monokai-Comment">! реверс элементов списка</span>
+<br/>
+<br/>
+<span class="Monokai-Operator">local</span>
+       $reverse_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-String">''</span>
+<br/>
+       $callback_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-Operator">{</span>
+       $reverse_
+       <span class="Monokai-Operator">=</span> <span class="Monokai-String">'|'</span> <span class="Monokai-Operator">+</span> <span class="Monokai-SysVar">$args</span><span class="Monokai-Operator">[</span><span class="Monokai-Numeric">0</span><span class="Monokai-Operator">]</span> <span class="Monokai-Operator">+</span>
+       $reverse_
+       <span class="Monokai-Operator">}</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.list.for_each</span><span class="Monokai-Operator">(</span>$list_<span class="Monokai-Operator">,</span> $callback_<span class="Monokai-Operator">)</span>
+<br/>
+<span class="Monokai-Operator">*pl</span> <span class="Monokai-Func">$mid</span><span class="Monokai-Operator">(</span>$reverse_<span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">2</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator">
+<br/>
+<br/>
+</span><span class="Monokai-Comment">! 'EEE|DDD|BBB|AAA|CCC|BBB|AAA'</span>
+</div>
+<h4 class="avs-article-h4">
+<a aria-hidden="true" id="edblistlength">
+</a>
+       edb.list.length
+      </h4>
+<p class="avs-article-p">
+       Возвращает число элементов в списке. Использует цикл.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - список вида
+        <code>aaaa|bbbb|....|zzzzz</code>.
+       </li>
+<li>
+<code>$args[1]</code>
+        - разделитель. Если не указано: вертикальная черта
+        <code>|</code>.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.list.length</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'AAA|BBB|CCC|AAA|BBB|DDD|EEE'</span><span class="Monokai-Operator">)
+       </span>
+<span class="Monokai-Comment">&amp; !
+       7</span>
+</div>
+</section>
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_rabota_s_bazoj_jachejk/0-86.html">
+<div class="avs-pages-button">⇐ Функции для работы с Базой, стр. 2</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/manual.html">
+<div class="avs-pages-button">Назад</div>
+</a>
+</div>
+</article>
+<aside class="e-block">
+<div class="avs-page-stamp" id="em_subscribe">
+<p>Aleks Versus'Easy Libraries'2022-<span class="subscribe-year">2023</span></p>
+<p>Aleks Versus'Game Adventure Making'Really Unimaginable Stories'2022-<span class="subscribe-year">2023</span></p>
+</div>
+</aside>
+</div>
+</div><div class="em-stick-upper"><a href="#UP" title="Вверх"><img class="em-stick-upper__image" src="../../res/img/uparrow_btn_.png"/></a></div></body>
+</html>

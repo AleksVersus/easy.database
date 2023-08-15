@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<!-- TODO: favicon -->
+<link href="../../res/css/easy.library.css" rel="stylesheet"/></head>
+<body>
+<div class="avs-page-wrapper">
+<div class="easy-lib-page">
+<article class="e-block">
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/manual.html">
+<div class="avs-pages-button">Назад</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_rabota_s_bazoj_jachejk/0-86.html">
+<div class="avs-pages-button">Функции для работы с ячейками ⇒</div>
+</a>
+</div>
+<a class="avs-article-h1__link" href="https://github.com/AleksVersus/easy.nrBD/releases" id="UP" target="_blank" title="Скачать последнюю версию библиотеки со страницы релизов">
+<h1 class="avs-article-h1">easy.database.qsp v. 0.2</h1>
+</a>
+<p class="avs-articles-underhead">Библиотека организации базы данных для <a class="avs-page-external-link" href="https://qsp.org" target="_blank">Quest Soft Player</a></p>
+<section data-head="Функции модуля">
+<h2 class="avs-article-h2"><a aria-hidden="true" id="funktsii_modulja"></a>Функции модуля</h2>
+<h3 class="avs-article-h3"><a aria-hidden="true" id="функции-для-работы-с-базой-данных"></a>Функции для работы с базой данных. База данных, Таблица данных, Колонка, Строка</h3>
+<p class="avs-article-p">Большинство функций автоматически перемещают указатель на указанные таблицу, колонку и/или строку.
+     </p>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbinit"></a>edb.init</h4>
+<p class="avs-article-p">
+       Данная функция служит для инициализации базы данных.
+      </p>
+<p class="avs-article-p">
+       Инициализация должна проводиться в самом начале игры, после чего больше повторяться не может. На всю игру создаётся только одна база данных. При этом инициализируются следующие значения в массиве
+       <code>$EASY_DATABASE</code>
+       :
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>ID</code>
+        - идентификатор базы данных в виде псевдо-UUID. Нужен для проверки инициализации базы данных.
+       </li>
+<li>
+<code>data_tables_counter</code>
+        - счётчик созданных таблиц данных, включая удалённые.
+       </li>
+<li>
+<code>data_tables_number</code>
+        - счётчик существующих в настоящий момент таблиц данных.
+       </li>
+<li>
+<code>data_tables_ids</code>
+        - список существующих таблиц данных.
+       </li>
+<li>
+<code>last_data_table</code>
+        - указатель на предыдущую активную таблицу данных.
+       </li>
+<li>
+<code>current_data_table</code>
+        - указатель на текущую активную таблицу данных.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Вызов функции:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.init</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbprint"></a>edb.print</h4>
+<p class="avs-article-p">
+       Возвращает информацию по состоянию базы данных в человекочитаемом виде.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — управляющие конструкции:
+        <ul class="avs-articles-structure">
+<li>
+<code>[inmain]</code>
+          — выведет информацию напрямую в окно основного описания.
+         </li>
+<li>
+<code>[instat]</code>
+          — выведет информацию напрямую в окно дополнительного описания.
+         </li>
+<li>
+          если ни одна из двух предыдущих конструкций не указана, вернёт информацию в виде результата.
+         </li>
+<li>
+<code>[all arrays]</code>
+          — к информации добавится список всех массивов, занятых базой данных.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Примеры вызова функции:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'[instat] [all arrays]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-Operator">local</span> $db_desc <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.print</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbnew_table"></a>edb.new_table</h4>
+<p class="avs-article-p">
+       Создаёт в базе данных новую таблицу данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — обязательный аргумент, идентификатор таблицы данных.
+       </li>
+<li>
+<code>$args[1]</code>
+        — название таблицы данных. Можно не указывать, или указать пустое значение.
+       </li>
+<li>
+<code>$args[2]</code>
+        — тип первичных ключей (по умолчанию
+        <code>[rstr:16]</code>):
+        <ul class="avs-articles-structure">
+<li>
+<code>[msecscount]</code>
+          - первичные ключи будут генерироваться на основе данных из функции msecscount.
+         </li>
+<li>
+<code>[uuid]</code>
+          - первичные ключи генерируются в формате UUID
+         </li>
+<li>
+<code>[hex:N]</code>
+          - первичные ключи генерируются, как порядковое шестнадцатерияное число из N символов. Это ограничит высоту таблицы данных максимальным возможным в этой таблице данных числом.
+         </li>
+<li>
+<code>[num:N]</code>
+          - первичные ключи генерируются в виде N-значного десятеричного числа. Это ограничит высоту таблицы данных максимальным возможным в такой таблице числом.
+         </li>
+<li>
+<code>[rhex:N]</code>
+          - первичным ключом будет назначаться случайное шестнадцатеричное число, состоящее из не менее, чем 8 символов.
+         </li>
+<li>
+<code>[rnum:N]</code>
+          - первичным ключом будет назначаться случайное десятерично число, состоящее из не менее, чем 16 символов.
+         </li>
+<li>
+<code>[uid]</code>
+          - первичный ключ будет генерироваться из строки случайных букв и цифр плюс текущее абсолютное значение от msecscount
+         </li>
+<li>
+<code>[rstr:N]</code>
+          - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       При создании таблицы данных инициализируется массив, название которого совпадает с переданным идентификатором. При этом происходит инициализация следующих ячеек этого массива:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>ID</code>
+        — идентификатор таблицы данных.
+       </li>
+<li>
+<code>NAME</code>
+        — название таблицы данных.
+       </li>
+<li>
+<code>columns</code>
+        — список колонок таблицы данных.
+       </li>
+<li>
+<code>current_col</code>
+        — идентификатор текущей колонки (указатель).
+       </li>
+<li>
+<code>current_row</code>
+        — идентификатор текущей строки (указатель).
+       </li>
+<li>
+<code>primary_keys_type</code>
+        — тип первичных ключей.
+       </li>
+<li>
+<code>free_keys</code>
+        — список освободившихся первичных ключей (только для порядковых первичных ключей).
+       </li>
+</ul>
+<p class="avs-article-p">
+       Также при создании таблицы данных изменяются соответствующие значения в
+       <code>$EASY_DATABASE</code>, и инициализируется массив для колонки первичных ключей.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.new_table</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'Предметы'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[rstr:32]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.new_table</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'dialogs'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'Диалоги и реплики'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[uuid]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.new_table</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'temp'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">''</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[msecscount]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.new_table</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'potions'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdel_table"></a>edb.del_table</h4>
+<p class="avs-article-p">
+       Удаление указанной таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных (по умолчанию используется идентификатор из указателя).
+       </li>
+</ul>
+<p class="avs-article-p">
+       При удалении таблицы данных уничтожаются массивы, соответствующие колонкам, а также одноимённый с идентификатором массив, описывающий свойства таблицы данных. Помимо этого изменяются соответствующие значения в массиве
+       <code>$EASY_DATABASE</code>.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-Comment">! удаляем указанную таблицу данных:</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.del_table</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'dialogs'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">! удаляем текущую таблицу данных:</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.del_table</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtset_cur"></a>edb.dt.set_cur</h4>
+<p class="avs-article-p">
+       Устанавливает указанную таблицу данных текущей.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Идентификатор текущей таблицы данных записывается в $EASY_DATABASE['last_data_table'], а идентификатор указанной таблицы данных записывается в $EASY_DATABASE['current_data_table'].
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.set_cur</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'object'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtprint"></a>edb.dt.print</h4>
+<p class="avs-article-p">
+       Выводит на печать или возвращает человекочитаемое описание таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных. Если не указывать, используется текущий.
+       </li>
+<li>
+<code>$args[1]</code>
+        — управление:
+        <ul class="avs-articles-structure">
+<li>
+<code>[oi]</code>,
+          <code>[only info]</code>
+          — будет возвращена только информация о таблице данных
+         </li>
+<li>
+<code>[ot]</code>,
+          <code>[only table]</code>
+          — будет возвращёна только html-таблица с содержимым таблицы данных.
+          <ul class="avs-articles-structure">
+<li>
+<code>[range:N-M]</code>
+            — будут возвращены только строки с N по M включительно.
+           </li>
+</ul>
+</li>
+<li>
+          если предыдущие опции не указаны, возвращается и информация и html-таблица с содержимым.
+         </li>
+<li>
+<code>[inmain]</code>
+          — выведет информацию напрямую в окно основного описания.
+         </li>
+<li>
+<code>[instat]</code>
+          — выведет информацию напрямую в окно дополнительного описания.
+         </li>
+<li>
+          если ни одна из двух предыдущих конструкций не указана, вернёт информацию в виде результата.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Примеры вызова:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[inmain]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[instat] [only info]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[ot] [range:2-4]'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<p class="avs-article-p">
+<strong>
+        Внимание!!!
+       </strong>
+       В описании таблицы данных указывается её высота, эта высота определяется размером массива первичных ключей, однако поскольку нулевая ячейка каждого массива используется под служебную информацию, полезная высота таблицы данных на единицу меньше обозначенной при выводе. Учитывайте это при работе с базой данных.
+      </p>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtnew_col"></a>edb.dt.new_col</h4>
+<p class="avs-article-p">
+       Создаёт колонку в таблице данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор колонки. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        — тип колонки. По умолчанию, тип 'str'.
+       </li>
+<li>
+<code>$args[2]</code>
+        — идентификатор таблицы данных. Если не указан, используется текущий.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Примеры вызова:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.new_col</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'dict'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.new_col</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'place'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'str'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.new_col</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'include'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.new_col</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'num'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<p class="avs-article-p">
+       При создании колонки в таблице данных инициализируется массив с именем, состоящим из идентификатора таблицы данных и идентификатора колонки данных, поэтому к идентификатору колонки применяются те же требования, что и к названиям массивов в QSP. Например, если идентификатор таблицы данных
+       <code>objects</code>, а идентификатор колонки
+       <code>body</code>, будет инициализирован массив
+       <code>$objects_body</code>. При этом в нулевую ячейку такого массива записывается тип колонки:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+        'str' - это колонка, которая может содержать только простую строку
+       </li>
+<li>
+        'dict' - это колонка, содержащая словарь значений. Словарь составляется из тегов типа "[tag:строка текста:tag]".
+       </li>
+<li>
+        'list' - это строка, содержащая перечисленные через | значения
+       </li>
+<li>
+        'tuple' - колонка со значениями кортежами
+       </li>
+<li>
+        'num' - колонка с числовыми значениями
+       </li>
+<li>
+        'ids' - колонка первичных ключей (нельзя указывать этот тип, так как колонка первичных ключей создаётся автоматически)
+       </li>
+</ul>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtdel_col"></a>edb.dt.del_col</h4>
+<p class="avs-article-p">
+       Удаляет колонку из таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.del_col</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'include'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<p class="avs-article-p">
+       Удаление колонки приводит к уничтожению соответствующего массива. Восстановить удалённую колонку нельзя.
+      </p>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtnew_row"></a>edb.dt.new_row</h4>
+<p class="avs-article-p">
+       Создаёт строку в таблице данных, не заполняя её значениями.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указтеля текущей колонки.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Функция возвращает идентификатор созданной строки, для дальнейшего использования.
+      </p>
+<p class="avs-article-p">
+       В зависимости от установленного на этапе создания таблицы данных типа первичных ключей генерируется очередной первичный ключ для новой строки. Далее происходит заполнение всех массивов, соответствующих колонкам таблицы данных, пустыми значениями, при этом индексы заполняемых ячеек равны сгенерированному первичному ключу.
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.new_row</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-Operator">local</span>
+       $r
+       <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.dt.new_row</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-Operator">local</span>
+       $i
+       <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.dt.new_row</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.new_row</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.new_row</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtdel_row"></a>edb.dt.del_row</h4>
+<p class="avs-article-p">
+       Удаляет из таблицы данных строку по указанному идентификатору. Если указан неверный идентификатор, функция просто не сработает.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.del_row</span><span class="Monokai-Operator">(</span>$r<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.del_row</span><span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">)</span>
+</div>
+<p class="avs-article-p">
+       Удаление строки — это уничтожение ячеек в массивах, соответствующих колонкам таблицы данных, по индексу, совпадающему с первичным ключом.
+      </p>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtheight"></a>edb.dt.height</h4>
+<p class="avs-article-p">
+       Функция для получения высоты таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает высоту таблицы данных (число).
+      </p>
+<p class="avs-article-p">
+<strong>
+        Внимание!!!
+       </strong>
+       Высота таблицы данных определяется размером массива первичных ключей, однако поскольку нулевая ячейка каждого массива используется под служебную информацию, полезная высота таблицы данных на единицу меньше обозначенной при выводе. Учитывайте это при работе с базой данных.
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.height</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-Operator">local</span>
+       height
+       <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.dt.height</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtwidth"></a>edb.dt.width</h4>
+<p class="avs-article-p">
+       Функция для получения ширины таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает ширину таблицы данных (число), которое соответствует числу колонок. Работа этой функции основана на цикле.
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.width</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-Operator">local</span>
+       width
+       <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.dt.width</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtfind"></a>edb.dt.find</h4>
+<p class="avs-article-p">
+       Поиск значения по таблице данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - регулярное выражение по которому производится поиск. Поиск ведётся на точное совпадение с регулярным выражением. Невозможно производить поиск по регулярному выражению, если тип колонки, по которой производится поиск, 'num'.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор колонки, по которой производится поиск. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы данных.
+       </li>
+<li>
+<code>$args[3]</code>
+        - размер чанка. Чанк - это фрагмент таблицы данных, по которому будет производиться поиск. Разбиение на чанки ускоряет поиск, если искомая информация находится где-то в начале таблицы данных.
+       </li>
+<li>
+<code>$args[4]</code>...
+        <code>$args[18]</code>
+        — дополнительные фильтры в виде кортежей:
+        <ul class="avs-articles-structure">
+<li>
+          (колонка, значение, управление) - управление:
+          <ul class="avs-articles-structure">
+<li>
+<code>[regexp]</code>
+            - регулярка. Точное соответствие. Не работает для колонок типа 'num'
+           </li>
+<li>
+<code>[callback]</code>
+            - функция колбэк принимающая, как аргумент, значение элемента, и возвращающая 1 или 0, в зависимости от результатов фильтрации
+           </li>
+<li>
+<code>[strict]</code>
+            (или не указанное значение) - проверяем на точное соответствие.
+           </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Функция возвращает идентификатор строки, в которой найдено искомое значение.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator">local</span>
+       $row_id
+       <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.dt.find</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый (меч|щит|шлем)'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">10000</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Operator">{</span><span class="Monokai-SysVar">result</span><span class="Monokai-Operator">=</span><span class="Monokai-Func">iif</span><span class="Monokai-Operator">(</span><span class="Monokai-SysVar">args</span><span class="Monokai-Operator">[</span><span class="Monokai-Numeric">0</span><span class="Monokai-Operator">]</span>
+       &gt;
+       <span class="Monokai-Numeric">1</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">1</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">0</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator">}</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[callback]'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator">)
+       </span>
+<br/>
+       $row_id
+       <span class="Monokai-UnFunc">@edb.dt.find</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtclear"></a>edb.dt.clear</h4>
+<p class="avs-article-p">
+       Очистка таблицы данных от всех данных. В результате работы функции все колонки в таблице данных сохраняются, но удаляются через удаление ячеек массивов все строки.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.dt.clear</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbdtclone"></a>edb.dt.clone</h4>
+<p class="avs-article-p">
+       Создаёт копию таблицы данных, или указанной части таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор новой таблицы данных. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор исходной таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+<li>
+<code>$args[2]</code>
+        или
+        <code>args[2]</code>
+        - идентификатор строки, от которой нужно производить клонирование, или номер этой строки. Если не указано, копирование таблицы данных будет производиться с первой строки. Технически нулевые ячейки массивов, соответствующих колонкам, отведены под хранение служебной информации, поэтому нумерация строк таблицы данных ведётся с 1.
+       </li>
+<li>
+<code>args[3]</code>
+        - число строк, которые необходимо скопировать. По-умолчанию: все оставшиеся строки.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Технически функция делает то, что указано. Создаёт точную копию уже существующей таблицы данных, либо некоторого количества её строк. При этом копируются все колонки, в т.ч. и колонка первичных ключей. В новой таблице данных снимаются все указатели, однако указатель текущей таблицы данных переводится на неё.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-Operator"></span><span class="Monokai-Comment">! копируем таблицу полностью</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.clone</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'new_objs'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span><span class="Monokai-Operator"><br/></span><span class="Monokai-Comment">! копируем несколько строк в новую таблицу данных</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.dt.clone</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'find_objs'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'000005'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">6</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbcolset_cur"></a>edb.col.set_cur</h4>
+<p class="avs-article-p">
+       Устанавливает указанную колонку в качестве текущей.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор колонки.
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Технически присваивает ячейке одноименного с идентификатором таблицы данных массива под индексом 'current_col' указанный идентификатор колонки.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.col.set_cur</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.col.set_cur</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbcolprint"></a>edb.col.print</h4>
+<p class="avs-article-p">
+       Вывод содержимого указанной колонки.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+<li>
+<code>$args[2]</code>
+        — управление:
+        <ul class="avs-articles-structure">
+<li>
+<code>[inmain]</code>
+          — выведет информацию напрямую в окно основного описания.
+         </li>
+<li>
+<code>[instat]</code>
+          — выведет информацию напрямую в окно дополнительного описания.
+         </li>
+<li>
+          если ни одна из двух предыдущих конструкций не указана, вернёт информацию в виде результата.
+         </li>
+<li>
+<code>[range:N-M]</code>
+          — вывод значений от элемента N до M включительно в колонке.
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.col.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'body'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[inmain]'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.col.print</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'[inmain] [range:3-5]'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbcolset_next"></a>edb.col.set_next</h4>
+<p class="avs-article-p">
+       Присваивает значение ячейке текущей строки, затем перемещает указатель на следующую строку.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - значение, присваиваемое ячейке.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+<strong>
+        ВНИМАНИЕ!!!
+       </strong>
+       Данная функция использует arrpos для поиска элементов. Для баз больших объёмов это может существенно подвешивать игру. Не используйте данную функцию без необходимости.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.col.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Яблоко'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'name'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.col.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Груша'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.col.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый меч'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowset_cur"></a>edb.row.set_cur</h4>
+<p class="avs-article-p">
+       Устанавливает указанную строку в качестве текущей.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор строки.
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Технически присваивает ячейке одноименного с идентификатором таблицы данных массива под индексом 'current_row' указанный идентификатор строки. Сделать текущей строку, которой нет в таблице данных нельзя, однако ошибку в игре это не вызовет.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.set_cur</span><span class="Monokai-Operator">(</span>$r<span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.row.set_cur</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'000000f1'</span><span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowfill"></a>edb.row.fill</h4>
+<p class="avs-article-p">
+       Заполняет строку значениями.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>...
+        <code>$args[18]</code>
+        — значения, или кортежи типа
+        <code>(идентификатор колонки, значение)</code>, с помощью которых заполняются ячейки в строке.
+       </li>
+<li>
+<code>$args[18]</code>...
+        <code>$args[0]</code>
+        — кортеж типа
+        <code>(идентификатор строки, идентификатор таблицы данных)</code>, либо только идентификатор строки.
+       </li>
+</ul>
+<p class="avs-article-p">
+<strong>
+        Внимание!
+       </strong>
+       При использовании данной функции не происходит переключения текущей колонки.
+      </p>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.fill</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый меч'</span><span class="Monokai-Operator">,</span> <span class="Monokai-String">'сумка'</span><span class="Monokai-Operator">,</span> <span class="Monokai-Numeric">1</span><span class="Monokai-Operator">,</span> <span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">,</span> <span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)</span><span class="Monokai-Operator">)
+       </span><br/>
+<span class="Monokai-UnFunc">@edb.row.fill</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Старый шлем'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'сумка'</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-Numeric">15</span><span class="Monokai-Operator">,</span>
+       $n<span class="Monokai-Operator">)</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.row.fill</span><span class="Monokai-Operator">(</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Пепел'</span><span class="Monokai-Operator">,</span> <span class="Monokai-String">'body'</span><span class="Monokai-Operator">)</span><span class="Monokai-Operator">,</span> <span class="Monokai-Operator">(</span><span class="Monokai-Numeric">2</span><span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'count'</span><span class="Monokai-Operator">)</span><span class="Monokai-Operator">,</span>
+       $s<span class="Monokai-Operator">)
+       </span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowprint"></a>edb.row.print</h4>
+<p class="avs-article-p">
+       Вывод содержимого указанной строки.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+<li>
+<code>$args[2]</code>
+        - управление:
+        <ul class="avs-articles-structure">
+<li>
+<code>[inmain]</code>
+          — выведет информацию напрямую в окно основного описания.
+         </li>
+<li>
+<code>[instat]</code>
+          — выведет информацию напрямую в окно дополнительного описания.
+         </li>
+<li>
+          если ни одна из двух предыдущих конструкций не указана, вернёт информацию в виде результата
+         </li>
+</ul>
+</li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.print</span><span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">,</span> <span class="Monokai-String">'objects'</span><span class="Monokai-Operator">,</span> <span class="Monokai-String">'[inmain]'</span><span class="Monokai-Operator">)</span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowset_next"></a>edb.row.set_next</h4>
+<p class="avs-article-p">
+       Присваивает значение ячейке текущей колонки, затем перемещает указатель на следующую колонку.
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - значение.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Примеры:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Яблоко'</span><span class="Monokai-Operator">)</span>
+<br/>
+<span class="Monokai-UnFunc">@edb.row.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'Инвентарь'</span><span class="Monokai-Operator">)
+       </span>
+<br/>
+<span class="Monokai-UnFunc">@edb.row.set_next</span><span class="Monokai-Operator">(</span><span class="Monokai-Numeric">25</span><span class="Monokai-Operator">)</span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowexchange"></a>edb.row.exchange</h4>
+<p class="avs-article-p">
+       Функция меняет содержимое двух строк местами.
+       <strong>
+        Внимание!!!
+       </strong>
+       Меняется именно содержимое строк. Идентификаторы не перемещаются, т.е. фактически строки остаются на своих местах, но обмениваются
+       <strong>
+        содержимым
+       </strong>
+       !
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - идентификатор одной строки.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор другой строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Обменять ошибку несуществующих строк нельзя, однако ошибку в игре это не вызовет.
+      </p>
+<p class="avs-article-p">
+       Строка, идентификатор которой передан в
+       <code>$args[0]</code>, становится текущей.
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.exchange</span><span class="Monokai-Operator">(</span>$d<span class="Monokai-Operator">,</span> $n<span class="Monokai-Operator">,
+       </span><span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)</span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowextract"></a>edb.row.extract</h4>
+<p class="avs-article-p">
+       Извлекает из строки содержимое, помещая значения в указанный массив, при этом индексами элементов массива выступают названия колонок.
+      </p>
+<blockquote>
+<p class="avs-article-p">
+        Концепция функции взята из модуля Олегуса.
+       </p>
+</blockquote>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - название массива. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.extract</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'septem'</span><span class="Monokai-Operator">,
+       </span> $i<span class="Monokai-Operator">)</span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowinject"></a>edb.row.inject</h4>
+<p class="avs-article-p">
+       Функция вводит в указанную строку данные из указанного массива. При этом предполагается, что данные лежат в ячейках, индексы которых соответствуют названиям колонок таблицы данных.
+      </p>
+<p class="avs-article-p">
+<strong>
+        Внимание!!!
+       </strong>
+       Новые данные затирают уже существующие в строке данные.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        - название массива. Обязательный аргумент.
+       </li>
+<li>
+<code>$args[1]</code>
+        - идентификатор строки. Если не указан, используется идентификатор из указателя текущей строки.
+       </li>
+<li>
+<code>$args[2]</code>
+        - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+<span class="Monokai-UnFunc">@edb.row.inject</span><span class="Monokai-Operator">(</span><span class="Monokai-String">'septem'</span><span class="Monokai-Operator">,
+       </span> $n<span class="Monokai-Operator">)</span>
+</div>
+<h4 class="avs-article-h4"><a aria-hidden="true" id="edbrowclone"></a>edb.row.clone</h4>
+<p class="avs-article-p">
+       Копирует строку внутри таблицы данных.
+      </p>
+<p class="avs-article-p">
+       Аргументы:
+      </p>
+<ul class="avs-articles-structure">
+<li>
+<code>$args[0]</code>
+        — идентификатор клонируемой строки. Если не указан, клонируется текущая строка (идентификатор которой находится в указателе текущей строки).
+       </li>
+<li>
+<code>$args[1]</code>
+        — идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
+       </li>
+</ul>
+<p class="avs-article-p">
+       Возвращает идентификатор новой строки.
+      </p>
+<p class="avs-article-p">
+       Технически в таблице данных создаётся новая строка с новым первичным ключом. Все остальные значения в ячейках этой строки идентичны значениям в исходной строке.
+      </p>
+<p class="avs-article-p">
+       Пример:
+      </p>
+<div class="Monokai-Code">
+       $new_string_ <span class="Monokai-Operator">=</span> <span class="Monokai-UnFunc">@edb.row.clone</span><span class="Monokai-Operator">(</span>$i<span class="Monokai-Operator">,</span> <span class="Monokai-String">'objects'</span><span class="Monokai-Operator">)</span>
+</div>
+</section>
+<div class="avs-pages-button__wrapper">
+<a class="avs-pages-button__link" href="../../easy.database/manual.html">
+<div class="avs-pages-button">Назад</div>
+</a>
+<a class="avs-pages-button__link" href="../../easy.database/funkcii_modulja_rabota_s_bazoj_jachejk/0-86.html">
+<div class="avs-pages-button">Функции для работы с ячейками ⇒</div>
+</a>
+</div>
+</article>
+<aside class="e-block">
+<div class="avs-page-stamp" id="em_subscribe">
+<p>Aleks Versus'Easy Libraries'2022-<span class="subscribe-year">2023</span></p>
+<p>Aleks Versus'Game Adventure Making'Really Unimaginable Stories'2022-<span class="subscribe-year">2023</span></p>
+</div>
+</aside>
+</div>
+</div><div class="em-stick-upper"><a href="#UP" title="Вверх"><img class="em-stick-upper__image" src="../../res/img/uparrow_btn_.png"/></a></div></body>
+</html>

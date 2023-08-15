@@ -3,7 +3,11 @@
 		"functions": ["Функции модуля"],
 		"history": ["История версий"]
 	},
-	"main": "0-11",
-	"functions": "0-22",
-	"history": "0-33"
+	"output_folder": "../easy.database/",
+	"output_files": {
+		"manual": "manual.html",
+		"functions": "functions/0-22.html",
+		"history": "history/0-33.html"
+	},
+	"template_path": "./template.html"
 }	

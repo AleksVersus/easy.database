@@ -38,6 +38,9 @@ class ReadmeArticle():
 					anchor['id'] = ReadmeArticle.transliterate(element.text)
 				else:
 					section.append(element)
+		# with open('1.html', 'w', encoding='utf-8') as fp:
+		# 	fp.write(self.sections.prettify())
+		print(len(self.sections.contents))
 
 	def clear(self):
 		for svg in self.sections.find_all('svg'):
@@ -107,8 +110,10 @@ class ReadmeArticle():
 			del tag['dir']
 		for ul in self.sections.find_all('ul'):
 			ul['class'] = "avs-articles-structure"
+		# with open('2.html', 'w', encoding='utf-8') as fp:
+		# 	fp.write(self.sections.prettify())
 
-	def generate_pages(self, output_folder:str, project_json:str, template_path='./template.html'):
+	def generate_pages(self, project_json:str):
 		with open(os.path.abspath(project_json), 'r', encoding='utf-8') as fp:
 			project = json.load(fp)
 		base_placing = {'sections': [], 'pages': []}
@@ -116,29 +121,52 @@ class ReadmeArticle():
 			for el in value:
 				base_placing['sections'].append(el)
 				base_placing['pages'].append(key)
+		template_path = project['template_path']
 		with open(os.path.abspath(template_path), 'r', encoding='utf-8') as fp:
 			template_html = fp.read()
 		pages = {}
 		keys = list(project['non_main_pages_sections'].keys())
-		keys.append('main')
+		keys.append('manual')
 		for key in keys:
 			pages[key] = BeautifulSoup(template_html, 'lxml')
-		for section in self.sections:
+		print(len(self.sections.contents))
+		count = 0
+		for section in self.sections.contents[:]:
+			print(count)
 			if 'data-head' in section.attrs:
+				print(section['data-head'])
 				if section['data-head'] in base_placing['sections']:
 					i = base_placing['sections'].index(section['data-head'])
 					key = base_placing['pages'][i]
 					k = key
+					print(f'in {k}')
 				else:
-					k = 'main'
+					print('in manual')
+					k = 'manual'
 			else:
-				k = 'main'
+				print('empty in manual')
+				k = 'manual'
 			article = pages[k].article
 			article.append(section.extract())
+			count += 1
+		output_folder = os.path.abspath(project['output_folder'])
+		output_files = project['output_files']
 		for key in pages:
-			with open(f'{key}.html', 'w', encoding='utf-8') as fp:
+			output_path = os.path.join(output_folder, os.path.relpath(output_files[key]))
+			self.mk_dirs(output_folder, os.path.relpath(output_files[key]).split('\\')[:-1])
+			with open(output_path, 'w', encoding='utf-8') as fp:
 				fp.write(pages[key].prettify())
 
+	@staticmethod
+	def mk_dirs(output_folder, splited_path: list):
+		new_dir = output_folder
+		while True:
+			if not os.path.isdir(new_dir):
+				os.mkdir(new_dir)
+			if len(splited_path)>0:
+				new_dir = f'{new_dir}\\{splited_path.pop(0)}'
+			else:
+				break
 
 
 	@staticmethod
@@ -389,7 +417,7 @@ class ReadmeArticle():
 
 def main():
 	ra = ReadmeArticle('[source].html')
-	ra.generate_pages('../easy.database', './proj.json', template_path='./template.html')
+	ra.generate_pages('./proj.json')
 
 
 if __name__ == "__main__":
