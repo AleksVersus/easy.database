@@ -57,10 +57,10 @@ class ReadmeArticle():
 			h['class'] = 'avs-article-h' + str(re.match(r'h(\d+)', h.name).group(1))
 		for a in self.sections.find_all('a'):
 			if 'href' in a.attrs:
-				internal = re.match(r'https://github.com/AleksVersus/easy\.nrBD#', a['href'])
+				internal = re.match(r'https://github.com/AleksVersus/easy\.database#', a['href'])
 				if internal is not None:
 					a['class'] = 'avs-page-internal-link'
-					a['href'].replace('https://github.com/AleksVersus/easy.nrBD', '')
+					a['href'].replace('https://github.com/AleksVersus/easy.database', '')
 				else:
 					a['class'] = 'avs-page-external-link'
 		for div in self.sections.find_all('div', {'class': 'snippet-clipboard-content'}):
