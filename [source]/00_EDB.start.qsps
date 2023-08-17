@@ -15,33 +15,33 @@ if $args[0] = '':
 	showacts 0
 	showobjs 0
 
-	"
-	Easy DataBase -> Система Управления Базой Данных.
+"Easy DataBase
+Система Управления Базой Данных для QSP
 
-	Репозиторий с исходниками библиотеки:
+Репозиторий с исходниками библиотеки:
 
-	*	https://github.com/AleksVersus/easy.database
+*	https://github.com/AleksVersus/easy.database
 
-	По всем вопросам и предложениям обращаться:
+По всем вопросам и предложениям обращаться:
 
-	*	aleksversus@mail.ru
-	*	https://vk.com/id40090736
+*	aleksversus@mail.ru
+*	https://vk.com/id40090736
 
-	Заходите на мой сайт:
+Заходите на мой сайт:
 
-	*	aleksversus.narod.ru
-	
-	Обучающие видео по программированию на QSP:
-	
-	*	https://www.youtube.com/channel/UCwX8RW2B9yTUFdlivtCGAgA
+*	aleksversus.narod.ru
 
-	Вы можете опробовать управление базой данных, вводя команды в строку ввода.
+Поддержите проект, подписавшись на мой бусти:
 
-	Все команды должны начинаться с ключевого слова `edb`.
+* https://boosty.to/aleksversus
 
-	Для получения списка команд, введите `edb help` в строку ввода.
+Обучающие видео по программированию на QSP:
 
-	"
+*	https://www.youtube.com/channel/UCwX8RW2B9yTUFdlivtCGAgA
+
+Вы можете опробовать управление базой данных, вводя команды в строку ввода.
+
+Для получения списка команд, введите `edb help` в строку ввода."
 elseif $args[0]='version':
 	result = 10
 elseif $args[0] = 'em-version':
@@ -59,6 +59,7 @@ end
 if instr($user_text, 'edb') = 1:
 	local $command_line_ = $trim($mid($user_text, 4))
 	if $command_line_ = 'help':
+		*pl 'Все команды для работы с модулем из строки ввода должны начинаться с ключевого слова `edb`'
 		*pl 'Основные команды для работы с модулем (ключевое слово `edb` опущено):'
 		*pl '* help - вывод справки по модулю `easy.database`.'
 		*pl '* run - выполнить следующий после `run` текст, как строку кода QSP.'
