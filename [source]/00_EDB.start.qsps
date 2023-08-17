@@ -151,7 +151,7 @@ if instr($user_text, 'edb') = 1:
 				@edb.dt.print($commands_[0], '[inmain]')
 			end
 		end
-	elseif instr($command_line_, 'run') <> 0:
+	elseif instr($command_line_, 'run ') = 1:
 		dynamic $trim($mid($command_line_, 4))
 	end
 end
