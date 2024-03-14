@@ -63,7 +63,8 @@ if instr($user_text, 'edb') = 1:
 		*pl 'Основные команды для работы с модулем (ключевое слово `edb` опущено):'
 		*pl '* help - вывод справки по модулю `easy.database`.'
 		*pl '* run - выполнить следующий после `run` текст, как строку кода QSP.'
-		*pl '* verison — текущая версия модуля.'
+		*pl '* version — текущая версия модуля.'
+		*pl '* em-version — требуемая и текущая версии easy.math.'
 		*pl '* required em — информация по используемому и необходимому easy.math.'
 		*pl '* gen id - генерирует uuid.'
 		*pl '* init - инициализирует базу данных'
@@ -73,6 +74,8 @@ if instr($user_text, 'edb') = 1:
 	elseif $command_line_ = 'version':
 		local v = @edb.start('version')
 		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
+	elseif $command_line_ = 'version':
+		@edb.start('em-version')
 	elseif $command_line_ = 'gen id':
 		*pl @em.gen_uuid()
 	elseif $command_line_ = 'test':
