@@ -2,27 +2,26 @@ QSP-Game Просмотр информации о базе данных
 
 # edb.print
 $args[0] = $lcase($args[0])
-$args[20], $args[21] = '', '
-'
+$args[20] = ''
 
 !@ ------------------ непосредственно информация о базе данных --------------------
 if $EASY_DATABASE['ID'] <> '':
-	$args[20] += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + $args[21]
-	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables_ids'] + $args[21]
-	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables_counter'] + $args[21]
-	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables_number'] + $args[21]
-	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + $args[21]
+	$args[20] += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + @em.RN
+	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables_ids'] + @em.RN
+	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables_counter'] + @em.RN
+	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables_number'] + @em.RN
+	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + @em.RN
 	if instr($args[0], '[all arrays]') <> 0:
-		$args[20] += "Все занятые массивы: " + $args[21]
-		$args[20] += "$EASY_DATABASE" + $args[21]
+		$args[20] += "Все занятые массивы: " + @em.RN
+		$args[20] += "$EASY_DATABASE" + @em.RN
 		$args[22] = {
-			$result = '$<<$args[0]>>' + $args[1]
-			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[2], '|', $args[0], $args[1])
+			$result = '$<<$args[0]>>' + @em.RN
+			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[1], '|', $args[0])
 		}
 		$args[23] = {
-			$result = '$<<$args[1]>>_<<$args[0]>>' + $args[2]
+			$result = '$<<$args[1]>>_<<$args[0]>>' + @em.RN
 		}
- 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], '|', $args[21], $args[23])
+ 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], '|', $args[23])
 	end
 else:
 	$args[20] += 'База данных не инициализирована'
@@ -46,5 +45,25 @@ $args[0] - управление:
 	[all arrays] - увидим на экране названия всех массивов
 
 $args[20] - выходной текст, возращаемый функцией к выводу
-$args[21] - символ переноса строки
+@em.RN - символ переноса строки
 $args[22] - колбэк
+
+{:for_each
+	0 - objects|dialogs|potions - tables list
+	1 - callback_out
+	2 - '|'
+	3 - callback_in
+	{:callback_out
+		0 - item (table)
+		1 - callback_in
+		{:for_each
+			0 - id|body|place|include - columns list
+			1 - callback_in
+			2 - '|'
+			3 - item (table)
+			{:callback_in
+				0 - item (column)
+				1 - item (table)
+			}
+	}
+}
