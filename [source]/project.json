@@ -2,11 +2,11 @@
 	"project":
 	[
 		{
-			"build":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
+			"build":"..\\..\\[releases]\\easy.database\\easy.DB.qsp",
 			"folders":[{"path":"."}]
 		},
 		{
-			"build":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.math.qsp",
+			"build":"..\\..\\[releases]\\easy.database\\easy.math.qsp",
 			"folders":[
 				{"path":"..\\..\\easy.math.3\\[source]"}
 			]
@@ -14,6 +14,6 @@
 	],
 	"player":"..\\..\\..\\..\\QSP 580 QG 400b\\qspgui.exe",
 	"save_txt2gam":"False",
-	"start":"..\\..\\..\\+releases+\\+lib+\\launcher.edb\\easy.DB.qsp",
+	"start":"..\\..\\[releases]\\easy.database\\easy.DB.qsp",
 	"preprocessor": "Off"
 }
