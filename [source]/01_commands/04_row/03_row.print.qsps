@@ -25,9 +25,9 @@ $args[22] = $arritem('$<<$args[1]>>', 'columns')
 $args[20] += 'Строка: <<$args[0]>>' + $args[21]
 !@ извлекаем значения из колонок
 local $args[23] = {
-	$args[20] = $arritem('$<<$args[2]>>_<<$args[0]>>', 0)
+	$args[20] = $arritem('$<<$args[4]>>_<<$args[0]>>', 0)
 	$args[21] = $iif($args[20] = 'num', '', '$')
-	$result = $arritem('<<$args[21]>><<$args[2]>>_<<$args[0]>>', $args[1]) + '|'
+	$result = $arritem('<<$args[21]>><<$args[4]>>_<<$args[0]>>', $args[3]) + '|'
 }
 $args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[0], $args[1])
 $args[20] += $mid($args[24], 1, len($args[24]) - 1)
@@ -57,3 +57,18 @@ $args[24] - список значений строки
 Управление:
 	[inmain] — вывод значений в окно основного описания
 	[instat] — вывод значений в окно дополнительного описания
+
+{:for_each
+	0 - column list
+	1 - callback
+	2 - |
+	3 - primary key
+	4 - table
+	{:callback
+		0 - item (column)
+		1 - tail
+		2 - result
+		3 - primary key (1)
+		4 - table (2)
+	}
+}

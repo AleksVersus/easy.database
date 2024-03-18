@@ -99,13 +99,13 @@ if $args[24] <> '':
 	!@ Строка создаётся генерацией новых элементов во всех массивах столбцов.
 	$args[27] = $arritem('$<<$args[0]>>', 'columns')
 	$args[28] = {
-		$args[20] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
+		$args[20] = $arritem('$<<$args[3]>>_<<$args[0]>>', 0)
 		if $args[20] = 'num':
-			dynamic "<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = 0"
+			dynamic "<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = 0"
 		elseif $args[20] = 'ids':
-			dynamic "$<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = '<<$args[2]>>'"
+			dynamic "$<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = '<<$args[4]>>'"
 		else
-			dynamic "$<<$args[1]>>_<<$args[0]>>['<<$args[2]>>'] = ''"
+			dynamic "$<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = ''"
 		end
 	}
 	$args['buffer'] = @edb.list.for_each($args[27], $args[28], '|', $args[0], $args[24])
@@ -156,3 +156,19 @@ $args[28] - функция типа колбэк для обработки сп�
 !@pp:var(em_str_random)
 !@pp:var(em_tag_getnum)
 !@pp:endif
+
+
+{:for_each
+	0 - column list
+	1 - callback
+	2 - |
+	3 - table
+	4 - primary key
+	{:callback
+		0 - item
+		1 - tail
+		2 - result
+		3 - table
+		4 - primary key
+	}
+}

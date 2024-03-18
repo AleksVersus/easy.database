@@ -20,7 +20,7 @@ if instr($args[20], '[hex:') <> 0 or instr($args[20], '[num:') <> 0:
 end
 !@ Удаление строки производится путём удаления ячеек из каждого массива-столбца:
 $args[21] = $arritem('$<<$args[1]>>', 'columns')
-$args[22] = { killvar '$<<$args[1]>>_<<$args[0]>>', $args[2] }
+$args[22] = { killvar '$<<$args[3]>>_<<$args[0]>>', $args[4] }
 $args['buffer'] = @edb.list.for_each($args[21], $args[22], '|', $args[1], $args[0])
 !@ если строка была текущей, снимаем указатель
 if $arritem('$<<$args[1]>>', 'current_row') = $args[0]:
@@ -33,3 +33,18 @@ end
 $args[20] - тип первичного ключа
 $args[21] - список колонок
 $args[22] - функция типа "колбэк" для обработки элементов списка
+
+{:for_each
+	0 - column list
+	1 - callback
+	2 - |
+	3 - table
+	4 - primary key
+	{:callback
+		0 - item
+		1 - tail
+		2 - result
+		3 - table
+		4 - primary key
+	}
+}

@@ -13,9 +13,9 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.dt.
 !@ очищаем таблицу данных
 $args[20] = $arritem('$<<$args[0]>>', 'columns')
 $args[21] = {
-	$args[20] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
-	killvar "$<<$args[1]>>_<<$args[0]>>"
-	dynamic "$<<$args[1]>>_<<$args[0]>>[0] = '<<$args[20]>>'"
+	$args[20] = $arritem('$<<$args[3]>>_<<$args[0]>>', 0)
+	killvar "$<<$args[3]>>_<<$args[0]>>"
+	dynamic "$<<$args[3]>>_<<$args[0]>>[0] = '<<$args[20]>>'"
 }
 @edb.list.for_each($args[20], $args[21], '|', $args[0])
 !@ делаем таблицу данных текущей
@@ -30,3 +30,16 @@ dynamic "
 $args[]:
 	20 - список колонок
 	21 - колбэк очистки
+
+{for_each
+	0 - column list
+	1 - callback
+	2 - |
+	3 - table
+	{:callback
+		0 - column
+		1 - tail
+		2 - result
+		3 - table (1)
+	}
+}

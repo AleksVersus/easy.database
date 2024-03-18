@@ -1,20 +1,20 @@
 QSP-Game Перебор списка
 
-$args[0] - список
-$args[1] - функция, применяющаяся к каждому элементу списка (условный колбэк)
-$args[2] - разделитель. По умолчанию вертикальная черта
-$args[3] ... $args[18] - аргументы, транслируемые в функцию, применяемую к каждому элементу списка. Только текстовые.
+$0 - список
+$1 - функция, применяющаяся к каждому элементу списка (условный колбэк)
+$2 - разделитель. По умолчанию вертикальная черта
+$3 ... $18 - аргументы, транслируемые в функцию, применяемую к каждому элементу списка. Только текстовые.
 
 # edb.list.for_each
 if $args[0] = '': exit
 if $args[2] = '': $args[2] = '|'
 $args[0] += $args[2]
 loop args[20] = 1 while args[20] and $args[0] <> '':
-	args[21] = instr($args[0], $args[2])
-	$args[22] = $mid($args[0], 1, args[21]-1)
-	$args[0] = $mid($args[0], args[21]+1)
+	args[21] = instr($args[0], $args[2])	& !@ instring number
+	$args[22] = $mid($args[0], 1, args[21]-1)	& !@ item of list
+	$args[0] = $mid($args[0], args[21]+1)	& !@ tail of list
 	if $args[0] = '': args[20] = 0
-	$result += $dyneval($args[1], $args[22], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10], $args[11], $args[12], $args[13], $args[14], $args[15], $args[16], $args[17], $args[18])
+	$result = $dyneval($args[1], $args[22], $args[0], $result, $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10], $args[11], $args[12], $args[13], $args[14], $args[15], $args[16], $args[17], $args[18])
 end
 if $result = '': killvar '$result'
 --- edb.list.for_each ---------------------------------
@@ -22,9 +22,11 @@ if $result = '': killvar '$result'
 Соответствие аргументов в колбэке
 
 {
-	$args[0] = $item_
-	$args[1] = $args[3]
-	$args[2] = $args[4]
+	$args[0] = $item_ ($args[22]) - item of list
+	$args[1] = $tail_ ($args[0]) - tail of list
+	$args[2] = $result  - result from last itteration
+	$args[3] = $args[3]
+	$args[4] = $args[4]
 	и т.д.
 }
 

@@ -54,11 +54,11 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 	edb_dt_find_temp_count_ = 1
 	$args[23] = {
 		$args[20] = 'edb_dt_find_chunk_array_<<edb_dt_find_chunk_count_>>_'
-		copyarr $args[20], '$<<$args[1]>>_<<$args[0]>>', val($args[2]), val($args[3])
+		copyarr $args[20], '$<<$args[3]>>_<<$args[0]>>', val($args[4]), val($args[5])
 		edb_dt_find_chunk_count_ += 1
-		$result = '[<<$args[0]>>:<<$args[20]>>]'
+		$result = $args[2] + '[<<$args[0]>>:<<$args[20]>>]'
 	}
-	$args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[2], $str(args[21]), $str(args[3]))
+	$args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[4], $str(args[21]), $str(args[5]))
 	!@ ---------------------- получаем чанк -------------------------
 
 	!@ ---------------------------------------- цикл поиска по чанку ----------------------------------------
@@ -161,3 +161,20 @@ args[35] - цикл фильтров. Маркер true|false - пройдены
 !@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_tag_getnum)
 !@pp:endif
+
+{for_each:
+	0 - column list
+	1 - callback
+	2 - |
+	3 - table
+	4 - chunk_start
+	5 - chunk size
+	{:callback
+		0 - item
+		1 - tail
+		2 - result
+		3 - table (1)
+		4 - chunk start (2)
+		5 - chunk size (3)
+	}
+}

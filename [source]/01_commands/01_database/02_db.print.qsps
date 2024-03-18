@@ -15,11 +15,13 @@ if $EASY_DATABASE['ID'] <> '':
 		$args[20] += "Все занятые массивы: " + @em.RN
 		$args[20] += "$EASY_DATABASE" + @em.RN
 		$args[22] = {
-			$result = '$<<$args[0]>>' + @em.RN
-			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[1], '|', $args[0])
+			$result = $args[2]
+			$result += '$<<$args[0]>>' + @em.RN
+			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[3], '|', $args[0])
 		}
 		$args[23] = {
-			$result = '$<<$args[1]>>_<<$args[0]>>' + @em.RN
+			$result = $args[2]
+			$result += '$<<$args[3]>>_<<$args[0]>>' + @em.RN
 		}
  		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], '|', $args[23])
 	end
@@ -55,7 +57,9 @@ $args[22] - колбэк
 	3 - callback_in
 	{:callback_out
 		0 - item (table)
-		1 - callback_in
+		1 - tail (table)
+		2 - result (from last iterration)
+		3 - callback_in
 		{:for_each
 			0 - id|body|place|include - columns list
 			1 - callback_in
@@ -63,7 +67,9 @@ $args[22] - колбэк
 			3 - item (table)
 			{:callback_in
 				0 - item (column)
-				1 - item (table)
+				1 - tail (column)
+				2 - result (from last iterration)
+				3 - item (table)
 			}
 	}
 }

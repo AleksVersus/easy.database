@@ -36,10 +36,11 @@ end
 if instr($args[1], '[only table]') <> 0 or instr($args[1], '[only info]') = 0:
 	$args[24] = $arritem('$<<$args[0]>>', 'columns')
 	$args[25] = {
-		if $arritem('$<<$args[1]>>_<<$args[0]>>', 0) <> 'num':
-			$result = "'$<<$args[1]>>_<<$args[0]>>',"
-		else
-			$result = "'<<$args[1]>>_<<$args[0]>>',"
+		$result = $args[2]
+		if $arritem('$<<$args[3]>>_<<$args[0]>>', 0) <> 'num':
+			$result += "'$<<$args[3]>>_<<$args[0]>>',"
+		else:
+			$result += "'<<$args[3]>>_<<$args[0]>>',"
 		end
 	}
 	$args[26] = @edb.list.for_each($args[24], $args[25], '|', $args[0])
@@ -85,3 +86,15 @@ $args[26] - строка аргументов
 !@pp:var(em_fewarrs_print)
 !@pp:endif
 
+{:for_each
+	0 - list of columns
+	1 - callback
+	2 - |
+	3 - table
+	{:callback
+		0 - item
+		1 - tail
+		2 - result
+		3 - table
+	}
+}
