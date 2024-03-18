@@ -9,13 +9,16 @@ $3 ... $18 - аргументы, транслируемые в функцию, �
 if $args[0] = '': exit
 if $args[2] = '': $args[2] = '|'
 $args[0] += $args[2]
+local edb_list_for_each_break_
 loop args[20] = 1 while args[20] and $args[0] <> '':
 	args[21] = instr($args[0], $args[2])	& !@ instring number
 	$args[22] = $mid($args[0], 1, args[21]-1)	& !@ item of list
 	$args[0] = $mid($args[0], args[21]+1)	& !@ tail of list
 	if $args[0] = '': args[20] = 0
 	$result = $dyneval($args[1], $args[22], $args[0], $result, $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10], $args[11], $args[12], $args[13], $args[14], $args[15], $args[16], $args[17], $args[18])
+	if edb_list_for_each_break_ = 1: jump 'break'
 end
+:break
 if $result = '': killvar '$result'
 --- edb.list.for_each ---------------------------------
 
@@ -31,6 +34,8 @@ if $result = '': killvar '$result'
 }
 
 В колбэке могут обрабатываться массивы, поэтому убираем все локальные переменные.
+
+Локальная переменная edb_list_for_each_break_ оставлена для того, чтобы иметь возможность прерывать цикл из колбэка
 
 args:
 	20 - run_, маркер работы цикла
