@@ -19,11 +19,13 @@ if $arritem('$<<$args[3]>>_id', $args[1]) <> $args[1] or arrsize('$<<$args[3]>>_
 !@ так же невозможно присвоить значение ячейке, которая находится в столбце первичных ключей
 if $args[2] = 'id' or $arritem('$<<$args[3]>>_<<$args[2]>>', 0) = 'ids': exit
 !@ непосредственно присваиваем значение ячейке
+$args[21] = $replace($args[1], "'", "''")
 if $arritem('$<<$args[3]>>_<<$args[2]>>', 0) = 'num':
 	!@ присваиваем число
-	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = <<args[0]>>"
+	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[21]>>'] = <<args[0]>>"
 else:
-	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = '<<$args[0]>>'"
+	$args[20] = $replace($args[0], "'", "''")
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[21]>>'] = '<<$args[20]>>'"
 end
 !@ делаем строку и столбец текущими
 @edb.row.set_cur($args[1])
