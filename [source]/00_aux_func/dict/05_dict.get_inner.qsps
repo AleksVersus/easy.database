@@ -1,0 +1,23 @@
+QSP-Game получение значения во вложенных словарях
+
+Доступ через аргументы
+$[0] - словарь
+$[1] ... $args[18] - ключи вложенных словарей
+$args[18] ... $args[2]
+# edb.dict.get_inner
+args[21] = arrsize('$args')
+if args[21] < 2: exit
+loop args[20] = 1 while args[20] < args[21] step args[20] += 1:
+	if $args[args[20]] = '' or $args[1] = '[with_type]': exit
+	if $args[args[20]] = '[with_type]':
+		args[20] = 99
+	else:
+		$args[22], $args[0] = @edb.dict.get_value($args[0], $args[args[20]], '[with_type]') 
+	end
+end
+if args[20] = 100:
+	$result = ($args[22], $args[0])
+else:
+	$result = $args[0]
+end
+--- edb.dict.get_inner ---------------------------------

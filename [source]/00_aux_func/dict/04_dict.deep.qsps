@@ -1,0 +1,26 @@
+QSP-Game получение значения во вложенных словарях
+
+Доступ через точку.
+$[0] - словарь
+$[1] - составной ключ
+$[2] - [with_type] — возвращает значение и тип
+# edb.dict.deep
+if $args[1] = '': exit
+$args[1] += '.'
+loop while 1:
+	args[20] = instr($args[1], '.')
+	if args[20] > 0:
+		$args[21] = $mid($args[1], 1, args[20] - 1)
+		$args[1] = $mid($args[1], args[20] + 1)
+		$args[22], $args[0] = @edb.dict.get_value($args[0], $args[21], '[with_type]') 
+	else:
+		jump 'break'
+	end
+end
+:break
+if $lcase($args[2]) = '[with_type]':
+	$result = ($args[22], $args[0])
+else:
+	$result = $args[0]
+end
+--- edb.dict.deep ---------------------------------

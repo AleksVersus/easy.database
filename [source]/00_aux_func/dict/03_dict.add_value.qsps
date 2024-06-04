@@ -1,0 +1,55 @@
+QSP-Game Добавление значения в словарь
+
+$[0] - словарь
+$[1] - ключ
+$[2] или [2] - значение
+$[3] тип
+# edb.dict.add_value
+if $args[1] = '': $result = $args[0] & exit
+if args[2] <> 0:
+	$args[20] = 'num'
+	$args[2] = $str(args[2])
+else:
+	if $args[3] = 'num':
+		$args[20] = 'num'
+		$args[2] = $iif($args[2]<>'', $args[2], '0')
+	elseif $args[3] <> '' and instr('[str][dict][list]', '[<<$args[3]>>]') <> 0:
+		$args[20] = $args[3]
+	else:
+		$args[20] = 'str'
+	end
+end
+if instr($args[0], 'local $__<<$args[1]>>__') <> 0:
+	!@ в словаре уже есть данный элемент - заменяем
+	!@ чтобы не окараться с заменяемым значением, нам нужно это значение правильно извлечь
+	$args[21], $args[22] = @edb.dict.get_value($args[0], $args[1], '[with_type]')
+	!@ заменяем тип
+	$args[23] = "$__<<$args[1]>>__['type'] = '<<$args[21]>>'"
+	$args[0] = $replace($args[0], $args[23], "$__<<$args[1]>>__['type'] = '<<$args[20]>>'")
+	!@ заменяем значение
+	!@ старый тип словарь
+	if $args[21] = 'dict':
+		$args[24] = "$__<<$args[1]>>__['value'] = {<<$args[22]>>}"	
+	else:
+		$args[24] = "$__<<$args[1]>>__['value'] = '<<$args[22]>>'"
+	end
+	!@ новый тип словарь
+	if $args[20] = 'dict':
+		$args[0] = $replace($args[0], $args[24], "$__<<$args[1]>>__['value'] = {<<$args[2]>>}")
+	else:
+		$args[2] = $replace($args[2], "'", "''")
+		$args[0] = $replace($args[0], $args[24], "$__<<$args[1]>>__['value'] = '<<$args[2]>>'")
+	end
+else:
+	!@ в словаре нет данного элемента - добавляем
+	$args[0] = 'local $__<<$args[1]>>__' + @em.RN + $args[0]
+	$args[0] += "$__<<$args[1]>>__['type'] = '<<$args[20]>>'" + @em.RN
+	!@ если словарь, добавляем как словарь
+	if $args[20] = 'dict':
+		$args[0] += "$__<<$args[1]>>__['value'] = {<<$args[2]>>}" + @em.RN
+	else:
+		$args[0] += "$__<<$args[1]>>__['value'] = '<<$args[2]>>'" + @em.RN
+	end
+end
+$result = $args[0]
+--- edb.dict.add_value ---------------------------------

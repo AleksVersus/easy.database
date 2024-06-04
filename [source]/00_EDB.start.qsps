@@ -42,6 +42,38 @@ if $args[0] = '':
 Вы можете опробовать управление базой данных, вводя команды в строку ввода.
 
 Для получения списка команд, введите `edb help` в строку ввода."
+
+local $obj_ = {
+	дробящий = 1000
+	стрелковый = 125
+}
+
+local $uron_dict_ = @edb.dict.new($obj_)
+
+$obj_ = {
+	kind = "деревянная_булава"
+	name = "Дубина|Дубины|Дубине|Дубину|Дубиной|Дубине"
+	number = 1
+	np = "оружие|одноручное|булава"
+	stoim = 176
+	weight = 50
+	color = "663300"	
+}
+$dict_ = @edb.dict.new($obj_)
+*pl $dict_
+*pl '...'
+*pl @edb.dict.get_value($dict_, 'name')
+*pl @edb.dict.get_value($dict_, 'weight')
+*pl @edb.dict.get_value($dict_, 'uron')
+*pl '...'
+$dict_ = @edb.dict.add_value($dict_, 'uron', $uron_dict_, 'dict')
+*pl $dict_
+*pl @edb.dict.get_value($dict_, 'name')
+*pl @edb.dict.get_value($dict_, 'дробящий')
+*pl @edb.dict.get_value($dict_, 'uron')
+*pl @edb.dict.deep($dict_, 'uron.стрелковый', '[with_type]')
+*pl @edb.dict.get_inner($dict_, 'uron', 'дробящий', '[with_type]')
+
 elseif $args[0]='version':
 	result = 10
 elseif $args[0] = 'em-version':

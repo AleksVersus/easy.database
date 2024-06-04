@@ -1,0 +1,47 @@
+QSP-Game Создаём словарь
+
+$[0] - словарь в виде исходника
+# edb.dict.new
+$result = {}	& !@ output dict object
+loop while 1:
+	!@ пытаемся извлечь пару
+	$args[20] = $strfind($args[0],'\w+\s*=\s*("|'')([\s\S]*?)\1')
+	$args[21] = $strfind($args[0],'\w+\s*=\s*\d+')
+	if $args[20] <> '' or $args[21] <> '':
+		!@ если пара извлечена
+		if $args[20] <> '':
+			$args[22] = $strfind($args[20], '(\w+)\s*=\s*', 1)	& !@ key
+			$args[23] = $strfind($args[20], '\s*=\s*("|'')([\s\S]*?)\1', 2)	& !@ value
+			$args[23] = $replace($args[23], "'", "''")
+			$args[24] = 'str'
+			$args[0] = $replace($args[0], $args[20])
+		elseif $args[21] <> '':
+			$args[22] = $strfind($args[21], '(\w+)\s*=\s*', 1)	& !@ key
+			$args[23] = $strfind($args[21], '\s*=\s*(\d+)', 1)	& !@ value
+			$args[24] = 'num'
+			$args[0] = $replace($args[0], $args[21])
+		end
+		$result = @edb.dict.add_value($result, $args[22], $args[23], $args[24])
+	else:
+		jump 'break'
+	end
+end
+:break
+--- edb.dict.new ---
+
+
+Исходник вида:
+
+$dict = {
+	kind = "деревянная_булава"
+	name = "Дубина|Дубины|Дубине|Дубину|Дубиной|Дубине"
+	number = 1
+	np = "оружие|одноручное|булава"
+	stoim = 176
+	weight = 50
+	color = "663300"
+	uron = {
+		дробящий = 1000
+		стрелковый = 125
+	}
+}
