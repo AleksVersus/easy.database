@@ -2,6 +2,6 @@ QSP-Game проверка наличия ключа в словаре
 
 $[0] - словарь
 $[1] - ключ
-# edb.dict.key_in
+# edb.dic.is_key
 result = dyneval($args[0] + @em.RN + {result = arrsize('$__<<$args[0]>>')}, $args[1])
---- edb.dict.key_in ---------------------------------
+--- edb.dic.is_key ---------------------------------
