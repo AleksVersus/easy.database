@@ -19,7 +19,7 @@ else:
 		$args[20] = 'str'
 	end
 end
-if @edb.dic.is_key($args[0], $args[1]):
+if @edb.dict.is_key($args[0], $args[1]):
 	!@ в словаре уже есть данный элемент - заменяем
 	!@ чтобы не окараться с заменяемым значением, нам нужно это значение правильно извлечь
 	$args[21], $args[22] = @edb.dict.get_value($args[0], $args[1], '[with_type]')

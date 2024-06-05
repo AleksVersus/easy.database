@@ -70,7 +70,7 @@ result = arrsize('$__<<$args[0]>>__')
 Вся функция проверки ключа в словаре будет выглядеть так:
 
 ```js
-result = dyneval($args[0] + @em.RN + {result = arrsize('$__<<$args[0]>>')}, $args[1])
+result = dyneval($args[0] + @em.RN + {result = arrsize('$__<<$args[0]>>__')}, $args[1])
 ```
 
 ## Достоинства и недостатки

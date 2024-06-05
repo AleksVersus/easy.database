@@ -73,6 +73,9 @@ $dict_ = @edb.dict.add_value($dict_, 'uron', $uron_dict_, 'dict')
 *pl @edb.dict.get_value($dict_, 'uron')
 *pl @edb.dict.deep($dict_, 'uron.стрелковый', '[with_type]')
 *pl @edb.dict.get_inner($dict_, 'uron', 'дробящий', '[with_type]')
+@...
+@edb.dict.is_key($dict_, 'uron')
+@edb.dict.is_key($dict_, 'nume')
 
 elseif $args[0]='version':
 	result = 10
@@ -83,6 +86,11 @@ elseif $args[0] = 'em-version':
 end
 
 --- edb.start ---------------------------------
+
+# ...
+$result = '...'
+--- ... ---------------------------------
+
 
 # edb.usercom
 !@ включение-выключение
