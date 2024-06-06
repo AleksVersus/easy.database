@@ -1,0 +1,22 @@
+QSP-Game Получение всех ключей в виде списка
+
+$args[0] — словарь
+# edb.dict.get_keys
+!@ callback to dict:
+$args[20] = {
+	loop while 1:
+		$args[21] = $strfind($args[0], 'local \$__(\w+)__', 1)
+		if $args[21] <> '':
+			if arrsize('$__<<$args[21]>>__') > 0: $args[22] += $args[21] + '|'
+			$args[0] = $replace($args[0], 'local $__<<$args[21]>>__')
+		else:
+			jump 'break'
+		end
+	end
+	:break
+	$result = $mid($args[22], 1, len($args[22]) - 1)
+}
+$result = $dyneval($args[0] + $args[20], $args[0])
+--- edb.dict.get_keys ---------------------------------
+
+

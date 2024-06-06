@@ -21,7 +21,7 @@ loop while 1:
 			$args[24] = 'num'
 			$args[0] = $replace($args[0], $args[21])
 		end
-		$result = @edb.dict.add_value($result, $args[22], $args[23], $args[24])
+		$result = @edb.dict.add($result, $args[22], $args[23], $args[24])
 	else:
 		jump 'break'
 	end
@@ -29,6 +29,8 @@ end
 :break
 --- edb.dict.new ---
 
+Зависимости:
+	edb.dict.add
 
 Исходник вида:
 

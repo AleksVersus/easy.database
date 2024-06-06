@@ -4,7 +4,7 @@ $[0] - словарь
 $[1] - ключ
 $[2] или [2] - значение
 $[3] тип
-# edb.dict.add_value
+# edb.dict.add
 if $args[1] = '': $result = $args[0] & exit
 if args[2] <> 0:
 	$args[20] = 'num'
@@ -13,7 +13,7 @@ else:
 	if $args[3] = 'num':
 		$args[20] = 'num'
 		$args[2] = $iif($args[2]<>'', $args[2], '0')
-	elseif $args[3] <> '' and instr('[str][dict][list]', '[<<$args[3]>>]') <> 0:
+	elseif $args[3] <> '' and instr('[str][dict][list][tuple]', '[<<$args[3]>>]') <> 0:
 		$args[20] = $args[3]
 	else:
 		$args[20] = 'str'
@@ -52,7 +52,7 @@ else:
 	end
 end
 $result = $args[0]
---- edb.dict.add_value ---------------------------------
+--- edb.dict.add ---------------------------------
 
 Зависимости:
 	edb.dict.get_value
