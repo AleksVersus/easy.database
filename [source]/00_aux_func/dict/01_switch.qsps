@@ -1,0 +1,20 @@
+QSP-Game Переключатель типа switch
+
+$[0] - упрощённая запись переключателя
+$[1] - ключ
+# edb.switch
+$args[20] = @edb.dict.new($args[0])
+if $args[1] = '' or no @edb.dict.is_key($args[20], $args[1]): $args[1] = 'default'
+$result = @edb.dict.get_value($args[20], $args[1])
+--- edb.switch ---------------------------------
+
+Чтобы в switch установить значение по умолчанию, используется ключ default.
+Если вам нужно использовать в switch числа — вместо чисел используйте переменные типа q1, q2, q3 и т.д.
+
+local $prop_kind_ = 'force'
+
+@edb.switch({
+	health = 'Регенерация'
+	force = 'Отдых'
+	default = 'Восстановление'
+}, $prop_kind_)
