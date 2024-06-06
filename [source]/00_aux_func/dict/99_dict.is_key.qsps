@@ -5,3 +5,8 @@ $[1] - ключ
 # edb.dict.is_key
 result = dyneval($args[0] + @em.RN + {result = arrsize('$__<<$args[0]>>__')}, $args[1])
 --- edb.dict.is_key ---------------------------------
+
+!@pp:var(em_rn)
+
+Функция не использует иных функций библиотеки
+Функция использует функцию библиотеки easy.math

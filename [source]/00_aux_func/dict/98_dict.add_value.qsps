@@ -53,3 +53,9 @@ else:
 end
 $result = $args[0]
 --- edb.dict.add_value ---------------------------------
+
+Зависимости:
+	edb.dict.get_value
+	edb.dict.is_key
+
+!@pp:var(em_rn)
