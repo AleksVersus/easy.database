@@ -14,7 +14,13 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.exc
 if $args[2] = '': msg "row.exchange: Ошибка. Не указан идентификатор таблицы данных." & exit
 !@pp:endif
 !@ Обменять содержимое несуществующих строк нельзя, однако ошибку в игре это не вызовет.
-if $arritem('$<<$args[2]>>_id', $args[0]) <> $args[0] or $arritem('$<<$args[2]>>_id', $args[1]) <> $args[1]: exit
+$args[21] = {
+	if $args[1] = '': result = 1 & exit
+	if $args[0] = '': result = 1 & exit
+	if $arritem('$<<$args[2]>>_id', $args[1]) <> $args[1]: result = 1 & exit
+	if $arritem('$<<$args[2]>>_id', $args[0]) <> $args[0]: result = 1 & exit
+}
+if dyneval($args[21], $args[0], $args[1], $args[2]): exit
 !@ получаем список колонок
 $args[20] = $arritem('$<<$args[2]>>', 'columns')
 !@ используем функцию типа колбэк для применения к каждому элементу списка
