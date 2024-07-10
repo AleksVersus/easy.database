@@ -11,16 +11,13 @@ if $args[0] = '': msg "edb.del_table: Ошибка. Не указан идент
 if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.del_table: Ошибка. Таблица данных «<<$args[0]>>» не существует." & exit
 !@pp:endif
 
-!@ получаем список колонок в таблице данных:
-local $edb_bd_deltable_columns_list_
-@em.str.inArr($arritem('$<<$args[0]>>', 'columns'), '$edb_bd_deltable_columns_list_', '|', '[notspace][trim][strip]')
 !@ проходим циклом по всем колонкам и уничтожаем массивы
-loop args[20] = 0 while args[20] < arrsize('$edb_bd_deltable_columns_list_') step args[20] += 1:
-	if $edb_bd_deltable_columns_list_[args[20]] <> 'id':
-		@edb.dt.del_col($edb_bd_deltable_columns_list_[args[20]], $args[0])
+$args[20] = {
+	if $args[0] <> 'id' and $args[0] <> '':
+		@edb.dt.del_col($args[0], $args[3])
 	end
-end
-
+}
+@edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[20], '|', $args[0])
 !@ удаляем колонку первичных ключей
 killvar '$<<$args[0]>>_id'
 !@  -------------------- из базы данных удаляем записи --------------------
