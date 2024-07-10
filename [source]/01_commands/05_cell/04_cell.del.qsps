@@ -57,6 +57,9 @@ elseif $args[20] = 'str':
 elseif $args[20] = 'dict':
 	!@ TODO: для словаря пока что это то же, что и для строки
 	jump 'string_and_other'
+elseif $args[20] = 'code':
+	!@ удалить код напрямую нельзя.
+	!@ PASS
 else:
 	:string_and_other
 	$args[22] = $arritem('$<<$args[3]>>_<<$args[2]>>', $args[1])

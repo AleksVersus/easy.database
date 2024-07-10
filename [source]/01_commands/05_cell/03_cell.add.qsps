@@ -25,6 +25,7 @@ if $args[20] = 'num':
 	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += <<args[0]>>"
 elseif $args[20] = 'list':
 	!@ если тип колонки список, добавляем в список новый элемент
+	$args[0] = $replace($args[0], "'", "''")
 	dynamic "
 		$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = @edb.list.append($<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'], '<<$args[0]>>')
 	"
@@ -39,6 +40,11 @@ elseif $args[20] = 'tuple':
 	dynamic "
 		$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = @em.arr.print('$edb_cell_add_temp_array_', '[only result] [not last]', '')
 	"
+elseif $args[20] = 'code':
+	!@ для кода это конкатенация с добавлением переноса строки.
+	!@ Помимо прочего код вставляется между фигурными скобками,
+	!@ чтобы не допускать раскрытия подвыражения.
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += @em.RN + {<<$args[0]>>}"
 elseif $args[20] = 'str':
 	!@ для строки это просто конкатенация
 	jump 'string_and_other'
@@ -47,6 +53,7 @@ elseif $args[20] = 'dict':
 	jump 'string_and_other'
 else:
 	:string_and_other
+	$args[0] = $replace($args[0], "'", "''")
 	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] += '<<$args[0]>>'"
 end
 !@ делаем строку и столбец текущими
