@@ -6,6 +6,9 @@
                     "path": "."
                 }
             ],
+            "files": [
+                {"path": "./00_sets/_variables.qsps_"}
+            ],
             "module": "..\\..\\[releases]\\easy.database\\easy.DB.qsp"
         },
         {

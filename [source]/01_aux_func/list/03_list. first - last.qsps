@@ -36,6 +36,8 @@ else:
 end
 --- edb.list.last ---------------------------------
 
+
+TODO: заменить все разделители на мой, и добавить в качестве последнего раздлителя снова мой. Тогда последний элемент регуляркой будет искать проще.
 @edb.list.last('id|body|count|place|include')
 @edb.list.last('body|count|place|include')
 @edb.list.last('count|place|include')
