@@ -1,7 +1,7 @@
 QSP-Game Две простые локации для извлечения первого и последнего элементов из списка
 
-$args[0] - список элементов
-$args[1] - разделитель
+!@ $0 - список элементов
+!@ $1 - разделитель
 
 # edb.list.first
 local $delimiter_, instr_ = $args[1], 0
@@ -29,10 +29,11 @@ else:
 	!@ local $elements_
 	!@ @em.str.inArr($args[0], '$elements_', $delimiter_)
 	!@ $result = $elements_[]
+!@pp:if(edb_fuse):include
 	if $delimiter_ = '%avs_delimiter%': msg 'list.last: don''t use ''%avs_delimiter%'' delimiter.' & exit
+!@pp:endif
 	$args[0] = $replace($args[0], $delimiter_, '%avs_delimiter%')
-	$delimiter_ = '%avs_delimiter%'
-	$result = $strfind($args[0], '^(.*?<<$delimiter_>>)+(.*?)$', 2) 
+	$result = $strfind($args[0], '^(.*?%avs_delimiter%)+(.*?)$', 2) 
 end
 --- edb.list.last ---------------------------------
 
