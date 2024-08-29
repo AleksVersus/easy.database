@@ -1,49 +1,41 @@
 QSP-Game Просмотр информации о базе данных
 
+!@ $0 - управление.
+!@ $r - информация о базе данных в распечатанном виде.
 # edb.print
 $args[0] = $lcase($args[0])
 $args[20] = ''
 
 !@ ------------------ непосредственно информация о базе данных --------------------
 if $EASY_DATABASE['ID'] <> '':
-	$args[20] += "Идентификатор базы данных: " + $EASY_DATABASE['ID'] + @em.RN
-	$args[20] += "Идентификаторы Таблиц Данных: " + $EASY_DATABASE['data_tables_ids'] + @em.RN
+	$args[20] += "Идентификатор базы данных: [" + $EASY_DATABASE['ID'] + ']' + @em.RN
+	$args[20] += "Идентификаторы Таблиц Данных: [" + $EASY_DATABASE['data_tables_ids'] + ']' + @em.RN
 	$args[20] += "Число созданных Таблиц Данных: " + EASY_DATABASE['data_tables_counter'] + @em.RN
 	$args[20] += "Число существующих Таблиц Данных: " + EASY_DATABASE['data_tables_number'] + @em.RN
-	$args[20] += "Текущая Таблица Данных: " + $EASY_DATABASE['current_data_table'] + @em.RN
+	$args[20] += "Текущая Таблица Данных: [" + $EASY_DATABASE['current_data_table']+ ']' + @em.RN
 	if instr($args[0], '[all arrays]') <> 0:
 		$args[20] += "Все занятые массивы: " + @em.RN
 		$args[20] += "$EASY_DATABASE" + @em.RN
 		$args[22] = {
 			$result = $args[2]
 			$result += '$<<$args[0]>>' + @em.RN
-			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[3], '|', $args[0])
+			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[3], $args[0])
 		}
 		$args[23] = {
 			$result = $args[2]
 			$result += '$<<$args[3]>>_<<$args[0]>>' + @em.RN
 		}
- 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], '|', $args[23])
+ 		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], $args[23])
 	end
 else:
-	$args[20] += 'База данных не инициализирована'
+	msg 'edb.print: База данных не инициализирована'
 end
 !@ ------------------ непосредственно информация о базе данных --------------------
 
-if instr($args[0], '[inmain]') <> 0:
-	*pl $args[20]
-elseif instr($args[0], '[instat]') <> 0:
-	pl $args[20]
-else
-	$result = $args[20]
-end
+$result = $args[20]
 --- edb.print ---------------------------------
 
 $args[0] - управление:
-	[inmain] - вывод в окно основного описания
-	[instat] - вывод в окно дополнительного описания
-	пустая строка или любое иное значение - возвращает результат
-
 	[all arrays] - увидим на экране названия всех массивов
 
 $args[20] - выходной текст, возращаемый функцией к выводу
@@ -53,8 +45,7 @@ $args[22] - колбэк
 {:for_each
 	0 - objects|dialogs|potions - tables list
 	1 - callback_out
-	2 - '|'
-	3 - callback_in
+	2 - callback_in
 	{:callback_out
 		0 - item (table)
 		1 - tail (table)
@@ -63,8 +54,7 @@ $args[22] - колбэк
 		{:for_each
 			0 - id|body|place|include - columns list
 			1 - callback_in
-			2 - '|'
-			3 - item (table)
+			2 - item (table)
 			{:callback_in
 				0 - item (column)
 				1 - tail (column)
