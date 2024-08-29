@@ -1,19 +1,16 @@
 QSP-Game Создать новую таблицу данных
 
-$0 - идентификатор таблицы данных, он же является названием массива, описывающего таблицу данных
-$1 - название таблицы данных
-$2 - управляющая конструкция
-
+!@ $0 - идентификатор таблицы данных, он же является названием массива, описывающего таблицу данных
+!@ $1 - название таблицы данных
+!@- $2 - управляющая конструкция
 # edb.new_table
-
 !@pp:if(edb_fuse):include
-!@ нельзя создать таблицу данных, если она уже создана, или база данных неинициализирована
-if $EASY_DATABASE['ID'] = '': msg "edb.new_table: Ошибка. База данных не инициализирована." & exit
-if $args[0] = '': msg "edb.new_table: Ошибка. Не указан идентификатор таблицы данных." & exit
-if @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.new_table: Ошибка. Таблица данных «<<$args[0]>>» уже существует." & exit
+if $EASY_DATABASE['ID'] = '': msg "edb.new_table: База данных не инициализирована." & exit
+if $args[0] = '': msg "edb.new_table: Не указан идентификатор таблицы данных." & exit
+if instr('$%', $mid($args[0], 1, 1)): msg 'edb.new_table: type prefix cannot be specified → <<$args[0]>>' & exit
+if @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.new_table: Таблица данных «<<$args[0]>>» уже существует." & exit
 !@pp:endif
-if instr($args[0], '$') = 1: $args[0] = $mid($args[0], 2)
-$args[2] = $lcase($args[2])
+!@ $args[2] = $lcase($args[2])
 !@ Вносим идентификатор таблицы данных в список:
 $EASY_DATABASE['data_tables_ids'] = @edb.list.append($EASY_DATABASE['data_tables_ids'], $args[0])
 !@ увеличиваем счётчик созданных баз:
@@ -28,10 +25,10 @@ dynamic "
 "
 !@ создаём в таблице данных колонку первичных ключей:
 dynamic "
-!@pp: тип колонки указываем в нулевой ячейке
-	$<<$args[0]>>_id[0] = 'ids'
+!@pp: тип колонки первичных ключей указываем в отдельной ячейке
+	$<<$args[0]>>['column.id.type'] = 'ids'
 !@pp: добавляем идентификатор колонки в список колонок
-	$<<$args[0]>>['columns'] = @edb.list.append($<<$args[0]>>['columns'],'id')
+	$<<$args[0]>>['columns'] = 'id'
 !@pp: указываем колонку в качестве текущей
 	$<<$args[0]>>['current_col'] = 'id'
 "
@@ -39,38 +36,38 @@ dynamic "
 @edb.dt.set_cur($args[0])
 
 !@ назначаем тип генерируемого первичного ключа
-if instr($args[2], '[msecscount]') <> 0:
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[msecscount]'"
-elseif instr($args[2], '[uuid]') <> 0:
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uuid]'"
-elseif instr($args[2], '[uid]') <> 0:
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
-elseif instr($args[2], '[hex:') <> 0:
-	args[20] = val(@em.tag.getNum($args[2], 'hex'))
-	if args[20] < 1: args[20] = 1
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<args[20]>>]'"
-elseif instr($args[2], '[num:') <> 0:
-	args[20] = val(@em.tag.getNum($args[2], 'num'))
-	if args[20] < 1: args[20] = 1
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<args[20]>>]'"
-elseif instr($args[2], '[rhex:') <> 0:
-	args[20] = val(@em.tag.getNum($args[2], 'rhex'))
-	if args[20] < 8: args[20] = 8
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<args[20]>>]'"
-elseif instr($args[2], '[rnum:') <> 0:
-	args[20] = val(@em.tag.getNum($args[2], 'rnum'))
-	if args[20] < 16: args[20] = 16
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<args[20]>>]'"
-elseif instr($args[2], '[rstr:') <> 0:
-	args[20] = val(@em.tag.getNum($args[2], 'rstr'))
-	if args[20] < 16: args[20] = 16
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<args[20]>>]'"
-else:
+!@ if instr($args[2], '[msecscount]') <> 0:
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[msecscount]'"
+!@ elseif instr($args[2], '[uuid]') <> 0:
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uuid]'"
+!@ elseif instr($args[2], '[uid]') <> 0:
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
+!@ elseif instr($args[2], '[hex:') <> 0:
+!@ 	args[20] = val(@em.tag.getNum($args[2], 'hex'))
+!@ 	if args[20] < 1: args[20] = 1
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<args[20]>>]'"
+!@ elseif instr($args[2], '[num:') <> 0:
+!@ 	args[20] = val(@em.tag.getNum($args[2], 'num'))
+!@ 	if args[20] < 1: args[20] = 1
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<args[20]>>]'"
+!@ elseif instr($args[2], '[rhex:') <> 0:
+!@ 	args[20] = val(@em.tag.getNum($args[2], 'rhex'))
+!@ 	if args[20] < 8: args[20] = 8
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<args[20]>>]'"
+!@ elseif instr($args[2], '[rnum:') <> 0:
+!@ 	args[20] = val(@em.tag.getNum($args[2], 'rnum'))
+!@ 	if args[20] < 16: args[20] = 16
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<args[20]>>]'"
+!@ elseif instr($args[2], '[rstr:') <> 0:
+!@ 	args[20] = val(@em.tag.getNum($args[2], 'rstr'))
+!@ 	if args[20] < 16: args[20] = 16
+!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<args[20]>>]'"
+!@ else:
 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:16]'"
-end
+!@ end
 --- edb.new_table ---------------------------------
 
-Управление:
+Управление (исключено, чтобы разгрузить модуль):
 	Управление генерацией первичных ключей
 	* [msecscount] - первичные ключи будут генерироваться на основе данных из функции msecscount.
 	* [uuid] - первичные ключи генерируются в формате UUID
@@ -82,7 +79,7 @@ end
 	* [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
 
 args[20] - num_
-!@pp:if(build_easy_math!=Off):nopp
-!@pp:var(em_tag_getnum)
-!@pp:endif
+!@ pp:if(build_easy_math!=Off):nopp
+!@ pp:var(em_tag_getnum)
+!@ pp:endif
 
