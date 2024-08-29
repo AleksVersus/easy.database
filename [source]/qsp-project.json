@@ -20,7 +20,7 @@
             "module": "..\\..\\[releases]\\easy.database\\easy.math.qsp"
         }
     ],
-    "player": "..\\..\\..\\..\\QSP 580 QG 400b\\qspgui.exe",
+    "player": "..\\..\\..\\..\\QSP 590\\qspgui.exe",
     "start": "..\\..\\[releases]\\easy.database\\easy.DB.qsp",
     "preprocessor": "Off",
     "save_temp_files": "False"

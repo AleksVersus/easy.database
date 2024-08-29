@@ -1,16 +1,12 @@
 QSP-Game длина списка
 
-$args[0] - список
-$args[1] - разделитель
-
+!@ $0 - список
+!@ #r - длина списка
 # edb.list.length
-if len($args[0])=0: result = 0 & exit
-if $args[1] = '': $args[1] = '|'
-loop local i, run = 1 - len($args[1]), 1 while run:
-	i = instr($args[0], $args[1], i+len($args[1]))
-	if i > 0: result += 1 else: run = 0
-end
-result += 1
+if no len($args[0]): result = 0 & exit
+local $edb_list_length_list_
+scanstr '$edb_list_length_list_', $args[0], '[^|]+'
+result = arrsize('$edb_list_length_list_')
 --- edb.list.length ---------------------------------
 
 

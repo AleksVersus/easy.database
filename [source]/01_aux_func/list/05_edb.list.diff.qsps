@@ -2,23 +2,19 @@ QSP-Game Вспомогательная функция
 
 На вход принимает два списка. Убирает из первого списка элементы, которые встречаются во втором списке
 
-$args[0] - уменьшаемый список
-$args[1] - вычитаемый список
-$args[2] - разделитель
-$args[3] - управляющее слово [union] или [un] - убирает из обоих списков повторяющиеся элементы, а на выход даёт неповторяющиеся
-
+!@ $0 - уменьшаемый список
+!@ $1 - вычитаемый список
+!@ $2 - управляющее слово [union] или [un] - убирает из обоих списков совпадающие элементы, а на выход даёт несовпадающие
 # edb.list.diff
 !@ объявляем локальные переменные
-local $src_list_, $del_list_, $delimiter_, $comm_ = $args[0], $args[1], $args[2], $lcase($args[3])
+local $src_list_, $del_list_, $comm_ = $args[0], $args[1], $lcase($args[2])
 !@ локальные массивы для списков
 local $first_list_, $second_list_
 !@ правильная упарвляющая конструкция
 if instr($comm_, '[un]') <> 0: $comm_ = $replace($comm_, '[un]', '[union]')
-!@ разделитель
-if $delimiter_ = '': $delimiter_ = '|'
 !@ оба списка запихиваем в массивы
-@em.str.inArr($src_list_, '$first_list_', $delimiter_, "[notspace][trim][strip]")
-@em.str.inArr($del_list_, '$second_list_', $delimiter_, "[notspace][trim][strip]")
+scanstr '$first_list_', $src_list_, '[^|]+'
+scanstr '$second_list_', $del_list_, '[^|]+'
 !@ теперь сравниваем списки, оставляя только несовпадающие значения
 loop local i, size_, pos_ = 0, max(arrsize('first_list_'), arrsize('second_list_')), -1 while i<size_ step i+=1:
 	if $first_list_[i] <> '':
@@ -33,18 +29,12 @@ loop local i, size_, pos_ = 0, max(arrsize('first_list_'), arrsize('second_list_
 end
 !@ когда из списков удалены все совпадающие значения, составляем новый список
 loop local i, size_ = 0, arrsize('first_list_') while i<size_ step i+=1:
-	if $first_list_[i] <> '': $result += $delimiter_ + $first_list_[i]
+	if $first_list_[i] <> '': $result += '|' + $first_list_[i]
 end
 if instr($comm_, '[union]') <> 0:
 	loop local i, size_ = 0, arrsize('second_list_') while i<size_ step i+=1:
-		if $second_list_[i] <> '': $result += $delimiter_ + $second_list_[i]
+		if $second_list_[i] <> '': $result += '|' + $second_list_[i]
 	end
 end
-!@ 
-$result = $mid($result, len($delimiter_) + 1)
+$result = $mid($result, len('|') + 1)
 --- edb.list.diff ---------------------------------
-
-Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
-!@pp:if(build_easy_math!=Off):nopp
-!@pp:var(em_str_inarr)
-!@pp:endif

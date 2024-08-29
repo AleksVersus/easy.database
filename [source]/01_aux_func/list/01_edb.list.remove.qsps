@@ -3,42 +3,38 @@ QSP-Game функция замены значения в списке
 !@ $0 - строка, список
 !@ $1 - старое значение
 !@ $2 - новое значение
-!@ $3 - разделитель (по умолчанию вертикальная черта)
-!@ $4 - управление
-
+!@ $3 - управление
+!@ $r - список с заменённым элементом
 # edb.list.remove
 !@ объявляем локальные переменные
-local $list_, $old_el_, $new_el_, $delimiter_, $comm_ = $args[0], $args[1], $args[2], $args[3], $lcase($args[4])
+local $list_, $old_el_, $new_el_, $comm_ = $args[0], $args[1], $args[2], $lcase($args[3])
 !@ разделитель по умолчанию
-if $delimiter_ = '': $delimiter_ = '|'
 !@ правильная упарвляющая конструкция
 if instr($comm_, '[nclr]') <> 0: $comm_ = $replace($comm_, '[nclr]', '[no clear]')
 if instr($comm_, '[of') <> 0: $comm_ = $replace($comm_, '[of]', '[only first]')
 !@ костылим список, чтобы легко убрать из него нужный элемент
-$list_ = $delimiter_ + $list_ + $delimiter_
-if instr($comm_, '[only first]') = 0:
+$list_ = '|<<$list_>>|'
+if no instr($comm_, '[only first]'):
 	!@ убираем элементы простой заменой
-	$list_ = $replace($list_, $delimiter_ + $old_el_ + $delimiter_, $delimiter_ + $new_el_ + $delimiter_)
+	$list_ = $replace($list_, '|<<$old_el_>>|', '|<<$new_el_>>|')
 else:
 	!@ убираем только первый встреченный элемент
-	local instr_ = instr($list_, $delimiter_ + $old_el_ + $delimiter_)
+	local instr_ = instr($list_, '|<<$old_el_>>|')
 	if instr_ <> 0:
-		$list_ = $mid($list_, 1, instr_-1) + $delimiter_ + $new_el_ + $delimiter_ + $mid($list_, instr_+len($delimiter_ + $old_el_ + $delimiter_))
+		$list_ = $mid($list_, 1, instr_-1) + '|<<$new_el_>>|' + $mid($list_, instr_+len('|<<$old_el_>>|'))
 	end
 end
 !@ если не запрещена очистка пустых элементов
 if instr($comm_, '[no clear]') = 0:
 	!@ удаляем их
-	$list_ = $replace($list_, $delimiter_ + $delimiter_, $delimiter_)
+	$list_ = $replace($list_, '||', '|')
 end
-$result = @em.str.slice($list_)
+$result = $mid($list_, 2, len($list_)-2)
 --- edb.list.remove ---------------------------------
 
 Внимание, эта функция очень проста и примитивна. Она годится лишь тогда, когда в списке нет повторяющихся элементов.
 
 Вырезает или заменяет в строке вида "aaaa|bbbb|....|zzzzz" указанную часть, если эта часть присутствует
-
-!@pp:var(em_str_slice)
 
 Управление:
 	[no clear] или [nclr] - запрещает удалять пустые элементы из списка
