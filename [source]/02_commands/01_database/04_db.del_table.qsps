@@ -1,9 +1,7 @@
 QSP-Game Удалить таблицу данных
 
-$args[0] - идентификатор таблицы данных
-
+!@ $0 - идентификатор таблицы данных
 # edb.del_table
-
 if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.del_table: Ошибка. База данных не инициализирована." & exit
@@ -17,7 +15,7 @@ $args[20] = {
 		@edb.dt.del_col($args[0], $args[3])
 	end
 }
-@edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[20], '|', $args[0])
+@edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[20], $args[0])
 !@ удаляем колонку первичных ключей
 killvar '$<<$args[0]>>_id'
 !@  -------------------- из базы данных удаляем записи --------------------
@@ -30,9 +28,3 @@ if $EASY_DATABASE['current_data_table'] = $args[0]: $EASY_DATABASE['current_data
 !@ уничтожаем массив таблицы данных
 killvar $args[0]
 --- edb.del_table ---------------------------------
-
-Функция использует локальный массив $edb_bd_deltable_columns_list_. Избегайте использования данного массива в своей игре.
-
-!@pp:if(build_easy_math!=Off):nopp
-!@pp:var(em_str_inarr)
-!@pp:endif
