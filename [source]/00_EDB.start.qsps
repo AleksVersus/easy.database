@@ -2,7 +2,6 @@ QSP-Game Точка входа и отладчик
 
 # edb.start
 
-if $args[0] = '':
 	!@ подключение библиотеки easy.math:
 	inclib 'easy.math.qsp'
 	!@ включаем обработчик строки ввода
@@ -15,48 +14,35 @@ if $args[0] = '':
 	showacts 0
 	showobjs 0
 
-"Easy DataBase
-Система Управления Базой Данных для QSP
+"Easy DataBase v.<<@edb.version('str')>>"
+'Система Управления Базой Данных для QSP
 
 Репозиторий с исходниками библиотеки:
 
-*	https://github.com/AleksVersus/easy.database
+*   <a href="https://github.com/AleksVersus/easy.database" class="plain" style="text-decoration:none;">github.com/AleksVersus/easy.database</a>
 
 По всем вопросам и предложениям обращаться:
 
-*	aleksversus@mail.ru
-*	https://vk.com/id40090736
+*   aleksversus@mail.ru
+*   <a href="https://vk.com/id40090736" class="plain">vk.com/id40090736</a>
 
 Заходите на мой сайт:
 
-*	aleksversus.narod.ru
+*   aleksversus.narod.ru
 
 Поддержите проект, подписавшись на мой бусти:
 
-* https://boosty.to/aleksversus
+*   <a href="https://boosty.to/aleksversus" class="plain" style="text-decoration:none;">boosty.to/aleksversus</a>
 
 Обучающие видео по программированию на QSP:
 
-*	https://www.youtube.com/channel/UCwX8RW2B9yTUFdlivtCGAgA
+*   <a href="https://www.youtube.com/channel/UCwX8RW2B9yTUFdlivtCGAgA" class="plain" style="text-decoration:none;">youtube.com/channel/aleksversus</a>
 
 Вы можете опробовать управление базой данных, вводя команды в строку ввода.
 
-Для получения списка команд, введите `edb help` в строку ввода."
-
-elseif $args[0]='version':
-	result = 10
-elseif $args[0] = 'em-version':
-	local v = func('!easy.math!', 'version')
-	$args['version'] = $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
-	msg "Используемая версия `easy.math`: <<$args['version']>>. Необходимая версия: 3.0.0"
-end
+Для получения списка команд, введите `edb help` в строку ввода.'
 
 --- edb.start ---------------------------------
-
-# ...
-$result = '...'
---- ... ---------------------------------
-
 
 # edb.usercom
 !@ включение-выключение
@@ -77,22 +63,19 @@ if instr($user_text, 'edb') = 1:
 		*pl '* run - выполнить следующий после `run` текст, как строку кода QSP.'
 		*pl '* version — текущая версия модуля.'
 		*pl '* em-version — требуемая и текущая версии easy.math.'
-		*pl '* required em — информация по используемому и необходимому easy.math.'
 		*pl '* gen id - генерирует uuid.'
 		*pl '* init - инициализирует базу данных'
 		*pl '* > - выводит информацию о базе данных' 
-	elseif $command_line_ = 'required em' or $command_line_ = 'required easy.math':
-		*pl @edb.start('em-version')
 	elseif $command_line_ = 'version':
-		local v = @edb.start('version')
-		*pl $str(v / 1000)+'.'+$str(v mod 1000 / 100)+'.'+$str(v mod 100)
-	elseif $command_line_ = 'version':
-		@edb.start('em-version')
+		*pl @edb.version('str')
+	elseif $command_line_ = 'em-version':
+		!@ EASY MATH VERSION:
+		msg "Используемая версия `easy.math`: <<@em.version('str')>>; необходимая версия: 3.0.0 или выше"
 	elseif $command_line_ = 'gen id':
 		*pl @em.gen_uuid()
 	elseif $command_line_ = 'test':
 		@edb.init()
-		@edb.new_table('objects', 'Объекты', '[hex:6]')
+		@edb.new_table('objects', 'Объекты')
 		!@ @edb.new_table('dialogs')
 		@edb.dt.new_col('body', 'dict', 'objects')
 		@edb.dt.new_col('place', 'str', 'objects')
@@ -103,16 +86,16 @@ if instr($user_text, 'edb') = 1:
 		local $i = @edb.dt.new_row()
 		local $d = @edb.dt.new_row()
 		local $n = @edb.dt.new_row()
-		@edb.row.fill('Старый меч', 'сумка', 1, ($i, 'objects'))
+		@edb.row.fill('Старый меч', 'сумка', 1, [$i, 'objects'])
 		@edb.row.fill('Старый шлем', 'сумка', 15, $n)
 		@edb.row.fill(('Пепел', 'body'), (2, 'count'), $s)
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.dt.del_col('include', 'objects')
 		@edb.cell.set_value('Инвентарь', $s, 'place', 'objects')
-		@edb.dt.print('objects', '[inmain]')
-		@edb.col.print('body', 'objects', '[inmain]')
-		@edb.col.print('count', 'objects', '[inmain] [range:3-5]')
-		@edb.row.print($i, 'objects', '[inmain]')
+		@edb.dt.print('objects')
+		@edb.col.print('body', 'objects')
+		@edb.col.print('count', 'objects', '[range:3-5]')
+		@edb.row.print($i, 'objects')
 		@edb.cell.get_value($i, 'place', 'objects')
 		@edb.cell.get_value($s, 'place')
 		@edb.cell.get_value($n)
@@ -121,19 +104,19 @@ if instr($user_text, 'edb') = 1:
 		@edb.row.set_next('Яблоко')
 		@edb.row.set_next('Инвентарь')
 		@edb.row.set_next(25)
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.row.set_cur($s)
 		@edb.col.set_cur('count')
 		loop local i = 1 while i < 10 step i += 1:
 			@edb.col.set_next(i * 10 + 1)
 		end
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.cell.add(34)
 		@edb.col.set_cur('place')
 		@edb.cell.add('34')
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.row.exchange($d, $n)
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.dt.find('Старый')
 		@edb.row.extract('septem', $i)
 		@edb.row.inject('septem', $n)
@@ -142,11 +125,11 @@ if instr($user_text, 'edb') = 1:
 		@edb.row.clone($n)
 		@edb.row.clone($n)
 		@edb.row.clone($n)
-		@edb.dt.print('objects', '[inmain]')
+		@edb.dt.print('objects')
 		@edb.print('[all arrays]')
-		@edb.dt.print('objects', '[inmain] [range:2-4]')
+		@edb.dt.print('objects', '[range:2-4]')
 		@edb.dt.clone('new_obj', 'objects', '000002', 4)
-		@edb.dt.print('new_obj', '[inmain]')
+		@edb.dt.print('new_obj')
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
@@ -171,4 +154,16 @@ if instr($user_text, 'edb') = 1:
 	end
 end
 --- edb.usercom ---------------------------------
+
+!@ $0 - type of returned version: empty(default) - tuple, 'str' - string
+!@ %r - version: tuple o string
+# edb.version
+%result = [0,2,0]	& !@ correct current version 
+if $args[0] = 'str':
+	$result = $dyneval({
+		local y, m, d = @edb.version()
+		$result = "<<y>>.<<m>>.<<d>>"
+	})
+end
+--- edb.version ---------------------------------
 
