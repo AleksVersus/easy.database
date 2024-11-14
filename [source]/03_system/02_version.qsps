@@ -1,0 +1,13 @@
+QSP-Game Проверка версии easy.database
+
+!@ $0 - type of returned version: empty(default) - tuple, 'str' - string
+!@ %r - version: tuple o string
+# edb.version
+%result = [0,2,0]	& !@ correct current version 
+if $args[0] = 'str':
+	$result = $dyneval({
+		local y, m, d = @edb.version()
+		$result = "<<y>>.<<m>>.<<d>>"
+	})
+end
+--- edb.version ---------------------------------

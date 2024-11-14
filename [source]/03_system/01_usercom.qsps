@@ -1,0 +1,120 @@
+QSP-Game Обработчик строки ввода для модуля easy.database
+
+!@ $0 - управление
+# edb.usercom
+!@ включение-выключение
+if $lcase($args[0]) = 'on':
+	$usercom['edb.usercom'] = 'edb.usercom'
+	exit
+elseif $lcase($args[0]) = 'off':
+	killvar '$usercom', 'edb.usercom'
+	exit
+end
+
+if instr($user_text, 'edb') = 1:
+	local $command_line_ = $trim($mid($user_text, 4))
+	if $command_line_ = 'help':
+		*pl 'Все команды для работы с модулем из строки ввода должны начинаться с ключевого слова `edb`'
+		*pl 'Основные команды для работы с модулем (ключевое слово `edb` опущено):'
+		*pl '* help - вывод справки по модулю `easy.database`.'
+		*pl '* run - выполнить следующий после `run` текст, как строку кода QSP.'
+		*pl '* version — текущая версия модуля.'
+		*pl '* em-version — требуемая и текущая версии easy.math.'
+		*pl '* gen id - генерирует uuid.'
+		*pl '* init - инициализирует базу данных'
+		*pl '* > - выводит информацию о базе данных'
+
+	elseif $command_line_ = 'version':
+		*pl @edb.version('str')
+
+	elseif $command_line_ = 'em-version':
+		@edb.em.version()
+		
+	elseif $command_line_ = 'gen id':
+		*pl @em.gen_uuid()
+	elseif $command_line_ = 'test':
+		@edb.init()
+		@edb.new_table('objects', 'Объекты')
+		!@ @edb.new_table('dialogs')
+		@edb.dt.new_col('body', 'dict', 'objects')
+		@edb.dt.new_col('place', 'str', 'objects')
+		!@ @edb.dt.new_col('include')
+		@edb.dt.new_col('count', 'num')
+		local $s = @edb.dt.new_row('objects')
+		local $r = @edb.dt.new_row('objects')
+		local $i = @edb.dt.new_row()
+		local $d = @edb.dt.new_row()
+		local $n = @edb.dt.new_row()
+		@edb.row.fill('Старый меч', 'сумка', 1, [$i, 'objects'])
+		@edb.row.fill('Старый шлем', 'сумка', 15, $n)
+		@edb.row.fill(('Пепел', 'body'), (2, 'count'), $s)
+		@edb.dt.print('objects')
+		@edb.dt.del_col('include', 'objects')
+		@edb.cell.set_value('Инвентарь', $s, 'place', 'objects')
+		@edb.dt.print('objects')
+		@edb.col.print('body', 'objects')
+		@edb.col.print('count', 'objects', '[range:3-5]')
+		@edb.row.print($i, 'objects')
+		@edb.cell.get_value($i, 'place', 'objects')
+		@edb.cell.get_value($s, 'place')
+		@edb.cell.get_value($n)
+		@edb.row.set_cur($r)
+		@edb.col.set_cur('body')
+		@edb.row.set_next('Яблоко')
+		@edb.row.set_next('Инвентарь')
+		@edb.row.set_next(25)
+		@edb.dt.print('objects')
+		@edb.row.set_cur($s)
+		@edb.col.set_cur('count')
+		loop local i = 1 while i < 10 step i += 1:
+			@edb.col.set_next(i * 10 + 1)
+		end
+		@edb.dt.print('objects')
+		@edb.cell.add(34)
+		@edb.col.set_cur('place')
+		@edb.cell.add('34')
+		@edb.dt.print('objects')
+		@edb.row.exchange($d, $n)
+		@edb.dt.print('objects')
+		@edb.dt.find('Старый')
+		@edb.row.extract('septem', $i)
+		@edb.row.inject('septem', $n)
+		@em.arr.print('$septem')
+		@edb.row.clone($n)
+		@edb.row.clone($n)
+		@edb.row.clone($n)
+		@edb.row.clone($n)
+		@edb.dt.print('objects')
+		@edb.print('[all arrays]')
+		@edb.dt.print('objects', '[range:2-4]')
+		@edb.dt.clone('new_obj', 'objects', '000002', 4)
+		@edb.dt.print('new_obj')
+	elseif $command_line_ = 'init':
+		@edb.init()
+		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
+	elseif $command_line_ = '>':
+		*pl @edb.print('[all arrays]')
+	elseif instr($command_line_, '>') = 1:
+		local $commands_
+		@em.str.inArr($mid($command_line_, 2), '$commands_', '>', '[strip]')
+		if $commands_[0] = 'new_table' and $commands_[1] <> '':
+			@edb.new_table($commands_[1])
+			*pl "Создана таблица данных «<<$commands_[1]>>»."
+		elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
+			@edb.del_table($commands_[1])
+			*pl "Удалена таблица данных «<<$commands_[1]>>»."
+		elseif @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $commands_[0]):
+			if $commands_[1] = 'print':
+				@edb.dt.print($commands_[0], '[inmain]')
+			end
+		end
+	elseif instr($command_line_, 'run ') = 1:
+		dynamic $trim($mid($command_line_, 4))
+	end
+end
+--- edb.usercom ---------------------------------
+
+
+$0 - может быть передано управление:
+	- 'on' — подключает обработчик строки ввода к игре. Обработчик подключается независимо, т.е. не влияет на другие обработчики.
+	- 'off' — отключает обработчик. Отключается только данный обработчик

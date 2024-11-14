@@ -1,0 +1,11 @@
+QSP-Game Проверка версии easy.math
+
+# edb.em.version
+!@ EASY MATH VERSION:
+if loc('em.version'):
+	msg "Используемая версия `easy.math`: <<@em.version('str')>>; необходима версия: 3.0.0 или выше."
+else:
+	msg "`easy.math` не установлена, или отсутствует функция проверки версий."
+end
+--- edb.em.version ---------------------------------
+
