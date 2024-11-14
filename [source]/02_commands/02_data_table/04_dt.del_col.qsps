@@ -1,8 +1,7 @@
 QSP-Game Удаление столбца из таблицы данных
 
-$args[0] - идентификатор колонки
-$args[1] - идентификатор таблицы данных
-
+!@ $0 - идентификатор колонки
+!@ $1 - идентификатор таблицы данных
 # edb.dt.del_col
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
@@ -13,10 +12,12 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "dt.del_
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_col')
 !@pp:if(edb_fuse):include
 if $args[0] = '': msg "dt.del_col: Ошибка. Не указан идентификатор колонки." & exit
-if $args[0] = 'id': msg "dt.del_col: Нельзя удалить колонку первичных ключей без удаления таблицы данных." & exit
+if $args[0] = 'id': msg "dt.del_col: Нельзя удалить колонку первичных ключей." & exit
 !@pp:endif
 !@ удаляем массив колонки
 killvar '$<<$args[1]>>_<<$args[0]>>'
+!@ удаляем запись о типе колонки
+killvar $args[1], 'column.<<$args[0]>>.type'
 dynamic "
 !@pp: если колонка является текущей, снимаем с неё укзатель
 	if $<<$args[1]>>['current_col'] = '<<$args[0]>>':
