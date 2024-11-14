@@ -23,8 +23,15 @@ killvar '$<<$args[0]>>_id'
 EASY_DATABASE['data_tables_number'] -= 1
 !@ удаляяем запись о таблице из списка идентификаторов таблиц
 $EASY_DATABASE['data_tables_ids'] = @edb.list.remove($EASY_DATABASE['data_tables_ids'], $args[0])
-!@ снимаем указатель с базы данных, если это текущая база данных
+!@ снимаем указатель с таблицы данных, если это текущая таблица данных
 if $EASY_DATABASE['current_data_table'] = $args[0]: $EASY_DATABASE['current_data_table'] = ''
 !@ уничтожаем массив таблицы данных
 killvar $args[0]
 --- edb.del_table ---------------------------------
+
+$args[20] - callback {
+	$args[0] - item of list (column id)
+	$args[1] - tale of list
+	$args[2] - $result
+	$args[3] - $args[0] (data table id)
+}
