@@ -22,7 +22,7 @@ $args[20], $args[21] = '', '
 '
 $args[22] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
 $args[23] = $iif($args[22] = 'num', '', '$')
-$args[24] = @em.tag.getNum($args[2], 'range')
+$args[24] = @em.tag.get_num($args[2], 'range')
 args[25] = val($strfind($args[24], '(\d+)\-(\d+)', 1))
 args[26] = val($strfind($args[24], '(\d+)\-(\d+)', 2))
 if args[25] < 1: args[25] = 1

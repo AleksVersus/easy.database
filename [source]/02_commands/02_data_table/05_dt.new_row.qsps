@@ -44,7 +44,7 @@ elseif instr($args[21], '[uid]') <> 0:
 	end
 	$args[24] = ''
 elseif instr($args[21], '[hex:') <> 0:
-	args[25] = val(@em.tag.getNum($args[21], 'hex'))
+	args[25] = val(@em.tag.get_num($args[21], 'hex'))
 	if args[25] < 1: args[25] = 1
 	$args[23] = $arritem('$<<$args[0]>>', 'free_keys')
 	if $args[23] = '':
@@ -59,7 +59,7 @@ elseif instr($args[21], '[hex:') <> 0:
 	if $arritem('$<<$args[20]>>', $args[24]) <> '': $args[24] = ''
 	jump 'key_create_end'
 elseif instr($args[21], '[num:') <> 0:
-	args[25] = val(@em.tag.getNum($args[21], 'num'))
+	args[25] = val(@em.tag.get_num($args[21], 'num'))
 	if args[25] < 1: args[25] = 1
 	$args[23] = $arritem('$<<$args[0]>>', 'free_keys')
 	if $args[23] = '':
@@ -74,21 +74,21 @@ elseif instr($args[21], '[num:') <> 0:
 	if $arritem('$<<$args[20]>>', $args[24]) <> '': $args[24] = ''
 	jump 'key_create_end'
 elseif instr($args[21], '[rhex:') <> 0:
-	args[25] = val(@em.tag.getNum($args[21], 'rhex'))
+	args[25] = val(@em.tag.get_num($args[21], 'rhex'))
 	if args[25] < 8: args[25] = 8
 	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
 		$args[24] = @em.str.random(args[25],'[inc][\h]')
 		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
 elseif instr($args[21], '[rnum:') <> 0:
-	args[25] = val(@em.tag.getNum($args[21], 'rnum'))
+	args[25] = val(@em.tag.get_num($args[21], 'rnum'))
 	if args[25] < 16: args[25] = 16
 	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
 		$args[24] = @em.str.random(args[25],'[inc][\d]')
 		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
 	end
 elseif instr($args[21], '[rstr:') <> 0:
-	args[25] = val(@em.tag.getNum($args[21], 'rstr'))
+	args[25] = val(@em.tag.get_num($args[21], 'rstr'))
 	if args[25] < 16: args[25] = 16
 	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
 		$args[24] = @em.str.random(args[25],'[inc][\d][\z][\я]')
