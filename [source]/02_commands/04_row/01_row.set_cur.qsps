@@ -1,8 +1,7 @@
 QSP-Game Делаем указанную строку текущей
 
-$args[0] - идентификатор строки
-$args[1] - идентификатор таблицы данных
-
+!@ $0 - идентификатор строки
+!@ $1 - идентификатор таблицы данных
 # edb.row.set_cur
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
