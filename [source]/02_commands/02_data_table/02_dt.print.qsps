@@ -11,23 +11,18 @@ if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "edb.dt.print: Ошибка.
 !@pp:endif
 $args[1] = $lcase($args[1])
 $args[20] = ''
-!@ $args[22] = $arritem('$<<$args[0]>>', 'primary_keys_type')
 if instr($args[1], '[oi]') <> 0: $args[1] = $replace($args[1], '[oi]', '[only info]')
 if instr($args[1], '[ot]') <> 0: $args[1] = $replace($args[1], '[ot]', '[only table]')
 !@ ------------------ непосредственно информация о таблице данных --------------------
 if instr($args[1], '[only info]') <> 0 or instr($args[1], '[only table]') = 0:
-	$args[20] += "Идентификатор таблицы данных: '" + $arritem('$<<$args[0]>>', 'ID') + "'<<@em.RN>>"
-	$args[20] += "Название таблицы данных: '" + $arritem('$<<$args[0]>>', 'NAME') + "'<<@em.RN>>"
-	$args[20] += "Список колонок: '" + $arritem('$<<$args[0]>>', 'columns') + "'<<@em.RN>>"
-	$args[20] += "Текущая колонка: '" + $arritem('$<<$args[0]>>', 'current_col') + "'<<@em.RN>>"
+	$args[20] += "Идентификатор таблицы данных: '<<$arritem('$<<$args[0]>>', 'ID')>>'<<@em.RN>>"
+	$args[20] += "Название таблицы данных: '<<$arritem('$<<$args[0]>>', 'NAME')>>'<<@em.RN>>"
+	$args[20] += "Список колонок: '<<$arritem('$<<$args[0]>>', 'columns')>>'<<@em.RN>>"
+	$args[20] += "Текущая колонка: '<<$arritem('$<<$args[0]>>', 'current_col')>>'<<@em.RN>>"
 	$args[20] += "Высота: " + $str(arrsize('$<<$args[0]>>_id'))+@em.RN
-	!@ $args[20] += "Вид первичных ключей (ID строк): '" + $args[22] + "'<<@em.RN>>"
-	!@ if instr($args[22], '[hex:') <> 0 or instr($args[22], '[num:') <> 0:
-	!@ 	$args[20] += "Список освободившихся ключей: '" + $arritem('$<<$args[0]>>', 'free_keys') + "'<<@em.RN>>"
-	!@ end
-	$args[20] += "Текущая строка: '" + $arritem('$<<$args[0]>>', 'current_row') + "'<<@em.RN>>"
+	$args[20] += "Текущая строка: '<<$arritem('$<<$args[0]>>', 'current_row')>>'<<@em.RN>>"
 	$args[23] = $dyneval('$result = $<<$args[0]>>_id[]')
-	if $args[23] <> 'ids' and $args[23] <> '':
+	if $args[23] <> '': !@ последняя ячейка масива первчных ключей либо не существует, либо обязятельно содержит первыичный ключ
 		$args[20] += "Последний первичный ключ: '" + $args[23] + "'<<@em.RN>>"
 	end
 end
@@ -37,10 +32,10 @@ if instr($args[1], '[only table]') <> 0 or instr($args[1], '[only info]') = 0:
 		$result = $args[2]
 		if $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type') = 'tuple':
 			$result += "'%<<$args[3]>>_<<$args[0]>>',"
-		elseif $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type') <> 'num':
-			$result += "'$<<$args[3]>>_<<$args[0]>>',"
-		else:
+		elseif $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type') = 'num':
 			$result += "'<<$args[3]>>_<<$args[0]>>',"
+		else:
+			$result += "'$<<$args[3]>>_<<$args[0]>>',"
 		end
 	}
 	$args[26] = @edb.list.for_each($args[24], $args[25], $args[0])
