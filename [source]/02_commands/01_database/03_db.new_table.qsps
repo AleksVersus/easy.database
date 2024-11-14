@@ -7,7 +7,7 @@ QSP-Game Создать новую таблицу данных
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.new_table: База данных не инициализирована." & exit
 if $args[0] = '': msg "edb.new_table: Не указан идентификатор таблицы данных." & exit
-if instr('$%', $mid($args[0], 1, 1)): msg 'edb.new_table: type prefix cannot be specified → <<$args[0]>>' & exit
+if instr('$%', $mid($args[0], 1, 1)): msg 'edb.new_table: Недопустимо указывать префикс типа → <<$args[0]>>.' & exit
 if @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.new_table: Таблица данных «<<$args[0]>>» уже существует." & exit
 !@pp:endif
 !@ $args[2] = $lcase($args[2])
@@ -17,69 +17,20 @@ $EASY_DATABASE['data_tables_ids'] = @edb.list.append($EASY_DATABASE['data_tables
 EASY_DATABASE['data_tables_counter'] += 1
 !@ увеличиваем число существующих баз:
 EASY_DATABASE['data_tables_number'] += 1
-!@ создаём запись в массиве, описывающем таблицу данных
-!@ вносим идентификатор и название таблицы:
+!@ создаём записи в массиве, описывающем таблицу данных
 dynamic "
+!@pp: вносим идентификатор и название таблицы:
 	$<<$args[0]>>['ID']='<<$args[0]>>'
 	$<<$args[0]>>['NAME']='<<$args[1]>>'
-"
-!@ создаём в таблице данных колонку первичных ключей:
-dynamic "
 !@pp: тип колонки первичных ключей указываем в отдельной ячейке
 	$<<$args[0]>>['column.id.type'] = 'ids'
 !@pp: добавляем идентификатор колонки в список колонок
 	$<<$args[0]>>['columns'] = 'id'
 !@pp: указываем колонку в качестве текущей
 	$<<$args[0]>>['current_col'] = 'id'
+!@pp: указываем тип первичных ключей
+	$<<$args[0]>>['primary_keys_type'] = '[rstr:16]'
 "
 !@ делаем созданную таблицу текущей
 @edb.dt.set_cur($args[0])
-
-!@ назначаем тип генерируемого первичного ключа
-!@ if instr($args[2], '[msecscount]') <> 0:
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[msecscount]'"
-!@ elseif instr($args[2], '[uuid]') <> 0:
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uuid]'"
-!@ elseif instr($args[2], '[uid]') <> 0:
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[uid]'"
-!@ elseif instr($args[2], '[hex:') <> 0:
-!@ 	args[20] = val(@em.tag.get_num($args[2], 'hex'))
-!@ 	if args[20] < 1: args[20] = 1
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[hex:<<args[20]>>]'"
-!@ elseif instr($args[2], '[num:') <> 0:
-!@ 	args[20] = val(@em.tag.get_num($args[2], 'num'))
-!@ 	if args[20] < 1: args[20] = 1
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[num:<<args[20]>>]'"
-!@ elseif instr($args[2], '[rhex:') <> 0:
-!@ 	args[20] = val(@em.tag.get_num($args[2], 'rhex'))
-!@ 	if args[20] < 8: args[20] = 8
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rhex:<<args[20]>>]'"
-!@ elseif instr($args[2], '[rnum:') <> 0:
-!@ 	args[20] = val(@em.tag.get_num($args[2], 'rnum'))
-!@ 	if args[20] < 16: args[20] = 16
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rnum:<<args[20]>>]'"
-!@ elseif instr($args[2], '[rstr:') <> 0:
-!@ 	args[20] = val(@em.tag.get_num($args[2], 'rstr'))
-!@ 	if args[20] < 16: args[20] = 16
-!@ 	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:<<args[20]>>]'"
-!@ else:
-	dynamic "$<<$args[0]>>['primary_keys_type'] = '[rstr:16]'"
-!@ end
 --- edb.new_table ---------------------------------
-
-Управление (исключено, чтобы разгрузить модуль):
-	Управление генерацией первичных ключей
-	* [msecscount] - первичные ключи будут генерироваться на основе данных из функции msecscount.
-	* [uuid] - первичные ключи генерируются в формате UUID
-	* [hex:N] - первичные ключи генерируются, как порядковое шестнадцатерияное число из N символов. Это ограничит высоту таблицы данных максимальным возможным в этой таблице данных числом.
-	* [num:N] - первичные ключи генерируются в виде N-значного десятеричного числа. Это ограничит высоту таблицы данных максимальным возможным в такой таблице числом.
-	* [rhex:N] - первичным ключом будет назначаться случайное шестнадцатеричное число, состоящее из не менее, чем 8 символов.
-	* [rnum:N] - первичным ключом будет назначаться случайное десятерично число, состоящее из не менее, чем 16 символов.
-	* [uid] - первичный ключ будет генерироваться из строки случайных букв и цифр плюс текущее абсолютное значение от msecscount
-	* [rstr:N] - первичный ключ генерируется, как случайный набор букв и цифр из N символов, но не менее 16 символов.
-
-args[20] - num_
-!@ pp:if(build_easy_math!=Off):nopp
-!@ pp:var(em_tag_getnum)
-!@ pp:endif
-
