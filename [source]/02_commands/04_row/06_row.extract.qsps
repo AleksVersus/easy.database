@@ -17,7 +17,7 @@ if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@ Предохранители:
 if $EASY_DATABASE['ID'] = '': msg "row.extract: Ошибка. База данных не инициализирована." & exit
 if $args[2] = '': msg "row.extract: Ошибка. Не указан идентификатор таблицы данных." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.extract: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.extract: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 !@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_row')
 !@ Извлекать данные из строки, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.

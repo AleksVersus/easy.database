@@ -8,7 +8,7 @@ if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.set_cur: Ошибка. База данных не инициализирована." & exit
 if $args[1] = '': msg "row.set_cur: Ошибка. Не указан идентификатор таблицы данных." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.set_cur: Ошибка. Таблица данных «<<$args[1]>>» не существует." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.set_cur: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
 !@pp:endif
 !@ Сделать текущей строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
 if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit

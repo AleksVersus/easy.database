@@ -8,7 +8,7 @@ if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "dt.new_col: Ошибка. База данных не инициализирована." & exit
 if $args[2] = '':	msg 'dt.new_col: Ошибка. Не указан идентификатор таблицы данных.' & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]):	msg 'dt.new_col: Ошибка. Таблица данных «<<$args[2]>>» не существует.' & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]):	msg 'dt.new_col: Ошибка. Таблица данных `<<$args[2]>>` не существует.' & exit
 if $args[0] = '': msg 'dt.new_col: Ошибка. Не указан идентификатор колонки.' &	exit
 if $args[0] = 'id' or $args[1] = 'ids':	msg 'dt.new_col: Колонка первичных ключей уже создана.' & exit
 if instr('$%', $mid($args[0], 1, 1)): msg 'dt.new_col: Недопустимо указывать префикс типа → <<$args[0]>>.' & exit

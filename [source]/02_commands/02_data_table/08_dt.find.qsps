@@ -2,18 +2,11 @@ QSP-Game Поиск по таблице данных
 
 Внимание!!! Эта функция использует несколько циклов, в т.ч. вложенных. Не используйте без острой необходимости.
 
-$[0] - регулярное выражение по которому производится поиск.
-	Внимание!!! Будет найден элемент точно соответствующий регулярке!
-	Если тип колонки num - поиск на точное совпадение.
-$[1] - колонка, по которой производим поиск
-$[2] - идентификатор таблицы данных
-[3] - размер чанка
-$[4] ... $[18] — дополнительные фильтры в виде кортежей:
-	(колонка, значение, управление) - управление:
-		[regexp] - регулярка. Точное соответствие. Не работает для колонок типа num
-		[callback] - функция колбэк принимающая, как аргумент значение элемента, и возвращающая 1 или 0, в зависимости от результатов фильтрации
-		[strict] (или не указанное значение) - проверяем на точное соответствие.
-
+!@ $0 - регулярное выражение по которому производится поиск.	Внимание!!! Будет найден элемент точно соответствующий регулярке!	Если тип колонки num или tuple- поиск на точное совпадение c числом или кортежем.
+!@ $1 - колонка, по которой производим поиск
+!@ $2 - идентификатор таблицы данных
+!@ #3 - размер чанка (если таблица более 150 тыс элементов, размер чанка нужно выбирать более 10 тыс)
+!@ %4 ... %18 - дополнительные фильтры в виде кортежей:	(колонка, значение, управление) - управление: 		[regexp] - регулярка. Точное соответствие. Не работает для колонок типа num и tuple		[callback] - функция колбэк принимающая, как аргумент значение элемента, и возвращающая 1 или 0, в зависимости от результатов фильтрации		[strict] (или не указанное значение) - проверяем на точное соответствие. - значение только текстового типа. Для поиска числа или кортежа, нужно преобразовать их к текстовому типу, затем они будут преобразованы обратно в нужный тип.
 # edb.dt.find
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
@@ -21,13 +14,13 @@ if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 if $EASY_DATABASE['ID'] = '': msg "edb.dt.find: Ошибка. База данных не инициализирована." & exit
 !@ проверка существования указанной таблицы данных
 if $args[2] = '': msg "edb.dt.find: Ошибка. Не указан идентификатор таблицы данных" & exit
-if $arritem('$<<$args[2]>>', 'ID') <> $args[2]: msg "edb.dt.find: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
+if $arritem('$<<$args[2]>>', 'ID') <> $args[2]: msg "edb.dt.find: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 !@pp:endif
 !@ проверка существования колонки
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_col')
 !@pp:if(edb_fuse):include
 if $args[1] = '': msg "edb.dt.find: Ошибка. Не указана колонка поиска." & exit
-if arrsize('$<<$args[2]>>_<<$args[1]>>') < 1: msg "edb.dt.find: Ошибка. Колонка «<<$args[1]>>» не существует." & exit
+if arrsize('$<<$args[2]>>_<<$args[1]>>') < 1: msg "edb.dt.find: Ошибка. Колонка `<<$args[1]>>` не существует." & exit
 !@pp:endif
 !@ размер чанка по умолчанию
 if args[3] = 0: args[3] = 10000
@@ -38,7 +31,7 @@ args[21] = 1
 !@ список колонок в таблице данных:
 $args[22] = $arritem('$<<$args[2]>>', 'columns')
 !@ тип основной колонки для поиска
-$args[29] = $arritem('$<<$args[2]>>_<<$args[1]>>', 0)
+$args[29] = $arritem('$<<$args[2]>>', 'column.<<$args[1]>>.type')
 !@ объявлем локальные массивы, которые используются для хранения чанков.
 !@ ВНИМАНИЕ!!! Не используйте данные массивы в своей игре
 local edb_dt_find_chunk_array_1_, edb_dt_find_chunk_array_2_, edb_dt_find_chunk_array_3_
@@ -58,7 +51,7 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 		edb_dt_find_chunk_count_ += 1
 		$result = $args[2] + '[<<$args[0]>>:<<$args[20]>>]'
 	}
-	$args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[4], $str(args[21]), $str(args[5]))
+	$args[24] = @edb.list.for_each($args[22], $args[23], $args[4], $str(args[21]), $str(args[5]))
 	!@ ---------------------- получаем чанк -------------------------
 
 	!@ ---------------------------------------- цикл поиска по чанку ----------------------------------------
@@ -66,10 +59,12 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 	!@ а так же соответствующий регуляркам фильтров
 	$args[27] = @em.tag.get_num($args[24], $args[1])
 	loop args[25], args[26], args[28] = 1, -1, 0 while args[25]:
-		if $args[29] = 'num':
+		if $args[29] = 'tuple':
+			args[26] = arrpos('%'+$args[27], %args[0], args[26]+1)
+		elseif $args[29] = 'num':
 			args[26] = arrpos($args[27], args[0], args[26]+1)
 		else:
-			args[26] = arrcomp($args[27], $args[0], args[26]+1)
+			args[26] = arrcomp('$'+$args[27], $args[0], args[26]+1)
 		end
 		if args[26] <> -1 and args[28] <> args[26]:
 			args[28] = args[26]
@@ -80,20 +75,23 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 				!@ -------------------------------- цикл перебора фильтров --------------------------------
 				loop args[30] = 4 while args[30] <= args[20] step args[30] += 1:
 					!@ получаем колонку, значение, управление
-					$args[31], $args[32], $args[33] = $args[args[30]]
+					$args[31], $args[32], $args[33] = %args[args[30]]
 					$args[33] = $lcase($args[33])
 					if @edb.list.is_el($args[22], $args[31]):
 						!@ указанная колонка присутствует в таблице данных. Получаем тип:
-						$args['34'] = $arritem('$<<$args[2]>>_<<$args[31]>>', 0)
-						if instr($args[33], '[regexp]') <> 0 and $args[34] <> 'num':
-							!@ сравниваем на регулярку
+						$args['34'] = $arritem('$<<$args[2]>>', 'column.<<$args[31]>>.type')
+						if instr($args[33], '[regexp]') and no instr('[num][tuple]', '[<<$args[34]>>]'):
+							!@ сравниваем на регулярку, если тип колонки не число и не кортеж
 							if no strcomp($arritem('$<<$args[2]>>_<<$args[31]>>', args[26]), $args[32]):
 								!@ фильтр не пройден
 								args[35] = 0 & jump 'filter_end'
 							end
 						elseif instr($args[33], '[callback]') <> 0:
 							!@ проверка по колбэку
-							if $args[34] = 'num' and no dyneval($args[32], arritem('<<$args[2]>>_<<$args[31]>>', args[26])):
+							if $args[34] = 'tuple' and no dyneval($args[32], arritem('%<<$args[2]>>_<<$args[31]>>', args[26])):
+								!@ колбэк вернул false - фильтр не пройдена
+								args[35] = 0 & jump 'filter_end'
+							elseif $args[34] = 'num' and no dyneval($args[32], arritem('<<$args[2]>>_<<$args[31]>>', args[26])):
 								!@ колбэк вернул false - фильтр не пройдена
 								args[35] = 0 & jump 'filter_end'
 							elseif no dyneval($args[32], $arritem('$<<$args[2]>>_<<$args[31]>>', args[26])):
@@ -102,7 +100,10 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 							end
 						else:
 							!@ проверка на точное совпадение
-							if $args[34] = 'num' and $args[32] <> arritem('<<$args[2]>>_<<$args[31]>>', args[26]):
+							if $args[34] = 'tuple' and @edb.str.to_tpl($args[32]) <> arritem('%<<$args[2]>>_<<$args[31]>>', args[26]):
+								!@ значения не равны
+								args[35] = 0 & jump 'filter_end'
+							elseif $args[34] = 'num' and val($args[32]) <> arritem('<<$args[2]>>_<<$args[31]>>', args[26]):
 								!@ значения не равны
 								args[35] = 0 & jump 'filter_end'
 							elseif $args[32] <> $arritem('$<<$args[2]>>_<<$args[31]>>', args[26]):
@@ -165,10 +166,9 @@ args[35] - цикл фильтров. Маркер true|false - пройдены
 {for_each:
 	0 - column list
 	1 - callback
-	2 - |
-	3 - table
-	4 - chunk_start
-	5 - chunk size
+	2 - table
+	3 - chunk_start
+	4 - chunk size
 	{:callback
 		0 - item
 		1 - tail

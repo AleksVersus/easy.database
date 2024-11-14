@@ -9,7 +9,7 @@ $args[2] - идентификатор таблицы данных
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.set_next: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.print: Ошибка. Таблица данных «<<$args[2]>>» не существует." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.print: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 if $args[2] = '': msg "row.set_nex: Ошибка. Не указан идентификатор таблицы данных." & exit
 !@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_row')

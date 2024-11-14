@@ -1,18 +1,17 @@
 QSP-Game Делаем указанную колонку текущей
 
-$args[0] - идентификатор колонки
-$args[1] - идентификатор таблицы данных
-
+!@ $0 - идентификатор колонки
+!@ $1 - идентификатор таблицы данных
 # edb.col.set_cur
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "col.set_cur: Ошибка. База данных не инициализирована." & exit
 if $args[1] = '':	msg 'col.set_cur: Ошибка. Не указан идентификатор таблицы данных.' & exit
-if $arritem('$<<$args[1]>>', 'ID') <> $args[1]:	msg 'col.set_cur: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
+if $arritem('$<<$args[1]>>', 'ID') <> $args[1]:	msg 'col.set_cur: Ошибка. Таблица данных `<<$args[1]>>` не существует.' & exit
 if $args[0] = '': msg 'col.set_cur: Ошибка. Не указан идентификатор колонки.' &	exit
 !@pp:endif
 !@ нельзя установить колонку первичных ключей текущей, однако это не приводит к ошибке
-if $arritem("$<<$args[1]>>_<<$args[0]>>", 0) = 'ids': exit
+if $arritem('$<<$args[1]>>', 'column.<<$args[0]>>.type') = 'ids': exit
 !@ непосредственно делаем колонку текущей
 dynamic "$<<$args[1]>>['current_col'] = '<<$args[0]>>'"
 !@ делаем текущей таблицу данных

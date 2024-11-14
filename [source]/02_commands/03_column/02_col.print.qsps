@@ -1,15 +1,14 @@
 QSP-Game Распечатка колонки
 
-$args[0] — идентификатор колонки
-$args[1] — идентификатор таблицы данных
-$args[2] — управление
-
+!@ $0 - идентификатор колонки
+!@ $1 - идентификатор таблицы данных
+!@ $2 - управление
 # edb.col.print
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '':	msg "col.print: Ошибка. База данных не инициализирована." & exit
 if $args[1] = '':	msg 'col.print: Ошибка. Не указан идентификатор таблицы данных.' & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]):	msg 'col.print: Ошибка. Таблица данных «<<$args[1]>>» не существует.' & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]):	msg 'col.print: Ошибка. Таблица данных `<<$args[1]>>` не существует.' & exit
 !@pp:endif
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_col')
 !@pp:if(edb_fuse):include
@@ -18,46 +17,41 @@ if $args[0] = '': msg 'col.print: Ошибка. Не указан идентиф
 !@ значения по умолчанию:
 $args[2] = $lcase($args[2])
 !@ определяем локальные переменные:
-$args[20], $args[21] = '', '
-'
-$args[22] = $arritem('$<<$args[1]>>_<<$args[0]>>', 0)
-$args[23] = $iif($args[22] = 'num', '', '$')
+$args[20] = ''
+$args[22] = $arritem('$<<$args[1]>>', 'column.<<$args[0]>>.type')
+!@ TODO: prefix.by_type ?
+if 0:
+	elseif $args[22] = 'tuple': $args[23] = '%'
+	elseif $args[22] = 'num': $args[23] = ''
+	else: $args[23] = '$'
+end
 $args[24] = @em.tag.get_num($args[2], 'range')
 args[25] = val($strfind($args[24], '(\d+)\-(\d+)', 1))
 args[26] = val($strfind($args[24], '(\d+)\-(\d+)', 2))
 if args[25] < 1: args[25] = 1
-if args[26] > arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]>>'): args[26] = arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]>>')-1
-args[27] = iif(args[26], args[26], arrsize('<<$args[23]>><<$args[1]>>_<<$args[0]>>')-1)
+if args[26] > arrsize('<<$args[1]>>_<<$args[0]>>'): args[26] = arrsize('<<$args[1]>>_<<$args[0]>>')-1
+args[27] = iif(args[26], args[26], arrsize('<<$args[1]>>_<<$args[0]>>')-1)
 !@ получаем содержимое колонки с помощью em.arr.print
-$args[20] += 'Колонка: «<<$args[0]>>», тип: «<<$args[22]>>», строки с <<args[25]>> по <<args[27]>>'+$args[21]
-$args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result] [not last]', '|', args[25], args[26])
+$args[20] += 'Колонка: `<<$args[0]>>`, тип: `<<$args[22]>>`, строки с <<args[25]>> по <<args[27]>>'+@em.RN
+$args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result]', [args[25], args[26]], '|')
 !@ делаем распечатанную колонку текущей
 @edb.col.set_cur($args[0])
-!@ выводим на экран
-if instr($args[2], '[inmain]') <> 0:
-	*pl $args[20]
-elseif instr($args[2], '[instat]') <> 0:
-	pl $args[20]
-else:
-	$result = $args[20]
-end
+!@ выводим в результат
+$result = $args[20]
 --- edb.col.print ---------------------------------
 
 Поскольку функция работает с именами массивов, здесь не используются локальные переменные,
 чтобы избежать пересечения с именами массивов.
 
-$args[20] - содержит текст, возвращаемый функцией
-$args[21] - символ переноса строки
-$args[22] - тип колонки
-$args[23] - символ $, если колонка не числовая
-$args[24] - пределы из тега range в управлении.
-args[25] - начальная позиция к выводу
-args[26] - конечная позиция к выводу, так же args[27] для форматирования строки к выводу.
+!@ $20 - содержит текст, возвращаемый функцией
+!@ $22 - тип колонки
+!@ $23 - символ $, если колонка не числовая
+!@ $24 - пределы из тега range в управлении.
+!@ #25 - начальная позиция к выводу
+!@ #26 - конечная позиция к выводу, так же #27 для форматирования строки к выводу.
 
 Управление:
 	[range:N-M] - вывод значений от элемента N до M в колонке
-	[inmain] — вывод значений в окно основного описания
-	[instat] — вывод значений в окно дополнительного описания
 
 !@pp:if(build_easy_math!=Off):nopp
 !@pp:var(em_arr_print)

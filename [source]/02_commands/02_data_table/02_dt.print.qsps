@@ -7,7 +7,7 @@ if $args[0] = '': $args[0] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.dt.print: Ошибка. База данных не инициализирована." & exit
 if $args[0] = '': msg "dt.print: Ошибка. Не указан идентификатор таблицы данных." & exit
-if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "edb.dt.print: Ошибка. Таблица данных «<<$args[0]>>» не создана." & exit
+if $arritem('$<<$args[0]>>', 'ID') <> $args[0]: msg "edb.dt.print: Ошибка. Таблица данных `<<$args[0]>>` не создана." & exit
 !@pp:endif
 $args[1] = $lcase($args[1])
 $args[20] = ''
