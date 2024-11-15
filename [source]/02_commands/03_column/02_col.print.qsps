@@ -19,12 +19,7 @@ $args[2] = $lcase($args[2])
 !@ определяем локальные переменные:
 $args[20] = ''
 $args[22] = $arritem('$<<$args[1]>>', 'column.<<$args[0]>>.type')
-!@ TODO: prefix.by_type ?
-if 0:
-	elseif $args[22] = 'tuple': $args[23] = '%'
-	elseif $args[22] = 'num': $args[23] = ''
-	else: $args[23] = '$'
-end
+$args[23] = @edb.type.get_prefix($args[22])
 $args[24] = @em.tag.get_num($args[2], 'range')
 args[25] = val($strfind($args[24], '(\d+)\-(\d+)', 1))
 args[26] = val($strfind($args[24], '(\d+)\-(\d+)', 2))

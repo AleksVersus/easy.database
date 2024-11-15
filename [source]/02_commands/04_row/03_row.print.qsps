@@ -1,74 +1,57 @@
 QSP-Game Вывод информации о строке на экран
 
-$args[0] - идентификатор строки
-$args[1] - идентификатор таблицы данных
-$args[2] - управление
-
+!@ $0 - идентификатор строки
+!@ $1 - идентификатор таблицы данных
 # edb.row.print
 !@ основные локальные переменные
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
-$args[2]= $lcase($args[2])
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.print: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.print: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
 if $args[1] = '': msg "row.print: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.print: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
 !@pp:endif
+$args[2] = $lcase($args[2])
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Распечатать строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
 if $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
 !@ объявляем дополнительные локальные переменные:
-$args[20], $args[21] = '', '
-'
+$args[20] = 
 !@ получаем список колонок:
 $args[22] = $arritem('$<<$args[1]>>', 'columns')
 !@ задаём описание строки
-$args[20] += 'Строка: <<$args[0]>>' + $args[21]
+$args[20] += 'Строка: <<$args[0]>>' + @em.RN
+
 !@ извлекаем значения из колонок
-local $args[23] = {
-	$args[20] = $arritem('$<<$args[4]>>_<<$args[0]>>', 0)
-	$args[21] = $iif($args[20] = 'num', '', '$')
-	$result = $arritem('<<$args[21]>><<$args[4]>>_<<$args[0]>>', $args[3]) + '|'
+$args[23] = {
+	$args[20] = $arritem('$<<$args[4]>>', 'column.<<$args[0]>>.type')
+	$args[21] = @edb.type.get_prefix($args[20])
+	$result += $arritem('<<$args[21]>><<$args[4]>>_<<$args[0]>>', $args[3]) + '|'
 }
-$args[24] = @edb.list.for_each($args[22], $args[23], '|', $args[0], $args[1])
+$args[24] = @edb.list.for_each($args[22], $args[23], $args[0], $args[1])
 $args[20] += $mid($args[24], 1, len($args[24]) - 1)
-!@ делаем таблицу текущей
-@edb.dt.set_cur($args[1])
-!@ делаем строку текущей
-@edb.row.set_cur($args[0])
-!@ выводим на экран
-if instr($args[2], '[inmain]') <> 0:
-	*pl $args[20]
-elseif instr($args[2], '[instat]') <> 0:
-	pl $args[20]
-else:
-	$result = $args[20]
-end
+
+@edb.row.set_cur($args[0], $args[1])
+$result = $args[20]
 --- edb.row.print ---------------------------------
 
 Поскольку функция работает с именами массивов, здесь не используются локальные переменные,
 чтобы избежать пересечения с именами массивов.
 
-$args[20] - $export_, переменная для фиксации возвращаемого текста
-$args[21] - $nr_, переменная для символа переноса строки
-$args[22] - $column_list_, переменная, в которую помещаем список колонок
-$args[23] - $callback_, переменная, в которую помещается "коллбэк"-функция для обработки элементов списка
-$args[24] - список значений строки
-
-Управление:
-	[inmain] — вывод значений в окно основного описания
-	[instat] — вывод значений в окно дополнительного описания
+!@ $20 - $export_, переменная для фиксации возвращаемого текста
+!@ $22 - $column_list_, переменная, в которую помещаем список колонок
+!@ $23 - $callback_, переменная, в которую помещается "коллбэк"-функция для обработки элементов списка
+!@ $24 - список значений строки
 
 {:for_each
 	0 - column list
 	1 - callback
-	2 - |
-	3 - primary key
-	4 - table
+	2 - primary key
+	3 - table
 	{:callback
 		0 - item (column)
 		1 - tail
 		2 - result
-		3 - primary key (1)
-		4 - table (2)
+		3 - primary key (0)
+		4 - table (1)
 	}
 }

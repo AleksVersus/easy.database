@@ -1,17 +1,16 @@
-QSP-Game Делаем указанную строку текущей
+QSP-Game Проверка строки на существование
 
-$args[0] - идентификатор строки
-$args[1] - идентификатор таблицы данных
-
+!@ $0 - идентификатор строки
+!@ $1 - идентификатор таблицы данных
 # edb.row.is
 if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
-if $EASY_DATABASE['ID'] = '': msg "row.set_cur: Ошибка. База данных не инициализирована." & exit
-if $args[1] = '': msg "row.set_cur: Ошибка. Не указан идентификатор таблицы данных." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.set_cur: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
+if $EASY_DATABASE['ID'] = '': msg "edb.row.is: Ошибка. База данных не инициализирована." & exit
+if $args[1] = '': msg "edb.row.is: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "edb.row.is: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
 !@pp:endif
 !@ если идентификатор строки указан не пустой, и он существует
 result = iif($args[0] <> '' and $arritem('$<<$args[1]>>_id', $args[0]) = $args[0], 1, 0)
-!@ делаем текущей таблицу данных
-@edb.dt.set_cur($args[1])
 --- edb.row.is ---------------------------------
+
+Проверяемая строка не становится текущеЙ!!!
