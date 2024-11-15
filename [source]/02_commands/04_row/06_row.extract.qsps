@@ -19,7 +19,7 @@ if no @edb.row.is($args[1], $args[2]): exit
 $args[20] = $arritem('$<<$args[2]>>', 'columns')
 !@ используем функцию типа колбэк для применения к каждому элементу списка
 $args[21] = {
-	$args[22] = @edb.type.get_prefix($arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type'))
+	$args[22] = @edb.pref_by_type($arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type'))
 	dynamic "<<$args[22]>><<$args[4]>>['<<$args[0]>>'] = <<$args[22]>><<$args[3]>>_<<$args[0]>>['<<$args[5]>>']"
 }
 @edb.list.for_each($args[20], $args[21], $args[2], $args[0], $args[1])

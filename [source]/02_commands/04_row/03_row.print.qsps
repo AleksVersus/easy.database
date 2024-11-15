@@ -24,7 +24,7 @@ $args[20] += 'Строка: <<$args[0]>>' + @em.RN
 !@ извлекаем значения из колонок
 $args[23] = {
 	$args[20] = $arritem('$<<$args[4]>>', 'column.<<$args[0]>>.type')
-	$args[21] = @edb.type.get_prefix($args[20])
+	$args[21] = @edb.pref_by_type($args[20])
 	$result += $arritem('<<$args[21]>><<$args[4]>>_<<$args[0]>>', $args[3]) + '|'
 }
 $args[24] = @edb.list.for_each($args[22], $args[23], $args[0], $args[1])

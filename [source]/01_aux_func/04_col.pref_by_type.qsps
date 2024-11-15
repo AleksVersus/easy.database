@@ -1,11 +1,11 @@
 QSP-Game Получение префикса типа
 
 !@ $0 - тип значения
-# edb.type.get_prefix
+# edb.pref_by_type
 if 0:
 	elseif $args[0] = 'tuple': $result = '%'
 	elseif $args[0] = 'num': $result = ''
 	else $result = '$'
 end
---- edb.type.get_prefix ---------------------------------
+--- edb.pref_by_type ---------------------------------
 

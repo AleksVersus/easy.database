@@ -19,7 +19,7 @@ $args[2] = $lcase($args[2])
 !@ определяем локальные переменные:
 $args[20] = ''
 $args[22] = $arritem('$<<$args[1]>>', 'column.<<$args[0]>>.type')
-$args[23] = @edb.type.get_prefix($args[22])
+$args[23] = @edb.pref_by_type($args[22])
 $args[24] = @em.tag.get_num($args[2], 'range')
 args[25] = val($strfind($args[24], '(\d+)\-(\d+)', 1))
 args[26] = val($strfind($args[24], '(\d+)\-(\d+)', 2))

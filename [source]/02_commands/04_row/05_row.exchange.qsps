@@ -22,7 +22,7 @@ $args[20] = $arritem('$<<$args[2]>>', 'columns')
 $args[21] = {
 	if $args[0] = 'id': exit
 	$args[30] = $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type')
-	$args[31] = @edb.type.get_prefix($args[30])
+	$args[31] = @edb.pref_by_type($args[30])
 	dynamic "<<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[4]>>'], <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[5]>>'] = <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[5]>>'], <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[4]>>']"
 }
 @edb.list.for_each($args[20], $args[21], $args[2], $args[0], $args[1])
