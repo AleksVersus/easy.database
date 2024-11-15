@@ -7,7 +7,7 @@ QSP-Game Создать новую таблицу данных
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "edb.new_table: База данных не инициализирована." & exit
 if $args[0] = '': msg "edb.new_table: Не указан идентификатор таблицы данных." & exit
-if instr('$%', $mid($args[0], 1, 1)): msg 'edb.new_table: Недопустимо указывать префикс типа → <<$args[0]>>.' & exit
+if @edb.type_prefix.is($args[0]): msg 'edb.new_table: Недопустимо указывать префикс типа → <<$args[0]>>.' & exit
 if @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "edb.new_table: Таблица данных `<<$args[0]>>` уже существует." & exit
 !@pp:endif
 !@ $args[2] = $lcase($args[2])

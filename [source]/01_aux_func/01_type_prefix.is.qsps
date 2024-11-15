@@ -1,0 +1,6 @@
+QSP-Game Проверяет наличие префикса типа в строке
+
+!@ $0 - 
+# edb.type_prefix.is
+result = iif(instr('$%', $mid($args[0], 1, 1)), 1, 0)
+--- edb.type_prefix.is ---------------------------------
