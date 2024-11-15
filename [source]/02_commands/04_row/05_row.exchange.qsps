@@ -2,41 +2,30 @@ QSP-Game Функция меняет содержимое двух строк в
 
 ВНИМАНИЕ!!! Функция обменивает содержимое строк, но сами строки позициями не меняются. Т.е. их идентификаторы в таблице данных не перемещаются.
 
-$args[0] - идентификатор одной строки
-$args[1] - идентификатор другой строки
-$args[2] - идентификатор таблицы данных
+!@ $0 - идентификатор одной строки
+!@ $1 - идентификатор другой строки
+!@ $2 - идентификатор таблицы данных
 
 # edb.row.exchange
 if $args[2] = '': $args[2] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.exchange: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.exchange: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 if $args[2] = '': msg "row.exchange: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[2]): msg "row.exchange: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 !@pp:endif
 !@ Обменять содержимое несуществующих строк нельзя, однако ошибку в игре это не вызовет.
-$args[21] = {
-	if $args[1] = '': result = 1 & exit
-	if $args[0] = '': result = 1 & exit
-	if $arritem('$<<$args[2]>>_id', $args[1]) <> $args[1]: result = 1 & exit
-	if $arritem('$<<$args[2]>>_id', $args[0]) <> $args[0]: result = 1 & exit
-}
-if dyneval($args[21], $args[0], $args[1], $args[2]): exit
+if no @edb.row.is($args[1], $args[2]): exit
+if no @edb.row.is($args[0], $args[2]): exit
 !@ получаем список колонок
 $args[20] = $arritem('$<<$args[2]>>', 'columns')
 !@ используем функцию типа колбэк для применения к каждому элементу списка
 $args[21] = {
-	!@ $args[0] - название колонки
-	!@ $args[3] - таблица данных
-	!@ $args[4] - идентификатор одной строки
-	!@ $args[5] - идентификатор второй строки
 	if $args[0] = 'id': exit
-	if $arritem('$<<$args[3]>>_<<$args[0]>>', 0) = 'num':
-		dynamic "<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'], <<$args[3]>>_<<$args[0]>>['<<$args[5]>>'] = <<$args[3]>>_<<$args[0]>>['<<$args[5]>>'], <<$args[3]>>_<<$args[0]>>['<<$args[4]>>']"
-	else:
-		dynamic "$<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'], $<<$args[3]>>_<<$args[0]>>['<<$args[5]>>'] = $<<$args[3]>>_<<$args[0]>>['<<$args[5]>>'], $<<$args[3]>>_<<$args[0]>>['<<$args[4]>>']"
-	end
+	$args[30] = $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type')
+	$args[31] = @edb.type.get_prefix($args[30])
+	dynamic "<<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[4]>>'], <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[5]>>'] = <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[5]>>'], <<$args[31]>><<$args[3]>>_<<$args[0]>>['<<$args[4]>>']"
 }
-@edb.list.for_each($args[20], $args[21], '|', $args[2], $args[0], $args[1])
+@edb.list.for_each($args[20], $args[21], $args[2], $args[0], $args[1])
 !@ строка, идентификатор которой был передан первым, становится текущей
 @edb.row.set_cur($args[0])
 - edb.row.exchange -
@@ -45,3 +34,9 @@ args:
 	20 - список колонок
 	21 - функция типа колбэк
 
+{callback
+	!@  $0 - название колонки
+	!@  $3 - таблица данных
+	!@  $4 - идентификатор одной строки
+	!@  $5 - идентификатор второй строки
+}
