@@ -804,13 +804,13 @@ $row_id = @edb.dt.find('Старый')
 * `$args[1]` - идентификатор колонки. Если не указан, используется идентификатор из указателя текущей колонки.
 * `$args[2]` - идентификатор таблицы данных. Если не указан, используется идентификатор из указателя текущей таблицы.
 
-Пример:
-
-```qsp
-@edb.cell.get_value($i, 'place', 'objects')
-@edb.cell.get_value($s, 'place')
-@edb.cell.get_value()
-```
+> [!example] Пример:
+> 
+> ```qsp
+> @edb.cell.get_value($i, 'place', 'objects')
+> @edb.cell.get_value($s, 'place')
+> @edb.cell.get_value()
+> ```
 
 #### edb.cell.add
 
