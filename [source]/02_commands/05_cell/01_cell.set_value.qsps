@@ -1,41 +1,40 @@
 QSP-Game Устанавливает значение ячейки
 
-$args[0] или args[0] - значение, присваиваемое ячейке
-$args[1] - идентификатор строки
-$args[2] - идентификатор колонки
-$args[3] - идентификатор таблицы данных
-
+!@ $0 - значение, присваиваемое ячейке
+!@ $1 - идентификатор строки
+!@ $2 - идентификатор колонки
+!@ $3 - идентификатор таблицы данных
 # edb.cell.set_value
 if $args[3] = '': $args[3] = $EASY_DATABASE['current_data_table']
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "cell.set_value: Ошибка. База данных не инициализирована." & exit
-if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[3]): msg "cell.set_value: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 if $args[3] = '': msg "cell.set_value: Ошибка. Не указан идентификатор таблицы данных." & exit
+if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[3]): msg "cell.set_value: Ошибка. Таблица данных `<<$args[2]>>` не существует." & exit
 !@pp:endif
 if $args[1] = '': $args[1] = $arritem('$<<$args[3]>>', 'current_row')
 if $args[2] = '': $args[2] = $arritem('$<<$args[3]>>', 'current_col')
 !@ Присвоить значение ячейке, которая не существует не получится, однако ошибку это не вызовет
-if $arritem('$<<$args[3]>>_id', $args[1]) <> $args[1] or arrsize('$<<$args[3]>>_<<$args[2]>>') = 0: exit
+if no @edb.row.is($args[1], $args[3]): exit
 !@ так же невозможно присвоить значение ячейке, которая находится в столбце первичных ключей
-if $args[2] = 'id' or $arritem('$<<$args[3]>>_<<$args[2]>>', 0) = 'ids': exit
+if $args[2] = 'id' : exit
 !@ непосредственно присваиваем значение ячейке
-!@ $args[21] = $replace($args[1], "'", "''")	& !@ TODO: зачем проводить замену в первичном ключе, который не содержит таких символов?
-$args[21] = $args[1]
-$args[23] = $arritem('$<<$args[3]>>_<<$args[2]>>', 0)
-if $args[23] = 'num':
-	!@ присваиваем число
-	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[21]>>'] = <<args[0]>>"
+$args[23] = $arritem('$<<$args[3]>>', 'column.<<$args[2]>>.type'))
+if $args[23] = 'tuple':
+	dynamic "%<<$args[3]>>_<<$args[2]>>['<<$args[1]>>''] = <<%args[0]>>"
+elseif $args[23] = 'num':
+	dynamic "<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = <<args[0]>>"
 elseif $args[23] = 'code':
-	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[21]>>'] = {<<$args[0]>>}"
+	$args[20] = $replace($args[0], '"', '""')
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = {<<$args[20]>>}"
 else:
 	$args[20] = $replace($args[0], "'", "''")
-	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[21]>>'] = '<<$args[20]>>'"
+	dynamic "$<<$args[3]>>_<<$args[2]>>['<<$args[1]>>'] = '<<$args[20]>>'"
 end
 !@ делаем строку и столбец текущими
 @edb.row.set_cur($args[1])
 @edb.col.set_cur($args[2])
 --- edb.cell.set_value ---------------------------------
-$args[20] - значение с заменой апострофов
-$args[21] - первичный ключ (не должен содержать апострофов)
 
-$args[23] - тип колонки
+!@ $20 - значение с заменой апострофов
+!@ $21 - первичный ключ (не должен содержать апострофов)
+!@ $23 - тип колонки
