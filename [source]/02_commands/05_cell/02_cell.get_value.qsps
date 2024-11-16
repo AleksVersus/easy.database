@@ -17,7 +17,7 @@ if $args[1] = '': $args[1] = $arritem('$<<$args[2]>>', 'current_col')
 if $args[1] = '': msg 'cell.get_value: Ошибка. Не указан идентификатор колонки.' &	exit
 !@pp:endif
 !@ Извлечь значение из ячейки, которая не существует не получится, однако ошибку это не вызовет
-if no @edb.row.is($args[0], $args[2]): exit
+if no @edb.cell.is($args[0], $args[1], $args[2]): exit
 !@ непосредственно извлекаем значение из ячейки
 $args[23] = $arritem('$<<$args[2]>>', 'column.<<$args[1]>>.type'))
 if $args[23] = 'tuple':

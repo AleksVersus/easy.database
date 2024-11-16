@@ -14,7 +14,7 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[3]): msg "cell.se
 if $args[1] = '': $args[1] = $arritem('$<<$args[3]>>', 'current_row')
 if $args[2] = '': $args[2] = $arritem('$<<$args[3]>>', 'current_col')
 !@ Присвоить значение ячейке, которая не существует не получится, однако ошибку это не вызовет
-if no @edb.row.is($args[1], $args[3]): exit
+if no @edb.cell.is($args[1], $args[2], $args[3]): exit
 !@ так же невозможно присвоить значение ячейке, которая находится в столбце первичных ключей
 if $args[2] = 'id' : exit
 !@ непосредственно присваиваем значение ячейке
