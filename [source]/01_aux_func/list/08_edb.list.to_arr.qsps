@@ -3,7 +3,5 @@ QSP-Game Добавление элементов списка в массив
 !@ $0 - список
 !@ $1 - название массива
 # edb.list.to_arr
-local $edb_list_to_arr_
-scanstr '$edb_list_to_arr_', $args[0], '[^|]+'
-copyarr $args[1], '$edb_list_to_arr_'
+scanstr $args[1], $args[0], '[^|]+'
 --- edb.list.to_arr ---------------------------------
