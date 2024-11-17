@@ -100,7 +100,7 @@ loop while args[21] < @edb.dt.height($args[2]) step args[21] += args[3]:
 							end
 						else:
 							!@ проверка на точное совпадение
-							if $args[34] = 'tuple' and @edb.str.to_tpl($args[32]) <> arritem('%<<$args[2]>>_<<$args[31]>>', args[26]):
+							if $args[34] = 'tuple' and @em.str.to_tpl($args[32]) <> arritem('%<<$args[2]>>_<<$args[31]>>', args[26]):
 								!@ значения не равны
 								args[35] = 0 & jump 'filter_end'
 							elseif $args[34] = 'num' and val($args[32]) <> arritem('<<$args[2]>>_<<$args[31]>>', args[26]):

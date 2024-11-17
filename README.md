@@ -106,11 +106,11 @@ inclib 'lib/easy.math.qsp'
 
 - [**Сущности**](_fullguide/entities/index.md)
 	- [База Данных. Data Base](_fullguide/entities/data_base.md)
-	- [data_table](_fullguide/entities/data_table.md)
-	- [column](_fullguide/entities/column.md)
-	- [row](_fullguide/entities/row.md)
-	- [cell](../cell.md)
-	- [list](_fullguide/entities/list.md)
+	- [Таблица Данных. Data Table](_fullguide/entities/data_table.md)
+	- [Колонка. Column](_fullguide/entities/column.md)
+	- [Строка. Row](_fullguide/entities/row.md)
+	- [Ячейка. Cell](../cell.md)
+	- [Список. List](_fullguide/entities/list.md)
 - **Функции модуля**
 	- Функции для работы с сущностями БД
 		- База Данных
@@ -157,11 +157,8 @@ inclib 'lib/easy.math.qsp'
 			- [edb.list.diff](_fullguide/funcs/list/edb.list.diff.md)
 			- [edb.list.for_each](_fullguide/funcs/list/edb.list.for_each.md)
 			- [edb.list.length](_fullguide/funcs/list/edb.list.length.md)
-		- 
-## Команды отладки
-
-[**Команды отладки можно посмотреть здесь.**](_fullguide/debug_commands.md)
-
-## История версий
-
-[**Историю версий можно посмотреть здесь.**](_fullguide/lib_versions.md)
+		- Другие функции
+			- [edb.pref_by_type](_fullguide/funcs/_etc/edb.pref_by_type.md)
+			- [edb.type_prefix.is](_fullguide/funcs/_etc/edb.type_prefix.is.md)
+- [**Команды отладки**](_fullguide/debug_commands.md)
+- [**История версий**](_fullguide/lib_versions.md)

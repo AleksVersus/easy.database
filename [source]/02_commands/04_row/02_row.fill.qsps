@@ -3,7 +3,7 @@ QSP-Game Заполнение строки значениями
 !@ $0 - кортеж значений, помещаемых подряд в колонки
 !@ $1 ... $18 - кортежи [идентификатор колонки, значение]
 # edb.row.fill
-!@ Перед использованием данной функции нужно выставить текущую строку и колонку
+!@ Перед использованием данной функции нужно выставить текущую строку и таблицу данных
 !@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "row.fill: Ошибка. База данных не инициализирована." & exit
 !@pp:endif
@@ -16,16 +16,18 @@ $args[21] = $arritem('$<<$args[22]>>', 'current_row')
 !@pp:if(edb_fuse):include
 if $args[21] = '': msg "row.fill: Ошибка. Не указан идентификатор текущей строки." & exit
 !@pp:endif
-$args[25] = @edb.list.remove($arritem($args[22], 'columns'), 'id') & !@ список колонок без первичных ключей
+$args[25] = @edb.list.remove(@edb.dt.columns($args[22]), 'id') & !@ список колонок без первичных ключей
 !@ нулевой аргумент может содержать как кортеж значений, которые нужно подряд поместить в колонки, так и
 !@ кортеж состоящий из идентификатора колонки и значения
-$args[23], %args[24] = %iif(len(%args[0]) = 2, %args[0], ['', %args[0]]
-if no ($args[23] <> '' and @edb.list.is_el($args[25], $args[23])):
+$args[23], %args[24] = %iif(len(%args[0]) = 2, %args[0], ['', %args[0]])
+pl 'row: <<$args[21]>> first: <<$args[23]>> tail: <<%args[24]>> columns: <<$args[25]>>'
+if $args[23] = '' or no @edb.list.is_el($args[25], $args[23]):
 	!@ таблица данных не содержит указанный идентификатор колонки, значит
 	!@ мы имеем дело со значениями к заполнению колонок подряд
 	$args[26] = {
-		%args[3] = @edb.str.to_tpl($iif($args[2]='', $args[3], $args[2]))
-		$args[30] = $arritem($args[5], 'column.<<$args[0]>>.type')
+		%args[3] = @em.str.to_tpl($iif($args[2] = '', $args[3], $args[2]))
+		pl %args[3]
+		$args[30] = $arritem('$<<$args[5]>>', 'column.<<$args[0]>>.type')
 		if $args[30] = 'tuple':
 			%args[31], %args[3] = %args[3]
 			dynamic "%<<$args[5]>>_<<$args[0]>>['<<$args[4]>>'] = <<%args[31]>>"
@@ -34,7 +36,7 @@ if no ($args[23] <> '' and @edb.list.is_el($args[25], $args[23])):
 			dynamic "<<$args[5]>>_<<$args[0]>>['<<$args[4]>>'] = <<args[31]>>"
 		else:
 			$args[31], %args[3] = %args[3]
-			dynamic "$<<$args[5]>>_<<$args[0]>>['<<$args[4]>>'] = '<<args[31]>>'"
+			dynamic "$<<$args[5]>>_<<$args[0]>>['<<$args[4]>>'] = '<<$args[31]>>'"
 		end
 		if %args[3] = []:
 			killvar 'result'
@@ -43,7 +45,7 @@ if no ($args[23] <> '' and @edb.list.is_el($args[25], $args[23])):
 			$result = $str(%args[3])
 		end
 	}
-	@edb.list.for_each($args[25], $args[26], $str(%args[24]), $args[21], $args[22])
+	@edb.list.for_each($args[25], $args[26], $str(%args[0]), $args[21], $args[22])
 	args[27] = 1
 end
 !@ остальные аргументы содержат пары [col_id, значение]

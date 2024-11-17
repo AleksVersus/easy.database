@@ -18,7 +18,7 @@ if no @edb.cell.is($args[1], $args[2], $args[3]): exit
 !@ так же невозможно присвоить значение ячейке, которая находится в столбце первичных ключей
 if $args[2] = 'id' : exit
 !@ непосредственно присваиваем значение ячейке
-$args[23] = $arritem('$<<$args[3]>>', 'column.<<$args[2]>>.type'))
+$args[23] = $arritem('$<<$args[3]>>', 'column.<<$args[2]>>.type')
 if $args[23] = 'tuple':
 	dynamic "%<<$args[3]>>_<<$args[2]>>['<<$args[1]>>''] = <<%args[0]>>"
 elseif $args[23] = 'num':
