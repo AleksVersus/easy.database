@@ -27,8 +27,8 @@ if args[25] < 1: args[25] = 1
 if args[26] > arrsize('<<$args[1]>>_<<$args[0]>>'): args[26] = arrsize('<<$args[1]>>_<<$args[0]>>')-1
 args[27] = iif(args[26], args[26], arrsize('<<$args[1]>>_<<$args[0]>>')-1)
 !@ получаем содержимое колонки с помощью em.arr.print
-$args[20] += 'Колонка: `<<$args[0]>>`, тип: `<<$args[22]>>`, строки с <<args[25]>> по <<args[27]>>'+@em.RN
-$args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result]', [args[25], args[26]], '|')
+if no instr($lcase($args[2]), '[list]'): $args[20] += 'Колонка: `<<$args[0]>>`, тип: `<<$args[22]>>`, строки с <<args[25]>> по <<args[27]>>'+@em.RN
+$args[20] += @em.arr.print('<<$args[23]>><<$args[1]>>_<<$args[0]>>', '[only result]', [args[25], args[27]], '|')
 !@ делаем распечатанную колонку текущей
 @edb.col.set_cur($args[0])
 !@ выводим в результат
@@ -46,6 +46,7 @@ $result = $args[20]
 !@ #26 - конечная позиция к выводу, так же #27 для форматирования строки к выводу.
 
 Управление:
+	[list] - выводит только список значений колонки
 	[range:N-M] - вывод значений от элемента N до M в колонке
 
 !@pp:if(build_easy_math!=Off):nopp
