@@ -32,8 +32,13 @@ if instr($user_text, 'edb') = 1:
 		
 	elseif $command_line_ = 'gen id':
 		*pl @em.gen_uuid()
+
 	elseif $command_line_ = 'test':
 		@edb.usercom.test()
+
+	elseif $command_line_ = 'long test':
+		@edb.usercom.test('waiting')
+
 	elseif $command_line_ = 'init':
 		@edb.init()
 		*pl 'Инициализирована база данных. id = ' + $EASY_DATABASE['ID']
