@@ -20,14 +20,12 @@ $args[25] = @edb.list.remove(@edb.dt.columns($args[22]), 'id') & !@ список
 !@ нулевой аргумент может содержать как кортеж значений, которые нужно подряд поместить в колонки, так и
 !@ кортеж состоящий из идентификатора колонки и значения
 $args[23], %args[24] = %iif(len(%args[0]) = 2, %args[0], ['', %args[0]])
-pl 'row: <<$args[21]>> first: <<$args[23]>> tail: <<%args[24]>> columns: <<$args[25]>>'
 if $args[23] = '' or no @edb.list.is_el($args[25], $args[23]):
 	!@ таблица данных не содержит указанный идентификатор колонки, значит
 	!@ мы имеем дело со значениями к заполнению колонок подряд
 	$args[26] = {
 		%args[3] = @em.str.to_tpl($iif($args[2] = '', $args[3], $args[2]))
-		pl %args[3]
-		$args[30] = $arritem('$<<$args[5]>>', 'column.<<$args[0]>>.type')
+		$args[30] = @edb.col.type($args[0], $args[5])
 		if $args[30] = 'tuple':
 			%args[31], %args[3] = %args[3]
 			dynamic "%<<$args[5]>>_<<$args[0]>>['<<$args[4]>>'] = <<%args[31]>>"
@@ -54,7 +52,7 @@ loop while args[27] < args[20] step args[27] += 1:
 	$args[23], %args[24] = %args[args[27]]
 	if $args[23] <> '' and @edb.list.is_el($args[25], $args[23]):
 		!@ талица данных содержит указанную колонку, получаем тип
-		$args[28] = $arritem($args[22], 'column.<<$args[23]>>.type')
+		$args[28] = @edb.col.type($args[23], $args[22])
 		if $args[28] = 'tuple':
 			dynamic "%<<$args[22]>>_<<$args[23]>>['<<$args[21]>>'] = <<%args[24]>>"
 		elseif $args[28] = 'num':
@@ -62,7 +60,7 @@ loop while args[27] < args[20] step args[27] += 1:
 			dynamic "<<$args[22]>>_<<$args[23]>>['<<$args[21]>>'] = <<args[29]>>"
 		else:
 			$args[29], %args[24] = %args[24]
-			dynamic "$<<$args[22]>>_<<$args[23]>>['<<$args[21]>>'] = '<<args[29]>>'"
+			dynamic "$<<$args[22]>>_<<$args[23]>>['<<$args[21]>>'] = '<<$args[29]>>'"
 		end
 	end
 end

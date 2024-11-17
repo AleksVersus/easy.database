@@ -1,6 +1,9 @@
 QSP-Game Извлекает список колонок из таблицы данных
 
+!@ $0 - идентификатор таблицы данных
+!@ $r - список колонок в таблице данных
 # edb.dt.columns
+!@pp:if(edb_fuse):include
 if $EASY_DATABASE['ID'] = '': msg "dt.columns: Ошибка. База данных не инициализирована." & exit
 if $args[0] = '': msg "dt.columns: Ошибка. Не указан идентификатор таблицы данных." & exit
 if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "dt.columns: Ошибка. Таблица данных `<<$args[0]>>` не существует." & exit
@@ -8,3 +11,4 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[0]): msg "dt.colu
 $result = $arritem('$<<$args[0]>>', 'columns')
 --- edb.dt.columns ---------------------------------
 
+Функция не перемещает указатель

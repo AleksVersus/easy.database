@@ -74,7 +74,6 @@ $args[26] - строка аргументов
 {:for_each
 	0 - list of columns
 	1 - callback
-	2 - |
 	3 - table
 	{:callback
 		0 - item (column)
