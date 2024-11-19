@@ -1,6 +1,7 @@
 QSP-Game Тесты базы данных
 
 # edb.usercom.test
+local $old_
 *pl @em.RN + 'инициализация базы данных' + @em.RN & if $args[0] = 'waiting': wait 500
 @edb.init()
 *pl @em.RN + 'новая таблица данных' + @em.RN & if $args[0] = 'waiting': wait 500
@@ -64,8 +65,9 @@ end
 *pl @em.RN + 'row.exchange' + @em.RN & if $args[0] = 'waiting': wait 500
 @edb.row.exchange($d, $n)
 @edb.dt.print('objects')
-*pl @em.RN + 'find test' + @em.RN & if $args[0] = 'waiting': wait 500
-*pl @edb.dt.find('[\s\S]*?Старый[\s\S]*?', 'body')
+*pl @em.RN + 'find test: ' + @em.RN & if $args[0] = 'waiting': wait 500
+$old_ = @edb.dt.find('^[\s\S]*?Старый[\s\S]*?$', 'body')
+*pl @edb.row.print($old_, '', '[list]')
 *pl @em.RN + 'extract inject' + @em.RN & if $args[0] = 'waiting': wait 500
 @edb.row.extract('septem', $i)
 @edb.row.inject('septem', $n)
