@@ -10,7 +10,7 @@ if $args[1] = '': msg "row.set_cur: Ошибка. Не указан иденти
 if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.set_cur: Ошибка. Таблица данных `<<$args[1]>>` не существует." & exit
 !@pp:endif
 !@ Сделать текущей строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
-if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
+if no @edb.row.is($args[0], $args[1]): exit
 !@ непосредственно делаем строку текущей
 dynamic "$<<$args[1]>>['current_row'] = '<<$args[0]>>'"
 !@ делаем текущей таблицу данных

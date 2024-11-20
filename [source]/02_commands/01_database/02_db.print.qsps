@@ -19,7 +19,7 @@ if $EASY_DATABASE['ID'] <> '':
 		$args[22] = {
 			$result = $args[2]
 			$result += '$<<$args[0]>>' + @em.RN
-			$result += @edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[3], $args[0])
+			$result += @edb.list.for_each(@edb.dt.columns($args[0]), $args[3], $args[0])
 		}
 		$args[23] = { $result = $args[2]+ '$<<$args[3]>>_<<$args[0]>>' + @em.RN }
  		$args[20] += @edb.list.for_each($EASY_DATABASE['data_tables_ids'], $args[22], $args[23])

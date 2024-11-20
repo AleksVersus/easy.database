@@ -11,9 +11,9 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "dt.del_
 !@pp:endif
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Удалить строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
-if $args[0] = '' or $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
+if no @edb.row.is($args[0], $args[1]): exit
 !@ Удаление строки производится путём удаления ячеек из каждого массива-столбца:
-$args[21] = $arritem('$<<$args[1]>>', 'columns')
+$args[21] = @edb.dt.columns($args[1])
 $args[22] = { killvar '$<<$args[3]>>_<<$args[0]>>', $args[4] }
 @edb.list.for_each($args[21], $args[22], $args[1], $args[0])
 !@ если строка была текущей, снимаем указатель
@@ -31,9 +31,8 @@ end
 {:for_each
 	0 - column list
 	1 - callback
-	2 - |
-	3 - table
-	4 - primary key
+	2 - table
+	3 - primary key
 	{:callback
 		0 - item
 		1 - tail

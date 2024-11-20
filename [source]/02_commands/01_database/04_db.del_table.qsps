@@ -15,7 +15,7 @@ $args[20] = {
 		@edb.dt.del_col($args[0], $args[3])
 	end
 }
-@edb.list.for_each($arritem('$<<$args[0]>>', 'columns'), $args[20], $args[0])
+@edb.list.for_each(@edb.dt.columns($args[0]), $args[20], $args[0])
 !@ удаляем колонку первичных ключей
 killvar '$<<$args[0]>>_id'
 !@  -------------------- из базы данных удаляем записи --------------------

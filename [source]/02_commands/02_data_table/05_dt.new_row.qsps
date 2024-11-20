@@ -20,7 +20,7 @@ end
 	args[25] = 16	& !@ 16 символов
 	loop args[26] = 0 while args[26] < 100000 step args[26] += 1:
 		$args[24] = @em.str.random(args[25],'[inc][\d][\z][\я]')
-		if $arritem('$<<$args[20]>>', $args[24]) = '': jump 'key_create_end'
+		if $arritem($args[20], $args[24]) = '': jump 'key_create_end'
 	end
 	!@ было решено отказаться от различных способов генерации первичных ключей, поскольку
 	!@ этот способ должен гарантированно давать более 5*10^33 комбинаций, что превышает все
@@ -31,16 +31,16 @@ end
 if $args[24] <> '':
 	!@ если ключ сгенерирован, создаём строку.
 	!@ Строка создаётся генерацией новых элементов во всех массивах столбцов.
-	$args[27] = $arritem('$<<$args[0]>>', 'columns')
+	$args[27] = @edb.dt.columns($args[0])
 	$args[28] = {
-		$args[20] = $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type')
+		$args[20] = @edb.col.type($args[0], $args[3])
 		if $args[20] = 'tuple':
 			dynamic "%<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = []"
 		elseif $args[20] = 'num':
 			dynamic "<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = 0"
 		elseif $args[20] = 'ids':
 			dynamic "$<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = '<<$args[4]>>'"
-		else
+		else:
 			dynamic "$<<$args[3]>>_<<$args[0]>>['<<$args[4]>>'] = ''"
 		end
 	}
@@ -49,10 +49,6 @@ if $args[24] <> '':
 	@edb.row.set_cur($args[24], $args[0])
 	!@ возвращаем идентификатор созданной строки
 	$result = $args[24] & exit
-else
-	!@ если ключ не сгенерирован (например, таблица достигла предела),
-	!@ возвращаем пустое значение, не создавая строку:
-	$result = '' & exit
 end
 --- edb.dt.new_row ---------------------------------
 

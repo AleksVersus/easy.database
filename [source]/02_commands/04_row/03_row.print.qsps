@@ -14,7 +14,7 @@ if no @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $args[1]): msg "row.pri
 !@pp:endif
 if $args[0] = '': $args[0] = $arritem('$<<$args[1]>>', 'current_row')
 !@ Распечатать строку, которой нет в таблице данных, нельзя, однако ошибку в игре это не вызовет.
-if $arritem('$<<$args[1]>>_id', $args[0]) <> $args[0]: exit
+if no @edb.row.is($args[0], $args[1]): exit
 $args[2] = $lcase($args[2])
 !@ объявляем дополнительные локальные переменные:
 $args[20] = ''

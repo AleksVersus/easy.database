@@ -17,7 +17,7 @@ if instr($args[1], '[ot]') <> 0: $args[1] = $replace($args[1], '[ot]', '[only ta
 if instr($args[1], '[only info]') <> 0 or instr($args[1], '[only table]') = 0:
 	$args[20] += "Идентификатор таблицы данных: '<<$arritem('$<<$args[0]>>', 'ID')>>'<<@em.RN>>"
 	$args[20] += "Название таблицы данных: '<<$arritem('$<<$args[0]>>', 'NAME')>>'<<@em.RN>>"
-	$args[20] += "Список колонок: '<<$arritem('$<<$args[0]>>', 'columns')>>'<<@em.RN>>"
+	$args[20] += "Список колонок: '<<@edb.dt.columns($args[0])>>'<<@em.RN>>"
 	$args[20] += "Текущая колонка: '<<$arritem('$<<$args[0]>>', 'current_col')>>'<<@em.RN>>"
 	$args[20] += "Высота: " + $str(arrsize('$<<$args[0]>>_id'))+@em.RN
 	$args[20] += "Текущая строка: '<<$arritem('$<<$args[0]>>', 'current_row')>>'<<@em.RN>>"
@@ -27,23 +27,18 @@ if instr($args[1], '[only info]') <> 0 or instr($args[1], '[only table]') = 0:
 	end
 end
 if instr($args[1], '[only table]') <> 0 or instr($args[1], '[only info]') = 0:
-	$args[24] = $arritem('$<<$args[0]>>', 'columns')
+	$args[24] = @edb.dt.columns($args[0])
 	$args[25] = {
 		$result = $args[2]
-		if $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type') = 'tuple':
-			$result += "'%<<$args[3]>>_<<$args[0]>>',"
-		elseif $arritem('$<<$args[3]>>', 'column.<<$args[0]>>.type') = 'num':
-			$result += "'<<$args[3]>>_<<$args[0]>>',"
-		else:
-			$result += "'$<<$args[3]>>_<<$args[0]>>',"
-		end
+		$args[30] = @edb.pref_by_type(@edb.col.type($args[0], $args[3]))
+		$result += "'<<$args[30]>><<$args[3]>>_<<$args[0]>>',"
 	}
 	$args[26] = @edb.list.for_each($args[24], $args[25], $args[0])
 	if instr($args[1], '[range:') <> 0:
 		$args[27] = $strfind($args[1], '\[range:(\d+\-\d+)\]', 1)
-		$args[26] += "'[range onscreen:<<$args[27]>>]'"
+		$args[26] += "'[range onscreen:<<$args[27]>>] [empty:Data Table is empty.]'"
 	else:
-		$args[26] = $mid($args[26], 1, len($args[26]) - 1)
+		$args[26] += "'[empty:Data Table is empty.]'"
 	end
 	$args[20] += $dyneval("$result = @em.fewArrs.print(<<$args[26]>>)")
 end

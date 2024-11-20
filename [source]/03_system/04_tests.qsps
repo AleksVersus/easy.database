@@ -2,89 +2,105 @@ QSP-Game Тесты базы данных
 
 # edb.usercom.test
 local $old_
-*pl @em.RN + 'инициализация базы данных' + @em.RN & if $args[0] = 'waiting': wait 500
+*pl @em.RN + 'инициализация базы данных:' & if $args[0] = 'waiting': wait 500
 @edb.init()
-*pl @em.RN + 'новая таблица данных' + @em.RN & if $args[0] = 'waiting': wait 500
+*pl @edb.print()
+
+*pl @em.RN + 'новая таблица данных:' & if $args[0] = 'waiting': wait 500
 @edb.new_table('objects', 'Объекты')
-!@ 
-*pl @em.RN + 'добавляем колонки' + @em.RN & if $args[0] = 'waiting': wait 500
+*pl @edb.print()
+
+*pl @em.RN + 'добавляем колонки:' & if $args[0] = 'waiting': wait 500
 @edb.dt.new_col('body', 'dict', 'objects')
 @edb.dt.new_col('place', 'str', 'objects')
 @edb.dt.new_col('include')
 @edb.dt.new_col('count', 'num')
-*pl @em.RN + 'создаём строки' + @em.RN & if $args[0] = 'waiting': wait 500
-local $s = @edb.dt.new_row('objects')
-local $r = @edb.dt.new_row('objects')
-local $i = @edb.dt.new_row()
-local $d = @edb.dt.new_row()
-local $n = @edb.dt.new_row()
-*pl @em.RN + 'проверяем созданное' + @em.RN & if $args[0] = 'waiting': wait 500
-*pl @edb.print()
 *pl @edb.dt.print('objects')
 
-*pl @em.RN + 'заполняем строки через row.fill' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.row.set_cur($i)
+*pl @em.RN + 'создаём пустые строки:' & if $args[0] = 'waiting': wait 500
+local $ash_ = @edb.dt.new_row('objects')
+local $r = @edb.dt.new_row('objects')
+local $old_sword_ = @edb.dt.new_row()
+local $d = @edb.dt.new_row()
+local $old_helmet_ = @edb.dt.new_row()
+*pl @edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'заполняем строки через row.fill' & if $args[0] = 'waiting': wait 500
+@edb.row.set_cur($old_sword_)
 @edb.row.fill(['Старый меч', 'сумка', '', 1])
-@edb.row.set_cur($n)
+@edb.row.set_cur($old_helmet_)
 @edb.row.fill(['Старый шлем', 'сумка', '', 15])
-@edb.row.set_cur($s)
+@edb.row.set_cur($ash_)
 @edb.row.fill(['body', 'Пепел'], ['count', 2])
-*pl @edb.dt.print('objects')
-*pl @em.RN + 'удаляем include' + @em.RN & if $args[0] = 'waiting': wait 500
+*pl @edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'удаляем include:' & if $args[0] = 'waiting': wait 500
 @edb.dt.del_col('include', 'objects')
-*pl @em.RN + 'пепел в инвентарь' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.cell.set_value('Инвентарь', $s, 'place', 'objects')
-@edb.dt.print('objects')
-*pl @em.RN + 'печать колонок' + @em.RN & if $args[0] = 'waiting': wait 500
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'пепел в инвентарь:' & if $args[0] = 'waiting': wait 500
+@edb.cell.set_value('Инвентарь', $ash_, 'place', 'objects')
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'печать колонок:' & if $args[0] = 'waiting': wait 500
 @edb.col.print('body', 'objects')
 @edb.col.print('count', 'objects', '[range:3-5]')
-@edb.row.print($i, 'objects')
-*pl @em.RN + 'значения ячеек' + @em.RN & if $args[0] = 'waiting': wait 500
-*pl @edb.cell.get_value($i, 'place', 'objects')
-*pl @edb.cell.get_value($s, 'place')
-*pl @edb.cell.get_value($n)
-*pl @em.RN + 'row.set_next test' + @em.RN & if $args[0] = 'waiting': wait 500
+@edb.row.print($old_sword_, 'objects')
+
+*pl @em.RN + 'значения ячеек:' & if $args[0] = 'waiting': wait 500
+*pl @edb.cell.get_value($old_sword_, 'place', 'objects')
+*pl @edb.cell.get_value($ash_, 'place')
+*pl @edb.cell.get_value($old_helmet_)
+
+*pl @em.RN + 'row.set_next test:' & if $args[0] = 'waiting': wait 500
 @edb.row.set_cur($r)
 @edb.col.set_cur('body')
 @edb.row.set_next('Яблоко')
 @edb.row.set_next('Инвентарь')
 @edb.row.set_next(25)
-@edb.dt.print('objects')
-@edb.row.set_cur($s)
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'col.set_nex test:' & if $args[0] = 'waiting': wait 500
+@edb.row.set_cur($ash_)
 @edb.col.set_cur('count')
-*pl @em.RN + 'col.set_nex test' + @em.RN & if $args[0] = 'waiting': wait 500
 loop local i = 1 while i < 10 step i += 1:
 	@edb.col.set_next(i * 10 + 1)
 end
-@edb.dt.print('objects')
-*pl @em.RN + 'cell.add test' + @em.RN & if $args[0] = 'waiting': wait 500
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'cell.add test:' & if $args[0] = 'waiting': wait 500
 @edb.cell.add(34)
 @edb.col.set_cur('place')
 @edb.cell.add('34')
-@edb.dt.print('objects')
-*pl @em.RN + 'row.exchange' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.row.exchange($d, $n)
-@edb.dt.print('objects')
-*pl @em.RN + 'find test: ' + @em.RN & if $args[0] = 'waiting': wait 500
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'row.exchange:' & if $args[0] = 'waiting': wait 500
+@edb.row.exchange($d, $old_helmet_)
+@edb.dt.print('objects', '[ot]')
+
+*pl @em.RN + 'find test: ' & if $args[0] = 'waiting': wait 500
 $old_ = @edb.dt.find('^[\s\S]*?Старый[\s\S]*?$', 'body')
 *pl @edb.row.print($old_, '', '[list]')
-*pl @em.RN + 'extract inject' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.row.extract('septem', $i)
-@edb.row.inject('septem', $n)
+
+*pl @em.RN + 'extract inject:' & if $args[0] = 'waiting': wait 500
+@edb.row.extract('septem', $old_sword_)
+@edb.row.inject('septem', $old_helmet_)
 @em.arr.print('$septem')
 
-*pl @em.RN + 'row.clone' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.row.clone($n)
-@edb.row.clone($n)
-@edb.row.clone($n)
-@edb.row.clone($n)
-@edb.dt.print('objects')
+*pl @em.RN + 'row.clone:' & if $args[0] = 'waiting': wait 500
+@edb.row.clone($old_helmet_)
+@edb.row.clone($old_helmet_)
+@edb.row.clone($old_helmet_)
+@edb.row.clone($old_helmet_)
+@edb.dt.print('objects', '[ot]')
 
-*pl @em.RN + 'print table range 2-4' + @em.RN & if $args[0] = 'waiting': wait 500
+*pl @em.RN + 'print table range 2-4:' & if $args[0] = 'waiting': wait 500
 @edb.print('[all arrays]')
-@edb.dt.print('objects', '[range:2-4]')
-*pl @em.RN + 'clone data table <<$i>>, 4 els' + @em.RN & if $args[0] = 'waiting': wait 500
-@edb.dt.clone('new_obj', 'objects', $i, 4)
-@edb.dt.print('new_obj')
+@edb.dt.print('objects', '[range:2-4] [ot]')
+
+*pl @em.RN + 'clone data table <<$old_sword_>>, 4 els:' & if $args[0] = 'waiting': wait 500
+@edb.dt.clone('new_obj', 'objects', $old_sword_, 4)
+@edb.print('[all arrays]')
+@edb.dt.print('new_obj', '[ot]')
 --- edb.usercom.test ---------------------------------
 

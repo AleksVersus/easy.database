@@ -19,7 +19,7 @@ end
 !@ получаем число элементов к копированию
 if args[3] = 0: args[3] = arrsize('$<<$args[1]>>_id') - args[2]
 !@ получаем список колонок исходной таблицы
-$args[20] = $arritem('$<<$args[1]>>', 'columns')
+$args[20] = @edb.dt.columns($args[1])
 !@ колбэк
 $args[21] = {
 	args[5], args[6] = val($args[5]), val($args[6])
@@ -55,11 +55,10 @@ $args[]:
 {:for_each
 	0 - column list
 	1 - callback
-	2 - '|'
-	3 - new-table
-	4 - old-table
-	5 - start number
-	6 - number of copyed els
+	2 - new-table
+	3 - old-table
+	4 - start number
+	5 - number of copyed els
 	{:callback
 		0 - item (column)
 		1 - tail
