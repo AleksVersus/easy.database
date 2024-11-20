@@ -45,19 +45,21 @@ if instr($user_text, 'edb') = 1:
 	elseif $command_line_ = '>':
 		*pl @edb.print('[all arrays]')
 	elseif instr($command_line_, '>') = 1:
-		local $commands_
-		@em.str.inArr($mid($command_line_, 2), '$commands_', '>', '[strip]')
-		if $commands_[0] = 'new_table' and $commands_[1] <> '':
-			@edb.new_table($commands_[1])
-			*pl "Создана таблица данных `<<$commands_[1]>>`."
-		elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
-			@edb.del_table($commands_[1])
-			*pl "Удалена таблица данных `<<$commands_[1]>>`."
-		elseif @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $commands_[0]):
-			if $commands_[1] = 'print':
-				@edb.dt.print($commands_[0], '[inmain]')
+		dynamic {
+			local $commands_
+			scanstr '$commands_', $mid($command_line_, 2), '[^|]+'
+			if $commands_[0] = 'new_table' and $commands_[1] <> '':
+				@edb.new_table($commands_[1])
+				*pl "Создана таблица данных `<<$commands_[1]>>`."
+			elseif $commands_[0] = 'del_table' and $commands_[1] <> '':
+				@edb.del_table($commands_[1])
+				*pl "Удалена таблица данных `<<$commands_[1]>>`."
+			elseif @edb.list.is_el($EASY_DATABASE['data_tables_ids'], $commands_[0]):
+				if $commands_[1] = 'print':
+					*pl @edb.dt.print($commands_[0])
+				end
 			end
-		end
+		}
 	elseif instr($command_line_, 'run ') = 1:
 		dynamic $trim($mid($command_line_, 4))
 	end
