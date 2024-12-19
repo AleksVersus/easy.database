@@ -28,7 +28,7 @@ $args[21] = {
 @edb.list.for_each($args[20], $args[21], $args[2], $args[0], $args[1])
 !@ строка, идентификатор которой был передан первым, становится текущей
 @edb.row.set_cur($args[0])
-- edb.row.exchange -
+--- edb.row.exchange ---------------------------------
 
 args:
 	20 - список колонок

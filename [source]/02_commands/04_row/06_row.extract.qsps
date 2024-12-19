@@ -25,7 +25,7 @@ $args[21] = {
 @edb.list.for_each($args[20], $args[21], $args[2], $args[0], $args[1])
 !@ делаем строку текущей
 @edb.row.set_cur($args[1])
-- edb.row.extract -
+--- edb.row.extract ---------------------------------
 
 args:
 	20 - список колонок
