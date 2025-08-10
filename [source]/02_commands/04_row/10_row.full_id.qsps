@@ -1,0 +1,9 @@
+QSP-Game Получение full id на основе идентификатора таблицы и строки
+
+!@ $0 - идентификатор строки
+!@ $1 - идентификатор таблицы данных
+# edb.row.full_id
+if $args[0] = '': exit
+if $args[1] = '': $args[1] = $EASY_DATABASE['current_data_table']
+$result = '<<$args[1]>>.<<$args[0]>>'
+--- edb.row.full_id ---------------------------------

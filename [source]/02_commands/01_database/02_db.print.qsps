@@ -58,5 +58,6 @@ $args[22] - колбэк
 				2 - result (from last iterration)
 				3 - item (table)
 			}
+		}
 	}
 }

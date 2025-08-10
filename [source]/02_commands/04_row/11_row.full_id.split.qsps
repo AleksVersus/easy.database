@@ -1,0 +1,9 @@
+QSP-Game Разбивание full_id на составляющие
+
+!@ $0 - full_id
+!@ %r - table_id, primary_key
+# edb.row.full_id.split
+local $edb_row_full_id_split_
+scanstr '$edb_row_full_id_split_', $args[0], '[^\.]*'
+%result = [$edb_row_full_id_split_[0], $edb_row_full_id_split_[1]]
+--- edb.row.full_id.split ---------------------------------

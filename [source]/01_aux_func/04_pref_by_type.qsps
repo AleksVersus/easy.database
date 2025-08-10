@@ -3,8 +3,8 @@ QSP-Game Получение префикса типа
 !@ $0 - тип значения
 # edb.pref_by_type
 if 0:
-	elseif $args[0] = 'tuple': $result = '%'
-	elseif $args[0] = 'num': $result = ''
-	else $result = '$'
+	elseif $args[0] = 'tuple':	$result = '%'
+	elseif $args[0] = 'num':	$result = ''
+	else:						$result = '$'
 end
 --- edb.pref_by_type ---------------------------------
